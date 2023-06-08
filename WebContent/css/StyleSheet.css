@@ -1,6 +1,9 @@
 @charset "ISO-8859-1";
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap');
 *{
 	margin:0;
+	font-family: sans-serif;
 }
 .container{
 	display:flex;
@@ -9,13 +12,15 @@
 
 .navbar{
 	width: 25%;
-	background-color:aliceblue;
+	background-color:#ffffff;
 	height:auto;
+	box-shadow: 6px 0px 15px -3px rgba(0,0,0,0.1);
 }
 
 .navbar .nav-title{
 	margin: 30px 10px 20px 10px;
 	text-align:Center;
+	color: #3661ed;
 }
 
 .navbar .items ul{
@@ -23,7 +28,34 @@
 	 display:flex;
 	 flex-direction: column;
   	 gap: 10px;
-  	 margin-top:10px
+  	 margin-top:10px;
+  	 padding: 0;
+}
+
+.navbar .items ul li{
+	padding: 10px 20px;
+
+}
+
+.navbar .items ul li a span{
+	color: #6d8ffd;
+	margin-right: 10px;
+}
+
+a{
+	display: flex;
+    align-items: center;
+	text-decoration: none;
+	color: #6d8ffd;
+	font-weight:700;
+}
+
+.active{
+	    color: #3661ed !important;
+}
+
+.active span{
+	    color: #3661ed !important;
 }
 
 .content-table{

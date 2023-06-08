@@ -4,14 +4,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Insert title here</title>
 <style>
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<title>Insert title here</title>
 </head>
 <body>
-
 <div class="container">
 	<div class="navbar">
 		<div class="nav-title">
@@ -34,7 +33,7 @@
 				
 				<li> 
 				
-				 <a href="Medicos.jsp">
+				 <a href="Medicos.jsp" class="active">
 				 	<span class="material-symbols-outlined">
 						clinical_notes
 					</span>	

@@ -11,7 +11,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-
 <div class="container">
 	<div class="navbar">
 		<div class="nav-title">
@@ -25,7 +24,7 @@
 			<ul>
 				<li>
 				
-				<a href="Pacientes.jsp">
+				<a href="Pacientes.jsp" class="active">
 				<span class="material-symbols-outlined">
 					groups
 				</span>
