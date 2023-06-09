@@ -5,8 +5,31 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+<style>
+<jsp:include page="css/StyleSheetLogin.css"></jsp:include>
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 </head>
 <body>
+
+	<div class="container">
+		<div class="container-login">
+
+			
+			
+		<div class="title">
+						<span class="material-symbols-outlined">
+			ecg_heart
+				</span>
+		<h2>Iniciar sesión</h2>
+		</div>
+			
+			<input type="text" placeholder="Correo Electrónico o DNI" required="true">
+			<input type="password" placeholder="Contraseña" required="true">
+			
+			<a href="Inicio.jsp" class="btn-submit" type="submit">Ingresar</a>
+		</div>
+	</div>
 
 </body>
 </html>
