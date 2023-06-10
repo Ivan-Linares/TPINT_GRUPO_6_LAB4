@@ -51,8 +51,68 @@
 		</div>
 	</div>
 	
-	<div>
 	
+	<div class="container fd-column m-auto">
+	<div class="title-section">
+		<h1>Médicos</h1>
+	</div>
+	
+	<div>
+		<table class="content-table header-table-blue"> 
+			<thead> 
+				<tr> 
+					<th>DNI</th>
+					<th>Nombre</th>
+					<th>Apellido</th> 
+					<th>Día de Atención</th> 
+					<th>Horario de Atención</th> 
+					<th>Especialidad</th> 
+					<th>Acciones</th> 
+				</tr>
+			</thead> 
+			<tbody>
+				<tr> 
+					<td><strong>27567897</strong></td> 
+					<td>Mario</td> 
+					<td>Gutierrez</td>
+					<td>Lunes</td> 
+					<td>18 a 20 hrs</td> 
+					<td>Neurología, Psicología</td> 
+					<td class="d-flex">
+						<a href="#" class="btn bg-blue">Ver</a>
+						<a href="#" class="btn bg-green">Editar</a>
+						<a href="#" class="btn bg-red">Eliminar</a>
+					 </td>
+				</tr> 
+				 <tr> 
+				 	<td><strong>23123657</strong></td> 
+					<td>Carla</td> 
+					<td>Montenegro</td>
+					<td>Miercoles</td> 
+					<td>11 a 17 hrs</td> 
+					<td>Oftalmología</td> 
+					<td class="d-flex">
+						<a href="#" class="btn bg-blue">Ver</a>
+						<a href="#" class="btn bg-green">Editar</a>
+						<a href="#" class="btn bg-red">Eliminar</a>
+					 </td>
+				 </tr> 
+				 <tr> 
+				 	<td><strong>33456912</strong></td> 
+					<td>Mariana</td> 
+					<td>Cantero</td>
+					<td>Martes</td> 
+					<td>8 a 12 hrs</td> 
+					<td>Neurología</td> 
+					<td class="d-flex">
+						<a href="#" class="btn bg-blue">Ver</a>
+						<a href="#" class="btn bg-green">Editar</a>
+						<a href="#" class="btn bg-red">Eliminar</a>
+					 </td>
+				 </tr>
+			</tbody> 
+		</table>
+	</div>
 	</div>
 </div>
 

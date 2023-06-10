@@ -84,3 +84,54 @@ a{
 .content-table tbody tr:nth-of-type(even){
 	background-color: #f3f3f3;
 }
+
+.header-table-blue th{
+	background-color: #3661ed !important;
+}
+
+.d-flex{
+	display:flex;
+	flex-direction:row;
+}
+
+.fd-row{
+	flex-direction:row;
+}
+
+.fd-column{
+	flex-direction:column;
+}
+
+.m-auto{
+	margin:auto;
+}
+
+.title-section{
+	padding-top:30px;
+}
+
+/* BOTONES */
+
+.btn{
+	all: unset;
+	cursor:pointer;
+	color: #fff;
+	border-radius:5px;
+	width:30%;
+	padding: 6px;
+    margin: 0px 5px;
+    align-self: end;
+    text-align:center;
+}
+
+.bg-blue{
+	background-color: #3661ed;
+}
+
+.bg-green{
+	background-color: #4ec326;
+}
+
+.bg-red{
+	background-color: #eb2a2a;
+}
