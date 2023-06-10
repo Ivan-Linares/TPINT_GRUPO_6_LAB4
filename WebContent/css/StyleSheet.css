@@ -102,6 +102,10 @@ a{
 	flex-direction:column;
 }
 
+.jc-sb{
+	justify-content:space-between;
+}
+
 .m-auto{
 	margin:auto;
 }
@@ -109,6 +113,40 @@ a{
 .title-section{
 	padding-top:30px;
 }
+
+.style-form .row{
+	    margin: 7px 0px;
+	    justify-content:space-between;
+	   
+}
+
+.style-form .campo{
+	
+	all: unset;
+	background-color: rgb(232 240 254);
+    padding: 10px;
+    border-bottom: 1px solid  #3661ed;
+
+}
+
+.style-form .select{
+	background-color: rgb(232 240 254);
+    padding: 10px;
+    border: 1px solid  #3661ed;
+}
+
+.style-form label{
+	font-weight:bold;
+}
+
+.style-form .row div{
+width:30%;
+}
+
+.w-50{
+	width: 40% !important;
+}
+
 
 /* BOTONES */
 
@@ -135,3 +173,11 @@ a{
 .bg-red{
 	background-color: #eb2a2a;
 }
+
+.filtro{
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	width:70%;
+}
+

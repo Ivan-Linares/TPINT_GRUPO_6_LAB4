@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
+<title>Médicos</title>
 <style>
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
@@ -53,8 +53,23 @@
 	
 	
 	<div class="container fd-column m-auto">
-	<div class="title-section">
+	<div class="title-section d-flex jc-sb">
 		<h1>Médicos</h1>
+		
+		<div class="filtro">
+		<h3>Filtrar por:</h3>
+		<select name="filtroMedicos" id="filtroMedicos">
+			<option>Nombre</option>
+			<option>Apellido</option>
+			<option>Día de Atención</option>
+			<option>Horario de Atención</option>
+			<option>Especialidad</option>
+		</select>
+		
+		<input type="text">
+		
+		<a href="InsertarMedico.jsp" class="btn bg-green">Agregar Médico</a>
+		</div>
 	</div>
 	
 	<div>
