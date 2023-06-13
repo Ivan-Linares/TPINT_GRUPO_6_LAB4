@@ -8,7 +8,7 @@
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<title>Insert title here</title>
+<title>Pacientes</title>
 </head>
 <body>
 <div class="container">
@@ -51,8 +51,76 @@
 		</div>
 	</div>
 	
+	<div class="container fd-column m-auto">
+	<div class="title-section d-flex jc-sb">
+		<h1>Pacientes</h1>		
+		<div class="filtro">
+		<h3>Filtrar por:</h3>
+		<select name="filtroPacientes" id="filtroPacientes">
+			<option>DNI</option>
+			<option>Nombre</option>
+			<option>Apellido</option>
+			<option>Correo electrónico</option>
+			<option>Teléfono</option>			
+		</select>
+		
+		<input type="text">
+		 <input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
+		<a href="InsertarPaciente.jsp" class="btn bg-green">Agregar Paciente</a>
+		</div>
+	</div>
 	<div>
-	
+		<table class="content-table header-table-blue"> 
+			<thead> 
+				<tr>
+					<th>DNI</th>
+					<th>Nombre</th>
+					<th>Apellido</th> 
+					<th>Sexo</th> 
+					<th>Nacionalidad</th> 
+					<th>Fecha Nacimiento</th> 
+					<th>Domicilio</th>
+					<th>Correo electrónico</th>
+					<th>Teléfono</th>
+					<th>Acciones</th>
+				</tr>
+			</thead> 
+			<tbody>
+				<tr> 
+					<td><strong>27567897</strong></td> 
+					<td>Rodrigo</td> 
+					<td>Aliendro</td>
+					<td>M</td> 
+					<td>Argentina</td> 
+					<td>1/1/1990</td> 
+					<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
+					<td>rodri@aliendro.com</td>
+					<td>123123123</td>					
+					<td class="d-flex">
+						<a href="#" class="btn bg-blue">Ver</a>
+						<a href="#" class="btn bg-green">Editar</a>
+						<a href="#" class="btn bg-red">Eliminar</a>
+					 </td>
+				</tr> 
+				 <tr> 
+				 	<td><strong>27567912</strong></td> 
+					<td>Lucas</td> 
+					<td>Beltran</td>
+					<td>M</td> 
+					<td>Argentina</td> 
+					<td>1/1/1990</td> 
+					<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
+					<td>lucas@beltran.com</td>
+					<td>123123123</td>					
+					<td class="d-flex">
+						<a href="#" class="btn bg-blue">Ver</a>
+						<a href="#" class="btn bg-green">Editar</a>
+						<a href="#" class="btn bg-red">Eliminar</a>
+					 </td>
+				 </tr> 				 
+			</tbody> 
+		</table>
+	</div>
 	</div>
 </div>
 

@@ -8,7 +8,7 @@
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<title>Insert title here</title>
+<title>Turnos</title>
 </head>
 <body>
 
@@ -54,9 +54,24 @@
 	</div>
 
 
-
-	<div style="margin: 20px auto;">
-		<table class="content-table"> 
+<div class="container fd-column m-auto">
+	<div class="title-section d-flex jc-sb">
+			<h1>Turnos</h1>
+			
+			<div class="filtro">
+			<h3>Filtrar por:</h3>
+			<select name="filtroTurnos" id="filtroTurnos">
+				<option>Especialidad</option>
+				<option>Medico</option>
+				<option>Paciente</option>				
+			</select>			
+			<input type="text">
+			<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
+			<a href="InsertarTurno.jsp" class="btn bg-green">Agregar Turno</a>			
+			</div>
+		</div>
+	<div>
+		<table class="content-table header-table-blue"> 
 			<thead> 
 				<tr> 
 					<th>ID Turno</th>
@@ -103,6 +118,7 @@
 			</tbody> 
 		</table>
 	</div>
+</div>
 </div>
 
 </body>
