@@ -37,11 +37,11 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		{
 			cn = DriverManager.getConnection(host+dbName, user,pass);
 			Statement st = cn.createStatement();
-			String query = "Insert into persona (dni, nombre, apellido, sexo, nacionalidad, fechaNac, correo, idDomicilio, activo) values ('"+paciente.getIdPaciente()+"','"+paciente.getNombre()+"','"+paciente.getApellido()+"','"+paciente.getSexo()+"','"+paciente.getNacionalidad()+"','"+paciente.getFechaNacimiento()+"','"+paciente.getCorreo()+"','"+paciente.getDomicilio()+"','true')";
+			String query = "Insert into persona (dni, nombre, apellido, sexo, nacionalidad, fechaNac, correo, idDomicilio, activo) values ('"+paciente.getIdPaciente()+"','"+paciente.getNombre()+"','"+paciente.getApellido()+"','"+paciente.getSexo()+"','"+paciente.getNacionalidad()+"','"+paciente.getFechaNacimiento()+"','"+paciente.getCorreo()+"','"+paciente.getDomicilio()+"','"+paciente.isActivo()+"')";
 			filas = st.executeUpdate(query);
 			
 			Statement st2 = cn.createStatement();
-			String query2 = "Insert into paciente (dni, idCobertura, activo) values ('"+paciente.getDni()+"','"+paciente.getCobertura()+"','true')";
+			String query2 = "Insert into paciente (dni, idCobertura, activo) values ('"+paciente.getDni()+"','"+paciente.getCobertura()+"','"+paciente.isActivo()+"')";
 			filas += st2.executeUpdate(query2);
 		
 		}
