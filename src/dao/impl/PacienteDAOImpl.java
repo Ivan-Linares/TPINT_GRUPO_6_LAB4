@@ -58,8 +58,37 @@ public class PacienteDAOImpl implements IPacienteDAO{
 
 	@Override
 	public boolean eliminar(Paciente paciente_a_eliminar) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean elimino = false;
+		Connection cn = null;
+		try
+		{
+			cn = DriverManager.getConnection(host+dbName, user,pass);
+			Statement st = cn.createStatement();
+			String query = "delete from paciente where id="+paciente_a_eliminar.getIdPaciente();
+			
+			cn = DriverManager.getConnection(host+dbName, user,pass);
+			Statement st2 = cn.createStatement();
+			String query2 = "delete from persona where dni="+paciente_a_eliminar.getDni();
+			
+			if(st.executeUpdate(query)==1 && st2.executeUpdate(query2)==1) {
+				elimino = true;
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return elimino;
 	}
 
 	@Override
