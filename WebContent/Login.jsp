@@ -13,22 +13,24 @@
 <body>
 
 	<div class="container">
-		<div class="container-login">
 
 			
-			
-		<div class="title">
+		<form action="serverletsLogin" method="post" class="container-login">
+		
+				<div class="title">
 						<span class="material-symbols-outlined">
 			ecg_heart
 				</span>
 		<h2>Iniciar sesión</h2>
 		</div>
+		
+					<input type="text" placeholder="Email" name="email" required="true">
+					<input type="password" placeholder="Contraseña" name="password" required="true">
 			
-			<input type="text" placeholder="Correo Electrónico o DNI" required="true">
-			<input type="password" placeholder="Contraseña" required="true">
+					<button class="btn-submit" type="submit">Iniciar Sesión</button>
 			
-			<a href="Inicio.jsp" class="btn-submit" type="submit">Ingresar</a>
-		</div>
+		</form>
+		
 	</div>
 
 </body>
