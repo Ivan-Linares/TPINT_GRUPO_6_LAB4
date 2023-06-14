@@ -13,8 +13,8 @@ public class Conexion
 	{
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver"); // quitar si no es necesario
-			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/NOMBRE_DE_LA_BASE","root","root");
+			Class.forName("com.mysql.jdbc.Driver"); 
+			this.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/ClinicaDb","root","root");
 			this.connection.setAutoCommit(false);
 		}
 		catch(Exception e)
