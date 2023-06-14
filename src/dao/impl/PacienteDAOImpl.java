@@ -18,16 +18,13 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, nacionalidad, fechaNac, correo, idDomicilio, activo) values (?,?,?,?,?,?,?,?,?)";
 	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura, activo) values (?,?,?)";
 	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais, Activo) values (?,?,?,?,?)";
+	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono, Activo) values (?,?,?)";
 	private static final String deletePaciente = "delete from pacientes where id=?";
 	private static final String deletePersona = "delete from personas where dni=?";
+	private static final String deleteTelefono = "delete from TelefonosXPersonas where dni=0";
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listar = "select * from personas";
-	
-	private String host = "jdbc:mysql://localhost:3306/";
-	private String user = "root";
-	private String pass = "root";
-	private String dbName = "clinicadb";
 	
 	private int agregarDomicilio(Paciente paciente) {
 		
@@ -58,6 +55,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		boolean insertarPersona = false;
 		boolean insertarPaciente = false;
+		boolean insertarTelefono = false;
 		
 		try 
 		{
@@ -98,6 +96,11 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				insertarPaciente = true;
 			}
 			
+			statement = conexion.prepareStatement(insertTelefono);
+			statement.setString(1, paciente.getDni());
+			statement.setString(2, paciente.getTelefono().getTelefono());
+			statement.setBoolean(3, paciente.isActivo());
+			
 		}
 		catch(Exception e)
 		{
@@ -128,6 +131,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		
 		boolean eliminoPaciente = false;
 		boolean eliminoPersona = false;
+		boolean eliminoTelefono = false;
 		
 		try
 		{
@@ -146,13 +150,22 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				conexion.commit();
 				eliminoPersona = true;
 			}
+			
+			statement = conexion.prepareStatement(deleteTelefono);
+			statement.setString(1, paciente_a_eliminar.getDni());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				eliminoTelefono = true;
+			}
+			
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		if(eliminoPaciente == true && eliminoPersona == true) {
+		if(eliminoPaciente == true && eliminoPersona == true && eliminoTelefono == true) {
 			return true;
 		}else {
 			return false;
