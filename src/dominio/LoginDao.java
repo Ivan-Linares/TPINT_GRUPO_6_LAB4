@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class LoginDao {
 
 	private String host = "jdbc:mysql://localhost:3306/";
-	private String user = "root";
+	private String usuario = "root";
 	private String pass = "root";
 	private String dbName = "clinicadb";
 	
@@ -27,7 +27,7 @@ public class LoginDao {
 		
 		try
 		{
-			cn = DriverManager.getConnection(host+dbName, user,pass);
+			cn = DriverManager.getConnection(host+dbName, usuario, pass);
 			Statement st = cn.createStatement();
 			String query = "Select * from usuario where email = '"+user.getEmail()+"' and password = '"+user.getPassword()+"'";
 			filas = st.executeUpdate(query);

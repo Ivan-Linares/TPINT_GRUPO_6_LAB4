@@ -1,26 +1,64 @@
 package dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.IPacienteDAO;
 import dominio.Paciente;
+import dominio.Persona;
 
 public class PacienteDAOImpl implements IPacienteDAO{
-	private static final String insert = "";
-	private static final String delete = "";
-	private static final String update = "";
-	private static final String listar = "";
+	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, nacionalidad, fechaNac, correo, idDomicilio, activo) values (?,?,?,?,?,?,?,?,?)";
+	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura, activo) values (?,?,?)";
+	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais, Activo) values (?,?,?,?,?)";
+	private static final String deletePaciente = "delete from pacientes where id=?";
+	private static final String deletePersona = "delete from personas where dni=?";
+	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
+	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
+	private static final String listar = "select * from personas";
 	
 	private String host = "jdbc:mysql://localhost:3306/";
 	private String user = "root";
 	private String pass = "root";
 	private String dbName = "clinicadb";
 	
+	private int agregarDomicilio(Paciente paciente) {
+		
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		int agregoDomicilio = 0;
+		
+		try {
+			
+			statement = conexion.prepareStatement(insertDomicilio);
+			statement.setString(1, paciente.getDomicilio().getDireccion());
+			statement.setString(2, paciente.getDomicilio().getLocalidad());
+			statement.setString(3, paciente.getDomicilio().getProvincia());
+			statement.setString(4, paciente.getNacionalidad());
+			statement.setBoolean(5, paciente.isActivo());
+			agregoDomicilio = statement.executeUpdate();	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return agregoDomicilio;
+	}
+	
 	@Override
 	public boolean agregar(Paciente paciente) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean insertarPersona = false;
+		boolean insertarPaciente = false;
+		
 		try 
 		{
 			Class.forName("com.mysql.jdbc.Driver");
@@ -30,34 +68,54 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			e.printStackTrace();
 		}
 		
-		int filas=0;
-		Connection cn = null;
-		
 		try
 		{
-			cn = DriverManager.getConnection(host+dbName, user,pass);
-			Statement st = cn.createStatement();
-			String query = "Insert into persona (dni, nombre, apellido, sexo, nacionalidad, fechaNac, correo, idDomicilio, activo) values ('"+paciente.getIdPaciente()+"','"+paciente.getNombre()+"','"+paciente.getApellido()+"','"+paciente.getSexo()+"','"+paciente.getNacionalidad()+"','"+paciente.getFechaNacimiento()+"','"+paciente.getCorreo()+"','"+paciente.getDomicilio()+"','"+paciente.isActivo()+"')";
-			filas = st.executeUpdate(query);
+			agregarDomicilio(paciente);
 			
-			Statement st2 = cn.createStatement();
-			String query2 = "Insert into paciente (dni, idCobertura, activo) values ('"+paciente.getDni()+"','"+paciente.getCobertura()+"','"+paciente.isActivo()+"')";
-			filas += st2.executeUpdate(query2);
-		
+			statement = conexion.prepareStatement(insertPersona);
+			statement.setString(1, paciente.getDni());
+			statement.setString(2, paciente.getNombre());
+			statement.setString(3, paciente.getApellido());
+			statement.setLong(4, paciente.getSexo());
+			statement.setString(5, paciente.getNacionalidad());
+			statement.setDate(6, (Date) paciente.getFechaNacimiento());
+			statement.setString(7, paciente.getCorreo());
+			statement.setInt(8, paciente.getDomicilio().getIdDomicilio());
+			statement.setBoolean(9, paciente.isActivo());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				insertarPersona = true;
+			}
+			
+			statement = conexion.prepareStatement(insertPaciente);
+			statement.setString(1, paciente.getDni());
+			statement.setInt(2, paciente.getCobertura().getId());
+			statement.setBoolean(3, paciente.isActivo());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				insertarPaciente = true;
+			}
+			
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		if(filas==2) {
+		if(insertarPaciente == true && insertarPersona == true) {
 			return true;
-		}else
+		}else {
 			return false;
+		}
 	}
 
 	@Override
 	public boolean eliminar(Paciente paciente_a_eliminar) {
+		
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
 		try 
 		{
@@ -68,39 +126,83 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			e.printStackTrace();
 		}
 		
-		boolean elimino = false;
-		Connection cn = null;
+		boolean eliminoPaciente = false;
+		boolean eliminoPersona = false;
+		
 		try
 		{
-			cn = DriverManager.getConnection(host+dbName, user,pass);
-			Statement st = cn.createStatement();
-			String query = "delete from paciente where id="+paciente_a_eliminar.getIdPaciente();
+			statement = conexion.prepareStatement(deletePaciente);
+			statement.setInt(1, paciente_a_eliminar.getIdPaciente());
 			
-			cn = DriverManager.getConnection(host+dbName, user,pass);
-			Statement st2 = cn.createStatement();
-			String query2 = "delete from persona where dni="+paciente_a_eliminar.getDni();
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				eliminoPaciente = true;
+			}
 			
-			if(st.executeUpdate(query)==1 && st2.executeUpdate(query2)==1) {
-				elimino = true;
+			statement = conexion.prepareStatement(deletePersona);
+			statement.setString(1, paciente_a_eliminar.getDni());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				eliminoPersona = true;
 			}
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
-		return elimino;
+		
+		if(eliminoPaciente == true && eliminoPersona == true) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 
 	@Override
 	public List<Paciente> listarPacientes() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public boolean modificar(int ID) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean modificar = false;
+		
+		Paciente paciente = null;
+		
+		for (Paciente x : listarPacientes()) {
+			if(x.getIdPaciente() == ID) {
+				paciente = x;
+			}
+		}
+		
+		try {
+			
+			statement = conexion.prepareStatement(updatePersona);
+			statement.setString(1, paciente.getDni());
+			statement.setString(2, paciente.getNombre());
+			statement.setString(3, paciente.getApellido());
+			statement.setLong(4, paciente.getSexo());
+			statement.setString(5, paciente.getNacionalidad());
+			statement.setDate(6, (Date) paciente.getFechaNacimiento());
+			statement.setString(7, paciente.getCorreo());
+			statement.setInt(8, paciente.getDomicilio().getIdDomicilio());
+			statement.setBoolean(9, paciente.isActivo());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				modificar = true;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return modificar;
 	}
 
 }
