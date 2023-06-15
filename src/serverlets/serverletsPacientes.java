@@ -24,7 +24,7 @@ public class serverletsPacientes extends HttpServlet  {
 		
 		Usuario var = (Usuario) request.getSession().getAttribute("usuario");
 		   
-		if (var == null) {
+		if(var == null){
 			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 			rd.forward(request, response);
 		}
