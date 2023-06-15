@@ -6,7 +6,7 @@ public class Persona {
 	private String dni;
 	private String nombre;
 	private String apellido;
-	private char sexo;
+	private String sexo;
 	private String nacionalidad;
 	private Date fechaNacimiento;
 	private String correo;
@@ -14,7 +14,7 @@ public class Persona {
 	private Telefono telefono;
 	private boolean activo;	
 	
-	public Persona(String dni, String nombre, String apellido, char sexo, String nacionalidad, Date fechaNacimiento,
+	public Persona(String dni, String nombre, String apellido, String sexo, String nacionalidad, Date fechaNacimiento,
 			String correo, dominio.Domicilio domicilio, dominio.Telefono telefono, boolean activo) {		
 		this.dni = dni;
 		this.nombre = nombre;
@@ -27,6 +27,8 @@ public class Persona {
 		this.telefono = telefono;
 		this.activo = activo;
 	}
+	
+	public Persona() {};
 	
 	public String getDni() {
 		return dni;
@@ -46,10 +48,10 @@ public class Persona {
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
 	}
-	public char getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
-	public void setSexo(char sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 	public String getNacionalidad() {

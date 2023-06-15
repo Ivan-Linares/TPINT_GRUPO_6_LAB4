@@ -19,9 +19,9 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura, activo) values (?,?,?)";
 	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais, Activo) values (?,?,?,?,?)";
 	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono, Activo) values (?,?,?)";
-	private static final String deletePaciente = "delete from pacientes where id=?";
-	private static final String deletePersona = "delete from personas where dni=?";
-	private static final String deleteTelefono = "delete from TelefonosXPersonas where dni=0";
+	private static final String deletePaciente = "update pacientes set Activo = 0 where idPaciente =?";
+	private static final String deletePersona = "update personas set Activo = 0 where dni=?";
+	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=0";
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listar = "select * from personas";
@@ -173,9 +173,41 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	}
 
 	@Override
-	public List<Paciente> listarPacientes() {
+	public ArrayList<Paciente> listarPacientes() {
+
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
-		return null;
+		ArrayList<Paciente> listaPacientes = new ArrayList<Paciente>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(listar);
+			
+			while(rs.next()) {
+				Paciente persona = new Paciente();
+				persona.setDni(rs.getString("dni"));
+				persona.setNombre(rs.getString("nombre"));
+				persona.setApellido(rs.getString("apellido"));
+				persona.setSexo(rs.getString("sexo"));
+				persona.setFechaNacimiento(rs.getDate("fechaNacimiento"));
+				persona.setCorreo(rs.getString("correo"));
+				persona.setActivo(rs.getBoolean("activo"));
+				
+				listaPacientes.add(persona);
+			}
+			
+			
+			
+			
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaPacientes;
 	}
 
 	@Override
@@ -199,7 +231,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(1, paciente.getDni());
 			statement.setString(2, paciente.getNombre());
 			statement.setString(3, paciente.getApellido());
-			statement.setLong(4, paciente.getSexo());
+			statement.setString(4, paciente.getSexo());
 			statement.setString(5, paciente.getNacionalidad());
 			statement.setDate(6, (Date) paciente.getFechaNacimiento());
 			statement.setString(7, paciente.getCorreo());

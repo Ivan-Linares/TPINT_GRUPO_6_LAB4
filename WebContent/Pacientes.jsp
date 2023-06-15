@@ -1,3 +1,6 @@
+<%@ page import="java.util.ArrayList"%>
+<%@ page import="dominio.Paciente"%>
+<%@ page import="java.util.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -54,7 +57,8 @@
 	<div class="container fd-column m-auto">
 	<div class="title-section d-flex jc-sb">
 		<h1>Pacientes</h1>		
-		<div class="filtro">
+		
+<form method="get" action="serverletsPacientes"  class="filtro">
 		<h3>Filtrar por:</h3>
 		<select name="filtroPacientes" id="filtroPacientes">
 			<option>DNI</option>
@@ -65,10 +69,23 @@
 		</select>
 		
 		<input type="text">
-		 <input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
-		<a href="InsertarPaciente.jsp" class="btn bg-green">Agregar Paciente</a>
-		</div>
+		 <input type="submit" name="btnBuscarPacientes" class="btn bg-blue" value="Buscar"/> 
+		 
+		 <a href="InsertarPaciente.jsp" class="btn bg-green">Agregar Paciente</a>
+		 </form>
+		
+		
 	</div>
+	
+	<%
+	ArrayList<Paciente> listaPacientes = new ArrayList<Paciente>();
+
+	if(request.getAttribute("listaPacientes") != null){
+		listaPacientes = ((ArrayList<Paciente>)request.getAttribute("listaPacientes"));
+	
+	}
+%>
+
 	<div>
 		<table class="content-table header-table-blue"> 
 			<thead> 
@@ -86,43 +103,33 @@
 				</tr>
 			</thead> 
 			<tbody>
+			
+			<%for(Paciente paciente : listaPacientes){%>
 				<tr> 
-					<td><strong>27567897</strong></td> 
-					<td>Rodrigo</td> 
-					<td>Aliendro</td>
-					<td>M</td> 
+					<td><strong><%=paciente.getDni() %></strong></td> 
+					<td><%= paciente.getNombre() %></td> 
+					<td><%= paciente.getApellido()%></td>
+					<td><%= paciente.getSexo()%></td> 
 					<td>Argentina</td> 
-					<td>1/1/1990</td> 
+					<td><%= paciente.getFechaNacimiento() %></td> 
 					<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
-					<td>rodri@aliendro.com</td>
+					<td><%=paciente.getCorreo() %></td>
 					<td>123123123</td>					
 					<td class="d-flex">
 						<a href="#" class="btn bg-blue">Ver</a>
 						<a href="#" class="btn bg-green">Editar</a>
 						<a href="#" class="btn bg-red">Eliminar</a>
 					 </td>
-				</tr> 
-				 <tr> 
-				 	<td><strong>27567912</strong></td> 
-					<td>Lucas</td> 
-					<td>Beltran</td>
-					<td>M</td> 
-					<td>Argentina</td> 
-					<td>1/1/1990</td> 
-					<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
-					<td>lucas@beltran.com</td>
-					<td>123123123</td>					
-					<td class="d-flex">
-						<a href="#" class="btn bg-blue">Ver</a>
-						<a href="#" class="btn bg-green">Editar</a>
-						<a href="#" class="btn bg-red">Eliminar</a>
-					 </td>
-				 </tr> 				 
+				</tr> 			
+			<%} %>
+					
 			</tbody> 
 		</table>
 	</div>
 	</div>
 </div>
+
+
 
 </body>
 </html>
