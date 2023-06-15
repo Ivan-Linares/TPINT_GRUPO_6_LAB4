@@ -74,7 +74,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(1, paciente.getDni());
 			statement.setString(2, paciente.getNombre());
 			statement.setString(3, paciente.getApellido());
-			statement.setLong(4, paciente.getSexo());
+			statement.setString(4, paciente.getSexo());
 			statement.setString(5, paciente.getNacionalidad());
 			statement.setDate(6, (Date) paciente.getFechaNacimiento());
 			statement.setString(7, paciente.getCorreo());

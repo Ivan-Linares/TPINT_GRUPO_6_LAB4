@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Medico extends Persona {
-	public Medico(String dni, String nombre, String apellido, char sexo, String nacionalidad, Date fechaNacimiento,
+	public Medico(String dni, String nombre, String apellido, String sexo, String nacionalidad, Date fechaNacimiento,
 			String correo, Domicilio domicilio, Telefono telefono, boolean activo) {
 		super(dni, nombre, apellido, sexo, nacionalidad, fechaNacimiento, correo, domicilio, telefono, activo);
 		// TODO Auto-generated constructor stub

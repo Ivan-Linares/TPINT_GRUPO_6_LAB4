@@ -9,8 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.impl.LoginDAO;
 import dominio.Login;
 import dominio.LoginDao;
+import dominio.Usuario;
 
 @WebServlet("/serverletsLogin")
 public class serverletsLogin extends HttpServlet 
@@ -23,7 +25,7 @@ public class serverletsLogin extends HttpServlet
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		int filas = 0;
+		/*int filas = 0;
 		
 		Login user = new Login();
 		user.setEmail(request.getParameter("email"));
@@ -42,7 +44,32 @@ public class serverletsLogin extends HttpServlet
 		}
 		
 		RequestDispatcher rd2 = request.getRequestDispatcher(requestDispacherRedirect); 
-		rd2.forward(request, response);
+		rd2.forward(request, response);*/
+		
+		Login user = new Login();
+		user.setEmail(request.getParameter("email"));
+		user.setPassword(request.getParameter("password"));
+		
+		String requestDispacherRedirect = "";
+		
+		Usuario usuario = null;
+		
+		LoginDAO login = new LoginDAO();
+		
+		if(login.iniciarSesion(user)) {
+			usuario = login.obtenerUsuario(user.getEmail());
+			if(usuario != null) {
+				request.getSession().setAttribute("usuario", usuario);
+				requestDispacherRedirect = "/Inicio.jsp";
+			}			
+		}
+		else {
+			request.getSession().setAttribute("usuario", usuario);
+			requestDispacherRedirect = "/Login.jsp";
+		}
+		
+		RequestDispatcher rd2 = request.getRequestDispatcher(requestDispacherRedirect); 
+		rd2.forward(request, response);		
 	}
 
 }

@@ -4,11 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import dominio.Login;
+import dominio.Usuario;
 
 public class LoginDAO {
 	private String query = "SELECT * FROM Usuarios WHERE Email = ? AND Password = ?";
+	private String queryObtenerUsuario = "SELECT IdUsuario, EsAdministrador FROM Usuario WHERE Email = ?";
 	
-	public int iniciarSesion(Login login) {
+	public boolean iniciarSesion(Login login) {
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		ResultSet filas;		
@@ -26,6 +28,25 @@ public class LoginDAO {
 		finally {
 			conexion.cerrarConexion();
 		}		
-		return resultado;
+		if(resultado == 1) return true;
+		return false;
+	}
+	
+	public Usuario obtenerUsuario(String email) {
+		PreparedStatement statement;
+		Conexion conexion = Conexion.getConexion();
+		ResultSet rs;
+		try {
+			statement = conexion.getSQLConexion().prepareStatement(queryObtenerUsuario);
+			statement.setString(1, email);
+			rs = statement.executeQuery();
+			if(rs.next()) {
+				return new Usuario(rs.getInt("IdUsuario"), rs.getBoolean("EsAdministrador"));
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
