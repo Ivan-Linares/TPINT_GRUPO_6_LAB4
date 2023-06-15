@@ -81,8 +81,13 @@
 	ArrayList<Paciente> listaPacientes = new ArrayList<Paciente>();
 
 	if(request.getAttribute("listaPacientes") != null){
-		listaPacientes = ((ArrayList<Paciente>)request.getAttribute("listaPacientes"));
-	
+		Object obj = request.getAttribute("listaPacientes");
+		if(obj instanceof ArrayList<?>){
+			listaPacientes = (ArrayList<Paciente>) obj;
+		}
+		else{
+			listaPacientes = null;
+		}		
 	}
 %>
 
@@ -103,26 +108,26 @@
 				</tr>
 			</thead> 
 			<tbody>
-			
-			<%for(Paciente paciente : listaPacientes){%>
-				<tr> 
-					<td><strong><%=paciente.getDni() %></strong></td> 
-					<td><%= paciente.getNombre() %></td> 
-					<td><%= paciente.getApellido()%></td>
-					<td><%= paciente.getSexo()%></td> 
-					<td>Argentina</td> 
-					<td><%= paciente.getFechaNacimiento() %></td> 
-					<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
-					<td><%=paciente.getCorreo() %></td>
-					<td>123123123</td>					
-					<td class="d-flex">
-						<a href="#" class="btn bg-blue">Ver</a>
-						<a href="#" class="btn bg-green">Editar</a>
-						<a href="#" class="btn bg-red">Eliminar</a>
-					 </td>
-				</tr> 			
-			<%} %>
-					
+			<% if (listaPacientes != null) { %>
+				<%for(Paciente paciente : listaPacientes){%>
+					<tr> 
+						<td><strong><%=paciente.getDni() %></strong></td> 
+						<td><%= paciente.getNombre() %></td> 
+						<td><%= paciente.getApellido()%></td>
+						<td><%= paciente.getSexo()%></td> 
+						<td>Argentina</td> 
+						<td><%= paciente.getFechaNacimiento() %></td> 
+						<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
+						<td><%=paciente.getCorreo() %></td>
+						<td>123123123</td>					
+						<td class="d-flex">
+							<a href="#" class="btn bg-blue">Ver</a>
+							<a href="#" class="btn bg-green">Editar</a>
+							<a href="#" class="btn bg-red">Eliminar</a>
+						 </td>
+					</tr> 			
+				<%} %>
+			<%} %>		
 			</tbody> 
 		</table>
 	</div>
