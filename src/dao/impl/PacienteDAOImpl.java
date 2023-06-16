@@ -7,8 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import dao.IPacienteDAO;
 import dominio.Domicilio;
@@ -16,10 +19,10 @@ import dominio.Paciente;
 import dominio.Persona;
 
 public class PacienteDAOImpl implements IPacienteDAO{
-	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, nacionalidad, fechaNac, correo, idDomicilio, activo) values (?,?,?,?,?,?,?,?,?)";
-	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura, activo) values (?,?,?)";
-	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais, Activo) values (?,?,?,?,?)";
-	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono, Activo) values (?,?,?)";
+	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, idNacionalidad, fechaNacimiento, correo, idDomicilio) values (?,?,?,?,?,?,?,?)";
+	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura) values (?,?)";
+	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais) values (?,?,?,?)";
+	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono) values (?,?)";
 	private static final String deletePaciente = "update pacientes set Activo = 0 where dni =?";
 	private static final String deletePersona = "update personas set Activo = 0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=0";
@@ -39,8 +42,8 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(1, paciente.getDomicilio().getDireccion());
 			statement.setString(2, paciente.getDomicilio().getLocalidad());
 			statement.setString(3, paciente.getDomicilio().getProvincia());
-			statement.setString(4, paciente.getNacionalidad());
-			statement.setBoolean(5, paciente.isActivo());
+			statement.setInt(4, 1); // arreglar
+			
 			agregoDomicilio = statement.executeUpdate();	
 			
 		} catch (Exception e) {
@@ -76,11 +79,16 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(2, paciente.getNombre());
 			statement.setString(3, paciente.getApellido());
 			statement.setString(4, paciente.getSexo());
-			statement.setString(5, paciente.getNacionalidad());
-			statement.setDate(6, (Date) paciente.getFechaNacimiento());
+			statement.setInt(5, 1); //Es ID nacionalidad
+
+			SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);		
+			SimpleDateFormat print = new SimpleDateFormat("yyyyddMM");		
+			Long datesql = Long.parseLong(print.format(paciente.getFechaNacimiento()));
+			java.sql.Date sqlDate = new java.sql.Date(datesql);		
+			statement.setDate(6, sqlDate);
+			
 			statement.setString(7, paciente.getCorreo());
-			statement.setInt(8, paciente.getDomicilio().getIdDomicilio());
-			statement.setBoolean(9, paciente.isActivo());
+			statement.setInt(8, 1);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -90,7 +98,6 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement = conexion.prepareStatement(insertPaciente);
 			statement.setString(1, paciente.getDni());
 			statement.setInt(2, paciente.getCobertura().getId());
-			statement.setBoolean(3, paciente.isActivo());
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -100,7 +107,6 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement = conexion.prepareStatement(insertTelefono);
 			statement.setString(1, paciente.getDni());
 			statement.setString(2, paciente.getTelefono().getTelefono());
-			statement.setBoolean(3, paciente.isActivo());
 			
 		}
 		catch(Exception e)

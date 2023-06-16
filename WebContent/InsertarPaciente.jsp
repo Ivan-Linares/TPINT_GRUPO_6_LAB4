@@ -43,26 +43,26 @@
 		<div class="container fd-column m-auto" style="width:100%;
 	    margin: 0px 100px;">		
 			<div>		
-				<form>
+				<form method="post" action="serverletsPacientes">
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 					
 						<div class="d-flex row">
 							<div class="d-flex fd-column">
 								<label>DNI</label>
-								<input type="number" class="campo">
+								<input type="number" required="true" name="dni" class="campo">
 							</div>
 					
 							<div class="d-flex fd-column">
 								<label>Fecha de Nacimiento</label>
-								<input type="Date" class="campo">
+								<input type="Date" required="true" name="fechaNacimiento" class="campo">
 							</div>
 							
 							<div class="d-flex fd-column">
 								<label>Sexo</label>
 								<select name="sexoSelect" class="select">
-									<option>Femenino</option>
-									<option>Masculino</option>
-									<option>Otro</option>
+									<option value="F">Femenino</option>
+									<option value="M">Masculino</option>
+									<option value="O">Otro</option>
 								</select>
 							</div>						
 						</div>
@@ -70,20 +70,20 @@
 						<div class="d-flex row">
 							<div class="d-flex fd-column">
 								<label>Nombre</label>
-								<input type="text" class="campo">
+								<input type="text" required="true" name="nombre" class="campo">
 							</div>
 					
 							<div class="d-flex fd-column">
 								<label>Apellido</label>
-								<input type="text" class="campo">
+								<input type="text" required="true" name="apellido" class="campo">
 							</div>
 							
 							<div class="d-flex fd-column">
 								<label>Nacionalidad</label>
 								<select name="nacionalidadSelect" class="select">
-									<option>Argentina</option>
-									<option>Bolivia</option>
-									<option>Peru</option>
+									<option value="1">Argentina</option>
+									<option value="2">Bolivia</option>
+									<option value="3">Peru</option>
 								</select>
 							</div>
 						</div>
@@ -91,12 +91,12 @@
 						<div class="d-flex row">
 							<div class="d-flex fd-column w-50">
 								<label>Correo Electrónico</label>
-								<input type="mail" class="campo">
+								<input type="mail" required="true" name="correo" class="campo">
 							</div>
 					
 							<div class="d-flex fd-column w-50">
 								<label>Telefono</label>
-								<input type="number" class="campo">
+								<input type="number" required="true" name="telefono" class="campo">
 							</div>							
 						</div>
 					
@@ -106,21 +106,34 @@
 					<div class="d-flex row">					
 						<div class="d-flex fd-column">
 							<label>Dirección</label>
-							<input type="Text" class="campo">
+							<input type="Text" required="true"  name="direccion" class="campo">
 						</div>
 						
 						<div class="d-flex fd-column">
 							<label>Localidad</label>
-							<input type="Text" class="campo">
+							<input type="Text" required="true" name="localidad"  class="campo">
 						</div>
 						
 						<div class="d-flex fd-column">
 							<label>Provincia</label>
-							<input type="Text" class="campo">
+							<input type="Text" required="true" name="provincia"  class="campo">
 						</div>				
-					</div>		
+					</div>	
+					
+					<div class="d-flex row">
+					<div class="d-flex fd-column">
+								<label>Cobertura</label>
+								<select name="coberturaSelect" class="select">
+									<option value="1">Ejemplo 1</option>
+									<option value="2">Ejemplo 2</option>
+									<option value="3">Etc</option>
+								</select>
+							</div>
+							</div>	
 					
 					</div>					
+					
+					<button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
 				</form>
 			</div>
 		</div>
