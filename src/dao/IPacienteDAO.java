@@ -5,7 +5,7 @@ import dominio.Paciente;
 
 public interface IPacienteDAO {
 	public boolean agregar(Paciente paciente);
-	public boolean eliminar(Paciente paciente_a_eliminar);
+	public boolean eliminar(String dniPaciente);
 	public boolean modificar (int ID);
 	public List<Paciente> listarPacientes();
 }

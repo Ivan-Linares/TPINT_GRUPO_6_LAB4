@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.IPacienteDAO;
+import dominio.Domicilio;
 import dominio.Paciente;
 import dominio.Persona;
 
@@ -19,12 +20,12 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura, activo) values (?,?,?)";
 	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais, Activo) values (?,?,?,?,?)";
 	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono, Activo) values (?,?,?)";
-	private static final String deletePaciente = "update pacientes set Activo = 0 where idPaciente =?";
+	private static final String deletePaciente = "update pacientes set Activo = 0 where dni =?";
 	private static final String deletePersona = "update personas set Activo = 0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=0";
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
-	private static final String listar = "select * from personas";
+	private static final String listar = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais";
 	
 	private int agregarDomicilio(Paciente paciente) {
 		
@@ -115,7 +116,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	}
 
 	@Override
-	public boolean eliminar(Paciente paciente_a_eliminar) {
+	public boolean eliminar(String dniPaciente) {
 		
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
@@ -135,8 +136,9 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		
 		try
 		{
+
 			statement = conexion.prepareStatement(deletePaciente);
-			statement.setInt(1, paciente_a_eliminar.getIdPaciente());
+			statement.setString(1, dniPaciente);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -144,15 +146,16 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			}
 			
 			statement = conexion.prepareStatement(deletePersona);
-			statement.setString(1, paciente_a_eliminar.getDni());
+			statement.setString(1, dniPaciente);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
-				eliminoPersona = true;
+				eliminoPersona = true;			
 			}
 			
+			//agregar validacion si tiene tel asociados
 			statement = conexion.prepareStatement(deleteTelefono);
-			statement.setString(1, paciente_a_eliminar.getDni());
+			statement.setString(1, dniPaciente);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -194,6 +197,8 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				persona.setFechaNacimiento(rs.getDate("fechaNacimiento"));
 				persona.setCorreo(rs.getString("correo"));
 				persona.setActivo(rs.getBoolean("activo"));
+				persona.setNacionalidad(rs.getString("nacionalidad"));
+				
 				
 				listaPacientes.add(persona);
 			}

@@ -112,10 +112,9 @@
 					<th>Apellido</th> 
 					<th>Sexo</th> 
 					<th>Nacionalidad</th> 
-					<th>Fecha Nacimiento</th> 
-					<th>Domicilio</th>
+					<th>Fecha Nacimiento</th> 					
 					<th>Correo electrónico</th>
-					<th>Teléfono</th>
+					<th>Activo</th>
 					<th>Acciones</th>
 				</tr>
 			</thead> 
@@ -123,20 +122,33 @@
 			<% if (listaPacientes != null) { %>
 				<%for(Paciente paciente : listaPacientes){%>
 					<tr> 
-						<td><strong><%=paciente.getDni() %></strong></td> 
-						<td><%= paciente.getNombre() %></td> 
-						<td><%= paciente.getApellido()%></td>
-						<td><%= paciente.getSexo()%></td> 
-						<td>Argentina</td> 
-						<td><%= paciente.getFechaNacimiento() %></td> 
-						<td>Figueroa Alcorta 7597, CABA, Buenos Aires</td> 
-						<td><%=paciente.getCorreo() %></td>
-						<td>123123123</td>					
-						<td class="d-flex">
-							<a href="#" class="btn bg-blue">Ver</a>
-							<a href="#" class="btn bg-green">Editar</a>
-							<a href="#" class="btn bg-red">Eliminar</a>
-						 </td>
+					<% String nombreClase ="bg-green" ; 
+					String textButtonActivo ="Activo";
+					if(!(paciente.isActivo())){
+						 nombreClase = "bg-red"; 
+						 textButtonActivo ="Inactivo";
+					}
+					%>
+						<form action="serverletsPacientes" method="post" class="<%=nombreClase%>">
+
+							<td><strong><%=paciente.getDni() %></strong> <input type="hidden" name="dniPaciente" value="<%=paciente.getDni() %>"> </td> 
+							<td><%= paciente.getNombre() %></td> 
+							<td><%= paciente.getApellido()%></td>
+							<td><%= paciente.getSexo()%></td> 
+							<td><%= paciente.getNacionalidad() %></td> 
+							<td><%= paciente.getFechaNacimiento() %></td> 
+							
+							<td><%=paciente.getCorreo() %></td>	
+							<td><button class="btn w-100 <%= nombreClase%>">
+							 <%= textButtonActivo%>
+							</button></td> 			
+							<td class="d-flex">
+								<button type="submit" name="btn-ver-paciente" class="btn bg-blue">Ver</button>
+								<button type="submit" name="btn-editar-paciente" class="btn bg-green">Editar</button>
+								<button type="submit" name="btn-eliminar-paciente" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al Paciente ?');">Eliminar</button>
+						 	</td>
+						 
+						 </form>
 					</tr> 			
 				<%} %>
 			<%} %>		

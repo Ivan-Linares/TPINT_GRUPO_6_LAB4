@@ -1,6 +1,7 @@
 package serverlets;
 
 import java.io.IOException;
+import dao.impl.*;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -30,18 +31,48 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else {
 			
-				PacienteDAOImpl pDao = new PacienteDAOImpl();
-				ArrayList<Paciente> listaPacientes  = pDao.listarPacientes();
-				
-				request.setAttribute("listaPacientes", listaPacientes);
-				
+			listarPacientes(request);
 				RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 				rd.forward(request, response);
+
 				if(request.getParameter("btnBuscarPacientes") != null) {
 					//filtrado
 			}
 		}
 		
+	}
+	
+	private void listarPacientes(HttpServletRequest request) {
+		PacienteDAOImpl pDao = new PacienteDAOImpl();
+		ArrayList<Paciente> listaPacientes  = pDao.listarPacientes();
+		
+		request.setAttribute("listaPacientes", listaPacientes);
+		
+	}
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		PacienteDAOImpl pDao = new PacienteDAOImpl();
+		if(request.getParameter("btn-ver-paciente") != null) 
+		{
+			String dniPaciente = request.getParameter("dniPaciente").toString();
+			System.out.println("entrooo ver" + dniPaciente);
+		}
+		
+		else if(request.getParameter("btn-editar-paciente") != null) {
+			String dniPaciente =request.getParameter("dniPaciente").toString();
+			System.out.println("entrooo editar");
+		}
+		else if(request.getParameter("btn-eliminar-paciente") != null) {
+			System.out.println("entrooo eliminar");
+			String dniPaciente = request.getParameter("dniPaciente").toString();
+			pDao.eliminar(dniPaciente);
+			
+		}
+		
+		listarPacientes(request);
+		RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
+		rd.forward(request, response);
 	}
 
 }

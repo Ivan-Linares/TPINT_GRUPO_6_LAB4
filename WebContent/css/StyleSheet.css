@@ -83,6 +83,10 @@ a{
 	box-shadow: 0 0 20px rgba(0,0,0,0.15);
 }
 
+.obj-inactivo content-table td {
+	
+}
+
 .content-table th{
 	background-color: black;
 	color: #ffffff;
@@ -160,6 +164,10 @@ width:30%;
 
 .w-50{
 	width: 40% !important;
+}
+
+.w-100{
+	Width: 100% !important;
 }
 
 
