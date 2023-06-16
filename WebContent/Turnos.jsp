@@ -1,3 +1,4 @@
+<%@ page import="dominio.Usuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -26,7 +27,7 @@
 			<ul>
 				<li>
 				
-				<a href="Pacientes.jsp">
+				<a href="serverletsPacientes?method=get">
 				<span class="material-symbols-outlined">
 					groups
 				</span>
@@ -50,6 +51,17 @@
 				</span>	Turnos</a>
 				</li>
 			</ul>
+		</div>
+		
+		<div class="user-container">
+			
+			
+			<%if(session.getAttribute("usuario") != null){
+				Usuario user = (Usuario)session.getAttribute("usuario");
+				%>	
+				<strong><%= user.getCorreo() %></strong>
+			<%} %>
+			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
 

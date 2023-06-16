@@ -24,28 +24,13 @@ public class serverletsLogin extends HttpServlet
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		/*int filas = 0;
 		
-		Login user = new Login();
-		user.setEmail(request.getParameter("email"));
-		user.setPassword(request.getParameter("password"));
 		
-		LoginDao login = new LoginDao();
-		login.iniciarSesion(user);
-		String requestDispacherRedirect = "";
-		
-		if(filas == 1) {
-			requestDispacherRedirect = "/Inicio.jsp"; 
+		if(request.getSession().getAttribute("usuario") != null) {
+			cerrarSesion(request, response);
 		}
-		else {
-			request.setAttribute("cantidadFilas", filas);	
-			requestDispacherRedirect = "/Login.jsp";
-		}
-		
-		RequestDispatcher rd2 = request.getRequestDispatcher(requestDispacherRedirect); 
-		rd2.forward(request, response);*/
-		
+		else 
+		{
 		Login user = new Login();
 		user.setEmail(request.getParameter("email"));
 		user.setPassword(request.getParameter("password"));
@@ -57,6 +42,7 @@ public class serverletsLogin extends HttpServlet
 		LoginDAO login = new LoginDAO();
 		
 		if(login.iniciarSesion(user)) {
+			System.out.println("entro al if");
 			usuario = login.obtenerUsuario(user.getEmail());
 			if(usuario != null) {
 				request.getSession().setAttribute("usuario", usuario);
@@ -68,6 +54,14 @@ public class serverletsLogin extends HttpServlet
 			requestDispacherRedirect = "/Login.jsp";
 		}
 		
+		RequestDispatcher rd2 = request.getRequestDispatcher(requestDispacherRedirect); 
+		rd2.forward(request, response);		
+		}
+	}
+	
+	protected void  cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.getSession().setAttribute("usuario", null);
+		String requestDispacherRedirect = "/Login.jsp";
 		RequestDispatcher rd2 = request.getRequestDispatcher(requestDispacherRedirect); 
 		rd2.forward(request, response);		
 	}

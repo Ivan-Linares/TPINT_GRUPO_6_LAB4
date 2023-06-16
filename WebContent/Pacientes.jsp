@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="dominio.Paciente"%>
+<%@ page import="dominio.Usuario"%>
 <%@ page import="java.util.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -27,7 +28,7 @@
 			<ul>
 				<li>
 				
-				<a href="Pacientes.jsp" class="active">
+				<a href="serverletsPacientes?method=get" class="active">
 				<span class="material-symbols-outlined">
 					groups
 				</span>
@@ -51,6 +52,17 @@
 				</span>	Turnos</a>
 				</li>
 			</ul>
+		</div>
+		
+		<div class="user-container">
+			
+			
+			<%if(session.getAttribute("usuario") != null){
+				Usuario user = (Usuario)session.getAttribute("usuario");
+				%>	
+				<strong><%= user.getCorreo() %></strong>
+			<%} %>
+			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
 	

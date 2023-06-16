@@ -29,7 +29,7 @@ public class serverletsPacientes extends HttpServlet  {
 			rd.forward(request, response);
 		}
 		else {
-			if(request.getParameter("btnBuscarPacientes") != null) {
+			
 				PacienteDAOImpl pDao = new PacienteDAOImpl();
 				ArrayList<Paciente> listaPacientes  = pDao.listarPacientes();
 				
@@ -37,6 +37,8 @@ public class serverletsPacientes extends HttpServlet  {
 				
 				RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 				rd.forward(request, response);
+				if(request.getParameter("btnBuscarPacientes") != null) {
+					//filtrado
 			}
 		}
 		

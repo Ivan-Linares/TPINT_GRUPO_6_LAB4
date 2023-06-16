@@ -15,6 +15,7 @@
 	background-color:#ffffff;
 	height:auto;
 	box-shadow: 6px 0px 15px -3px rgba(0,0,0,0.1);
+	position:relative;
 }
 
 .navbar .nav-title{
@@ -40,6 +41,20 @@
 .navbar .items ul li a span{
 	color: #6d8ffd;
 	margin-right: 10px;
+}
+
+.user-container{
+	position:absolute;
+	bottom:0px;
+	padding:10px;
+	display:flex;
+	flex-direction:column;
+}
+
+.user-container .btn{
+	width:80% !important;
+	margin: 10px 0 !important;
+	align-self:start !important;
 }
 
 a{
