@@ -17,6 +17,7 @@ import dao.impl.PacienteDAOImpl;
 import dominio.Cobertura;
 import dominio.Domicilio;
 import dominio.Paciente;
+import dominio.Pais;
 import dominio.Telefono;
 import dominio.Usuario;
 
@@ -100,12 +101,17 @@ public class serverletsPacientes extends HttpServlet  {
 		nuevoPaciente.setSexo(request.getParameter("sexoSelect"));
 		nuevoPaciente.setNombre(request.getParameter("nombre"));
 		nuevoPaciente.setApellido(request.getParameter("apellido"));
-		//nuevoPaciente.setNacionalidad(request.getParameter("nacionalidadSelect"));
+		
+		Pais nacionalidad = new Pais();
+		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
+		
 		nuevoPaciente.setCorreo(request.getParameter("correo"));
 		
 		Telefono telefono = new Telefono();
 		telefono.setTelefono(request.getParameter("telefono"));
 		nuevoPaciente.setTelefono(telefono);
+		
+		
 		
 		Domicilio domicilioPaciente = new Domicilio();
 		domicilioPaciente.setDireccion(request.getParameter("direccion"));

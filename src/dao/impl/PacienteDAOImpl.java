@@ -16,6 +16,7 @@ import java.util.Locale;
 import dao.IPacienteDAO;
 import dominio.Domicilio;
 import dominio.Paciente;
+import dominio.Pais;
 import dominio.Persona;
 
 public class PacienteDAOImpl implements IPacienteDAO{
@@ -79,7 +80,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(2, paciente.getNombre());
 			statement.setString(3, paciente.getApellido());
 			statement.setString(4, paciente.getSexo());
-			statement.setInt(5, 1); //Es ID nacionalidad
+			statement.setInt(5, paciente.getNacionalidad().getIdPais());
 
 			SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);		
 			SimpleDateFormat print = new SimpleDateFormat("yyyyddMM");		
@@ -88,6 +89,8 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setDate(6, sqlDate);
 			
 			statement.setString(7, paciente.getCorreo());
+			
+			// ACA Cuando se inserta el domicilio, hay qu tomar el ID y asignarselo
 			statement.setInt(8, 1);
 			
 			if(statement.executeUpdate() > 0) {
@@ -203,8 +206,11 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				persona.setFechaNacimiento(rs.getDate("fechaNacimiento"));
 				persona.setCorreo(rs.getString("correo"));
 				persona.setActivo(rs.getBoolean("activo"));
-				persona.setNacionalidad(rs.getString("nacionalidad"));
 				
+				Pais nacionalidad = new Pais();
+				nacionalidad.setDescripcion(rs.getString("nacionalidad"));
+				
+				persona.setNacionalidad(nacionalidad);				
 				
 				listaPacientes.add(persona);
 			}
@@ -243,7 +249,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(2, paciente.getNombre());
 			statement.setString(3, paciente.getApellido());
 			statement.setString(4, paciente.getSexo());
-			statement.setString(5, paciente.getNacionalidad());
+			//statement.setString(5, paciente.getNacionalidad());
 			statement.setDate(6, (Date) paciente.getFechaNacimiento());
 			statement.setString(7, paciente.getCorreo());
 			statement.setInt(8, paciente.getDomicilio().getIdDomicilio());

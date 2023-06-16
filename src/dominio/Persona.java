@@ -7,14 +7,14 @@ public class Persona {
 	private String nombre;
 	private String apellido;
 	private String sexo;
-	private String nacionalidad;
+	private Pais nacionalidad;
 	private Date fechaNacimiento;
 	private String correo;
 	private Domicilio domicilio;
 	private Telefono telefono;
 	private boolean activo;	
 	
-	public Persona(String dni, String nombre, String apellido, String sexo, String nacionalidad, Date fechaNacimiento,
+	public Persona(String dni, String nombre, String apellido, String sexo, Pais nacionalidad, Date fechaNacimiento,
 			String correo, dominio.Domicilio domicilio, dominio.Telefono telefono, boolean activo) {		
 		this.dni = dni;
 		this.nombre = nombre;
@@ -54,10 +54,10 @@ public class Persona {
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
-	public String getNacionalidad() {
+	public Pais getNacionalidad() {
 		return nacionalidad;
 	}
-	public void setNacionalidad(String nacionalidad) {
+	public void setNacionalidad(Pais nacionalidad) {
 		this.nacionalidad = nacionalidad;
 	}
 	public Date getFechaNacimiento() {
