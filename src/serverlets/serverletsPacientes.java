@@ -68,7 +68,13 @@ public class serverletsPacientes extends HttpServlet  {
 		
 		else if(request.getParameter("btn-editar-paciente") != null) {
 			String dniPaciente =request.getParameter("dniPaciente").toString();
-			System.out.println("entrooo editar");
+			try {
+				ModificarPaciente(pDao, request);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		else if(request.getParameter("btn-eliminar-paciente") != null) {
 			String dniPaciente = request.getParameter("dniPaciente").toString();
@@ -126,5 +132,40 @@ public class serverletsPacientes extends HttpServlet  {
 		
 		boolean agregado = pDao.agregar(nuevoPaciente);
 		return agregado;
+	}
+	
+	protected boolean ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+		Paciente UpdatePaciente = new Paciente();
+		UpdatePaciente.setDni(request.getParameter("dni").toString());
+		UpdatePaciente.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
+		System.out.println(UpdatePaciente.getFechaNacimiento());
+		
+		UpdatePaciente.setSexo(request.getParameter("sexoSelect"));
+		UpdatePaciente.setNombre(request.getParameter("nombre"));
+		UpdatePaciente.setApellido(request.getParameter("apellido"));
+		
+		Pais nacionalidad = new Pais();
+		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
+		
+		UpdatePaciente.setCorreo(request.getParameter("correo"));
+		
+		Telefono telefono = new Telefono();
+		telefono.setTelefono(request.getParameter("telefono"));
+		UpdatePaciente.setTelefono(telefono);
+		
+		Domicilio domicilioPaciente = new Domicilio();
+		domicilioPaciente.setDireccion(request.getParameter("direccion"));
+		domicilioPaciente.setLocalidad(request.getParameter("localidad"));
+		domicilioPaciente.setProvincia(request.getParameter("provincia"));
+		
+		UpdatePaciente.setDomicilio(domicilioPaciente);
+		
+		Cobertura cobertura = new Cobertura();
+		cobertura.setId(Integer.parseInt(request.getParameter("coberturaSelect").toString()));
+		UpdatePaciente.setCobertura(cobertura);
+		
+		boolean Modificado = pDao.modificar(UpdatePaciente);
+		
+		return Modificado;
 	}
 }

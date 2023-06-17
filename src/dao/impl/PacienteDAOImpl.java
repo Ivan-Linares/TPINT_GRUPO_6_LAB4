@@ -215,10 +215,6 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				listaPacientes.add(persona);
 			}
 			
-			
-			
-			
-			
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
@@ -228,28 +224,19 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	}
 
 	@Override
-	public boolean modificar(int ID) {
-		
+	public boolean modificar(Paciente paciente) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
-		boolean modificar = false;
-		
-		Paciente paciente = null;
-		
-		for (Paciente x : listarPacientes()) {
-			if(x.getIdPaciente() == ID) {
-				paciente = x;
-			}
-		}
+		boolean modificado = false;
 		
 		try {
-			
 			statement = conexion.prepareStatement(updatePersona);
+			
 			statement.setString(1, paciente.getDni());
 			statement.setString(2, paciente.getNombre());
 			statement.setString(3, paciente.getApellido());
 			statement.setString(4, paciente.getSexo());
-			//statement.setString(5, paciente.getNacionalidad());
+			statement.setInt(5, paciente.getNacionalidad().getIdPais());
 			statement.setDate(6, (Date) paciente.getFechaNacimiento());
 			statement.setString(7, paciente.getCorreo());
 			statement.setInt(8, paciente.getDomicilio().getIdDomicilio());
@@ -257,14 +244,14 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
-				modificar = true;
+				modificado = true;
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return modificar;
+		return modificado;
 	}
 
 }
