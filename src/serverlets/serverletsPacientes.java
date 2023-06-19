@@ -38,12 +38,22 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else {
 			
-			listarPacientes(request);
+			if(request.getParameter("btn-agregar-paciente") != null) {
+				agregarListaPaises(request);
+				agregarListaCoberturas(request);
+			
+				RequestDispatcher rd = request.getRequestDispatcher("InsertarPaciente.jsp");
+				rd.forward(request, response);
+			}
+			else {
+				listarPacientes(request);
+				
 				RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 				rd.forward(request, response);
 
 				if(request.getParameter("btnBuscarPacientes") != null) {
 					//filtrado
+			}		
 			}
 		}
 		
@@ -104,7 +114,14 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else if(request.getParameter("btn-agregar-paciente") != null) {
 			try {
-				AgregarPaciente(pDao, request);
+				if(AgregarPaciente(pDao, request)) {
+					//habria que hacer que muestre un msj de confirmacion antes de agregar 
+					//y que muestr un msj de que se agrego bien cdo se agrega el nuevo paciente
+					listarPacientes(request);
+					
+					RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
+					rd.forward(request, response);
+				}
 			} catch (ParseException e) {
 				
 				e.printStackTrace();
@@ -127,8 +144,8 @@ public class serverletsPacientes extends HttpServlet  {
 		nuevoPaciente.setApellido(request.getParameter("apellido"));
 		
 		Pais nacionalidad = new Pais();
-		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("paisSelect").toString()));
-		
+		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
+		nuevoPaciente.setNacionalidad(nacionalidad);
 		nuevoPaciente.setCorreo(request.getParameter("correo"));
 		
 		Telefono telefono = new Telefono();

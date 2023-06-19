@@ -1,4 +1,5 @@
 <%@ page import="dominio.Pais"%>
+<%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
@@ -140,6 +141,7 @@
 					<div class="d-flex row">
 																	<div class="d-flex fd-column">
 								<label>Pais</label>
+								<select name="paisSelect" class="select">
 								<option value="-1">Escoge un Pais: </option>
 								<% 
 								
@@ -158,9 +160,21 @@
 					<div class="d-flex fd-column">
 								<label>Cobertura</label>
 								<select name="coberturaSelect" class="select">
-									<option value="1">Ejemplo 1</option>
-									<option value="2">Ejemplo 2</option>
-									<option value="3">Etc</option>
+									<option value="-1">Escoge una Cobertura: </option>
+								<% 
+								ArrayList<Cobertura> listaCoberturas = new ArrayList<Cobertura>();
+								if(request.getAttribute("listaCoberturas") != null){
+									listaCoberturas = (ArrayList<Cobertura>)request.getAttribute("listaCoberturas");
+								}
+								
+								ListIterator <Cobertura> it3 = listaCoberturas.listIterator();
+												while(it3.hasNext())
+				{
+					Cobertura cobertura = it3.next();
+				%>
+				<option value="<%= cobertura.getId()%>"><%= cobertura.getDescripcion() %></option>
+				<%
+				}%>
 								</select>
 							</div>
 							</div>	

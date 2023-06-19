@@ -83,7 +83,7 @@
 		<input type="text">
 		 <input type="submit" name="btnBuscarPacientes" class="btn bg-blue" value="Buscar"/> 
 		 
-		 <a href="InsertarPaciente.jsp" class="btn bg-green">Agregar Paciente</a>
+		 <button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
 		 </form>
 		
 		

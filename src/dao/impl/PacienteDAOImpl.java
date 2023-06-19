@@ -23,7 +23,7 @@ import dominio.Telefono;
 public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, idNacionalidad, fechaNacimiento, correo, idDomicilio) values (?,?,?,?,?,?,?,?)";
 	private static final String insertPaciente = "Insert into pacientes (dni, idCobertura) values (?,?)";
-	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais) values (?,?,?,?)";
+	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais)";
 	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono) values (?,?)";
 	private static final String deletePaciente = "update pacientes set Activo = 0 where dni =?";
 	private static final String deletePersona = "update personas set Activo = 0 where dni=?";
@@ -35,19 +35,19 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	
 	private int agregarDomicilio(Paciente paciente) {
 		
-		PreparedStatement statement;
+		Statement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		int idDomicilio = 0;
 		
 		try {
+			statement = conexion.createStatement();			
+			String query = insertDomicilio + "values('"+paciente.getDomicilio().getDireccion() +"','"+paciente.getDomicilio().getLocalidad() +"', '"+ paciente.getDomicilio().getProvincia() +"', 1)";
+			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);	
+			ResultSet rs = statement.getGeneratedKeys();
 			
-			statement = conexion.prepareStatement(insertDomicilio, Statement.RETURN_GENERATED_KEYS);
-			statement.setString(1, paciente.getDomicilio().getDireccion());
-			statement.setString(2, paciente.getDomicilio().getLocalidad());
-			statement.setString(3, paciente.getDomicilio().getProvincia());
-			statement.setInt(4, 1); 
-			
-			idDomicilio = statement.executeUpdate();	
+			if (rs.next()){
+				idDomicilio = Integer.parseInt(rs.getString(1));
+			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,11 +56,11 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		return idDomicilio;
 	}
 	
-	private int agregarTelefono(Telefono nuevoTelefono) {
+	private boolean agregarTelefono(Telefono nuevoTelefono) {
 		
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
-		int agregoTelefono = 0;
+		boolean agregoTelefono = false;
 		
 		try {
 			
@@ -68,7 +68,10 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(1, nuevoTelefono.getDni());
 			statement.setString(2, nuevoTelefono.getTelefono());
 			
-			agregoTelefono = statement.executeUpdate();	
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				agregoTelefono = true;
+			}	
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,25 +100,21 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		try
 		{
 			int idDomicilio = agregarDomicilio(paciente);
-			agregarTelefono(paciente.getTelefono());
 			
 			statement = conexion.prepareStatement(insertPersona);
 			statement.setString(1, paciente.getDni());
-			statement.setString(2, paciente.getNombre());
+			statement.setString(2, paciente.getNombre());		
 			statement.setString(3, paciente.getApellido());
-			statement.setString(4, paciente.getSexo());
+			statement.setString(4, paciente.getSexo());	
 			statement.setInt(5, paciente.getNacionalidad().getIdPais());
 
 			SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);		
 			SimpleDateFormat print = new SimpleDateFormat("yyyyddMM");		
 			Long datesql = Long.parseLong(print.format(paciente.getFechaNacimiento()));
-			java.sql.Date sqlDate = new java.sql.Date(datesql);		
-			statement.setDate(6, sqlDate);
+			java.sql.Date sqlDate = new java.sql.Date(datesql);				
+			statement.setDate(6, sqlDate);	
 			
 			statement.setString(7, paciente.getCorreo());
-			
-			// ACA Cuando se inserta el domicilio, hay qu tomar el ID y asignarselo
-			System.out.println("DOMICLIO" + idDomicilio );
 			statement.setInt(8, idDomicilio);
 			
 			if(statement.executeUpdate() > 0) {
@@ -132,9 +131,8 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				insertarPaciente = true;
 			}
 			
-			statement = conexion.prepareStatement(insertTelefono);
-			statement.setString(1, paciente.getDni());
-			statement.setString(2, paciente.getTelefono().getTelefono());
+			agregarTelefono(paciente.getTelefono());
+			
 			
 		}
 		catch(Exception e)
