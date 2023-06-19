@@ -1,3 +1,6 @@
+<%@ page import="dominio.Pais"%>
+<%@page import="java.util.ListIterator"%>
+<%@ page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -81,9 +84,22 @@
 							<div class="d-flex fd-column">
 								<label>Nacionalidad</label>
 								<select name="nacionalidadSelect" class="select">
-									<option value="1">Argentina</option>
-									<option value="2">Bolivia</option>
-									<option value="3">Peru</option>
+								<option value="-1">Escoge un Pais: </option>
+								<% 
+								ArrayList<Pais> listaPaises = new ArrayList<Pais>();
+								if(request.getAttribute("listaPaises") != null){
+									listaPaises = (ArrayList<Pais>)request.getAttribute("listaPaises");
+								}
+								
+								ListIterator <Pais> it = listaPaises.listIterator();
+												while(it.hasNext())
+				{
+					Pais pais = it.next();
+				%>
+				<option value="<%= pais.getIdPais()%>"><%= pais.getDescripcion() %></option>
+				<%
+				}%>
+								
 								</select>
 							</div>
 						</div>
@@ -124,10 +140,18 @@
 					<div class="d-flex row">
 																	<div class="d-flex fd-column">
 								<label>Pais</label>
-								<select name="paisSelect" class="select">
-									<option value="1">Argentina</option>
-									<option value="2">Bolivia</option>
-									<option value="3">Peru</option>
+								<option value="-1">Escoge un Pais: </option>
+								<% 
+								
+								ListIterator <Pais> it2 = listaPaises.listIterator();
+												while(it2.hasNext())
+				{
+					Pais pais = it2.next();
+				%>
+				<option value="<%= pais.getIdPais()%>"><%= pais.getDescripcion() %></option>
+				<%
+				}%>
+								
 								</select>
 							</div>
 							

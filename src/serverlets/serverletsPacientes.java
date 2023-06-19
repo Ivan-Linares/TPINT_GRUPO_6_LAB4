@@ -57,6 +57,18 @@ public class serverletsPacientes extends HttpServlet  {
 		
 	}
 	
+	protected void agregarListaPaises(HttpServletRequest request) {
+		PaisDAOImpl paisDao = new PaisDAOImpl();
+		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisDao.listarPaises();
+		request.setAttribute("listaPaises", listaPaises);
+	}
+	
+	protected void agregarListaCoberturas(HttpServletRequest request) {
+		CoberturaDAOImpl coberturaDao = new CoberturaDAOImpl();
+		ArrayList<Cobertura> listaCoberturas = (ArrayList<Cobertura>) coberturaDao.listarCoberturas();
+		request.setAttribute("listaCoberturas", listaCoberturas);
+	}
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		 String dniPaciente ="";
@@ -67,6 +79,10 @@ public class serverletsPacientes extends HttpServlet  {
 		{
 			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
 			request.setAttribute("paciente", paciente);
+			
+			agregarListaPaises(request);
+			agregarListaCoberturas(request);
+		
 			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
 			rd.forward(request, response);
 		}
@@ -134,6 +150,8 @@ public class serverletsPacientes extends HttpServlet  {
 		boolean agregado = pDao.agregar(nuevoPaciente);
 		return agregado;
 	}
+	
+
 	
 	protected boolean ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
 		Paciente UpdatePaciente = new Paciente();

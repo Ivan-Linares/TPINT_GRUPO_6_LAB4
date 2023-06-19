@@ -96,7 +96,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		
 		try
 		{
-			agregarDomicilio(paciente);
+			int idDomicilio = agregarDomicilio(paciente);
 			agregarTelefono(paciente.getTelefono());
 			
 			statement = conexion.prepareStatement(insertPersona);
@@ -115,7 +115,8 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(7, paciente.getCorreo());
 			
 			// ACA Cuando se inserta el domicilio, hay qu tomar el ID y asignarselo
-			statement.setInt(8, 1);
+			System.out.println("DOMICLIO" + idDomicilio );
+			statement.setInt(8, idDomicilio);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
