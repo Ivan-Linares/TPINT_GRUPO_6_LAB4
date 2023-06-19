@@ -13,6 +13,20 @@
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <title>Pacientes</title>
+
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+	
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#tablaPacientes').DataTable();
+	});
+</script>
 </head>
 <body>
 <div class="container">
@@ -104,7 +118,7 @@
 %>
 
 	<div>
-		<table class="content-table header-table-blue"> 
+		<table class="content-table header-table-blue"  id="tablaPacientes"> 
 			<thead> 
 				<tr>
 					<th>DNI</th>
