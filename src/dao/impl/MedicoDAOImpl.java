@@ -230,6 +230,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				persona.setHorarioAtencionDesde(rs.getString("HorarioAtencionDesde"));
 				persona.setHorarioAtencionHasta(rs.getString("HorarioAtencionHasta"));
 				
+				
 				st2 = conexion.createStatement();
 				ResultSet rs2 = st2.executeQuery(listarEspecialidades);
 				
