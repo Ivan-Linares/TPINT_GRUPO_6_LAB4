@@ -27,7 +27,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono) values (?,?)";
 	private static final String deletePaciente = "update pacientes set Activo = 0 where dni =?";
 	private static final String deletePersona = "update personas set Activo = 0 where dni=?";
-	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=0";
+	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=?";
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";

@@ -14,6 +14,8 @@ public class Medico extends Persona {
 	private String HorarioAtencionHasta;
 	private ArrayList<Especialidad> especialidades;
 	
+	public Medico() {}
+	
 	public int getIdMedico() {
 		return idMedico;
 	}
