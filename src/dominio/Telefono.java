@@ -1,24 +1,24 @@
 package dominio;
 
 public class Telefono {
-	private Persona persona;
+	private String dni;
 	private String telefono;
 	private boolean activo;
 	
 	public Telefono() {		
 	}
 	
-	public Telefono(dominio.Persona persona, String telefono, boolean activo) {		
-		this.persona = persona;
+	public Telefono(String dni, String telefono, boolean activo) {		
+		this.dni = dni;
 		this.telefono = telefono;
 		this.activo = activo;
 	}	
 	
-	public Persona getPersona() {
-		return persona;
+	public String getDni() {
+		return dni;
 	}
-	public void setPersona(Persona persona) {
-		this.persona = persona;
+	public void setDni(String dni) {
+		this.dni = dni;
 	}
 	public String getTelefono() {
 		return telefono;

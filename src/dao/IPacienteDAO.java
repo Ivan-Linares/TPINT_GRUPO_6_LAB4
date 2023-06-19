@@ -8,4 +8,5 @@ public interface IPacienteDAO {
 	public boolean eliminar(String dniPaciente);
 	public boolean modificar (Paciente paciente);
 	public List<Paciente> listarPacientes();
+	public Paciente obtenerPaciente(String dniPaciente);
 }

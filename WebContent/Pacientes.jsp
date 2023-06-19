@@ -135,7 +135,7 @@
 							<td><%= paciente.getNombre() %></td> 
 							<td><%= paciente.getApellido()%></td>
 							<td><%= paciente.getSexo()%></td> 
-							<td><%= paciente.getNacionalidad() %></td> 
+							<td><%= paciente.getNacionalidad().getDescripcion() %></td> 
 							<td><%= paciente.getFechaNacimiento() %></td> 
 							
 							<td><%=paciente.getCorreo() %></td>	

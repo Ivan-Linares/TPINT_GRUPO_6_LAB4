@@ -18,6 +18,7 @@ import dominio.Domicilio;
 import dominio.Paciente;
 import dominio.Pais;
 import dominio.Persona;
+import dominio.Telefono;
 
 public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, idNacionalidad, fechaNacimiento, correo, idDomicilio) values (?,?,?,?,?,?,?,?)";
@@ -29,29 +30,51 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=0";
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
-	private static final String listar = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais";
+	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";
+	private static final String listarPaciente = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
 	
 	private int agregarDomicilio(Paciente paciente) {
 		
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
-		int agregoDomicilio = 0;
+		int idDomicilio = 0;
 		
 		try {
 			
-			statement = conexion.prepareStatement(insertDomicilio);
+			statement = conexion.prepareStatement(insertDomicilio, Statement.RETURN_GENERATED_KEYS);
 			statement.setString(1, paciente.getDomicilio().getDireccion());
 			statement.setString(2, paciente.getDomicilio().getLocalidad());
 			statement.setString(3, paciente.getDomicilio().getProvincia());
-			statement.setInt(4, 1); // arreglar
+			statement.setInt(4, 1); 
 			
-			agregoDomicilio = statement.executeUpdate();	
+			idDomicilio = statement.executeUpdate();	
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return agregoDomicilio;
+		return idDomicilio;
+	}
+	
+	private int agregarTelefono(Telefono nuevoTelefono) {
+		
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		int agregoTelefono = 0;
+		
+		try {
+			
+			statement = conexion.prepareStatement(insertTelefono);
+			statement.setString(1, nuevoTelefono.getDni());
+			statement.setString(2, nuevoTelefono.getTelefono());
+			
+			agregoTelefono = statement.executeUpdate();	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return agregoTelefono;
 	}
 	
 	@Override
@@ -74,6 +97,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		try
 		{
 			agregarDomicilio(paciente);
+			agregarTelefono(paciente.getTelefono());
 			
 			statement = conexion.prepareStatement(insertPersona);
 			statement.setString(1, paciente.getDni());
@@ -195,7 +219,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		try 
 		{
 			st = conexion.createStatement();
-			ResultSet rs = st.executeQuery(listar);
+			ResultSet rs = st.executeQuery(listarPacientes);
 			
 			while(rs.next()) {
 				Paciente persona = new Paciente();
@@ -252,6 +276,54 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		}
 		
 		return modificado;
+	}
+
+	@Override
+	public Paciente obtenerPaciente(String dniPaciente) {
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		Paciente paciente = new Paciente();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(listarPaciente + "'"+ dniPaciente +"'");
+			
+			rs.next();
+			
+				paciente.setDni(rs.getString("dni"));
+				paciente.setNombre(rs.getString("nombre"));
+				
+				System.out.println("entro al impl" + paciente.getDni());
+				paciente.setApellido(rs.getString("apellido"));
+				paciente.setSexo(rs.getString("sexo"));
+				paciente.setFechaNacimiento(rs.getDate("fechaNacimiento"));
+				paciente.setCorreo(rs.getString("correo"));
+				paciente.setActivo(rs.getBoolean("activo"));
+				
+				Pais nacionalidad = new Pais();
+				nacionalidad.setDescripcion(rs.getString("nacionalidad"));
+				
+				paciente.setNacionalidad(nacionalidad);		
+				
+				Domicilio domicilio = new Domicilio();
+				domicilio.setDireccion(rs.getString("direccion"));
+				domicilio.setLocalidad(rs.getString("localidad"));
+				domicilio.setProvincia(rs.getString("provincia"));
+				
+				paciente.setDomicilio(domicilio);		
+				
+				Telefono telefono = new Telefono();
+				telefono.setTelefono(rs.getString("telefono"));
+				
+				paciente.setTelefono(telefono);
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return paciente;
 	}
 
 }

@@ -59,39 +59,42 @@ public class serverletsPacientes extends HttpServlet  {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
+		 String dniPaciente ="";
+		if(request.getParameter("dniPaciente") != null) dniPaciente = request.getParameter("dniPaciente").toString();
 		PacienteDAOImpl pDao = new PacienteDAOImpl();
+		
 		if(request.getParameter("btn-ver-paciente") != null) 
 		{
-			String dniPaciente = request.getParameter("dniPaciente").toString();
-			System.out.println("entrooo ver" + dniPaciente);
+			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
+			request.setAttribute("paciente", paciente);
+			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
+			rd.forward(request, response);
 		}
 		
 		else if(request.getParameter("btn-editar-paciente") != null) {
-			String dniPaciente =request.getParameter("dniPaciente").toString();
 			try {
 				ModificarPaciente(pDao, request);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		else if(request.getParameter("btn-eliminar-paciente") != null) {
-			String dniPaciente = request.getParameter("dniPaciente").toString();
+			
 			EliminarPaciente(pDao, dniPaciente);
+			listarPacientes(request);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
+			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-agregar-paciente") != null) {
 			try {
 				AgregarPaciente(pDao, request);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
 		
-		listarPacientes(request);
-		RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
-		rd.forward(request, response);
 	}
 
 	protected void EliminarPaciente(PacienteDAOImpl pDao, String dniPaciente) {		
@@ -99,25 +102,23 @@ public class serverletsPacientes extends HttpServlet  {
 	}
 	
 	protected boolean AgregarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+		
 		Paciente nuevoPaciente = new Paciente();
 		nuevoPaciente.setDni(request.getParameter("dni").toString());
 		nuevoPaciente.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
-		System.out.println(nuevoPaciente.getFechaNacimiento());
-		
 		nuevoPaciente.setSexo(request.getParameter("sexoSelect"));
 		nuevoPaciente.setNombre(request.getParameter("nombre"));
 		nuevoPaciente.setApellido(request.getParameter("apellido"));
 		
 		Pais nacionalidad = new Pais();
-		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
+		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("paisSelect").toString()));
 		
 		nuevoPaciente.setCorreo(request.getParameter("correo"));
 		
 		Telefono telefono = new Telefono();
+		telefono.setDni(nuevoPaciente.getDni());
 		telefono.setTelefono(request.getParameter("telefono"));
 		nuevoPaciente.setTelefono(telefono);
-		
-		
 		
 		Domicilio domicilioPaciente = new Domicilio();
 		domicilioPaciente.setDireccion(request.getParameter("direccion"));
