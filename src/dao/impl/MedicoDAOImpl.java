@@ -3,6 +3,7 @@ package dao.impl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.Locale;
 
 import dao.IMedicoDAO;
 import dominio.Especialidad;
+import dominio.HorariosTrabajo;
 import dominio.Medico;
 import dominio.Paciente;
 import dominio.Pais;
@@ -19,7 +21,7 @@ import dominio.Telefono;
 public class MedicoDAOImpl implements IMedicoDAO{
 
 	private static final String insertPersona = "Insert into personas (dni, nombre, apellido, sexo, idNacionalidad, fechaNacimiento, correo, idDomicilio) values (?,?,?,?,?,?,?,?)";
-	private static final String insertMedico = "Insert into medicos (dni, DiaAtencion, HorarioAtencionDesde, HorarioAtencionHasta, Activo) values (?,?,?,?,?)";
+	private static final String insertMedico = "Insert into medicos (dni) values (?)";
 	private static final String insertDomicilio = "insert into Domicilio (Direccion, Localidad, Provincia, Pais)";
 	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono) values (?,?)";
 	private static final String deleteMedico = "update medicos set Activo=0 where dni=?";
@@ -118,16 +120,15 @@ public class MedicoDAOImpl implements IMedicoDAO{
 			
 			statement = conexion.prepareStatement(insertMedico);
 			statement.setString(1, medico.getDni());
-			statement.setString(2, medico.getDiaAtencion());
-			statement.setString(3, medico.getHorarioAtencionDesde());
-			statement.setString(3, medico.getHorarioAtencionHasta());
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				insertarMedico = true;
 			}
 			
-			agregarTelefono(medico.getTelefono());
+			//agregarTelefono(medico.getTelefono());
+			//agregarHorariosMedico(medico);
+
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -139,6 +140,16 @@ public class MedicoDAOImpl implements IMedicoDAO{
 			return false;
 		}
 		
+	}
+	
+	public void agregarHorariosMedico(Medico medico) {
+		boolean insertarHorario = false;
+		HorariosTrabajoDAOImpl horariosDao = new HorariosTrabajoDAOImpl();
+
+		ArrayList<HorariosTrabajo> horariosLista = medico.getHorariosTrabajo();
+		for(HorariosTrabajo horarioTrabajoAgregar : horariosLista) {
+			horariosDao.agregar(horarioTrabajoAgregar);
+		}
 	}
 
 	@Override
@@ -226,9 +237,9 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				persona.setNombre(rs.getString("nombre"));
 				persona.setApellido(rs.getString("apellido"));
 				persona.setActivo(rs.getBoolean("activo"));
-				persona.setDiaAtencion(rs.getString("DiaAtencion"));
-				persona.setHorarioAtencionDesde(rs.getString("HorarioAtencionDesde"));
-				persona.setHorarioAtencionHasta(rs.getString("HorarioAtencionHasta"));
+				//persona.setDiaAtencion(rs.getString("DiaAtencion"));
+				//persona.setHorarioAtencionDesde(rs.getString("HorarioAtencionDesde"));
+				//persona.setHorarioAtencionHasta(rs.getString("HorarioAtencionHasta"));
 				
 				
 				st2 = conexion.createStatement();

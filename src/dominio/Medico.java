@@ -9,10 +9,8 @@ public class Medico extends Persona {
 		// TODO Auto-generated constructor stub
 	}
 	private int idMedico;
-	private String DiaAtencion;
-	private String HorarioAtencionDesde;
-	private String HorarioAtencionHasta;
 	private ArrayList<Especialidad> especialidades;
+	private ArrayList<HorariosTrabajo> horariosTrabajo;
 	
 	public Medico() {}
 	
@@ -22,29 +20,20 @@ public class Medico extends Persona {
 	public void setIdMedico(int idMedico) {
 		this.idMedico = idMedico;
 	}
-	public String getDiaAtencion() {
-		return DiaAtencion;
-	}
-	public void setDiaAtencion(String diaAtencion) {
-		DiaAtencion = diaAtencion;
-	}
-	public String getHorarioAtencionDesde() {
-		return HorarioAtencionDesde;
-	}
-	public void setHorarioAtencionDesde(String horarioAtencionDesde) {
-		HorarioAtencionDesde = horarioAtencionDesde;
-	}
-	public String getHorarioAtencionHasta() {
-		return HorarioAtencionHasta;
-	}
-	public void setHorarioAtencionHasta(String horarioAtencionHasta) {
-		HorarioAtencionHasta = horarioAtencionHasta;
-	}
+	
 	public ArrayList<Especialidad> getEspecialidades() {
 		return especialidades;
 	}
 	public void setEspecialidades(ArrayList<Especialidad> especialidades) {
 		this.especialidades = especialidades;
+	}
+
+	public ArrayList<HorariosTrabajo> getHorariosTrabajo() {
+		return horariosTrabajo;
+	}
+
+	public void setHorariosTrabajo(ArrayList<HorariosTrabajo> horariosTrabajo) {
+		this.horariosTrabajo = horariosTrabajo;
 	}
 	
 }
