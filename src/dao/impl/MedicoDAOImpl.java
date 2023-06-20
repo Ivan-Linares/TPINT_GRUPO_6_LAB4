@@ -27,7 +27,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String deleteMedico = "update medicos set Activo=0 where dni=?";
 	private static final String deletePersona = "update personas set Activo=0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo=0 where dni=?";
-	private static final String listarMedicos = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo, med.DiaAtencion as DiaAtencion, med.HorarioAtencionDesde as HorarioAtencionDesde, med.HorarioAtencionHasta as HorarioAtencionHasta from personas per inner join medicos med on per.dni = med.dni";
+	private static final String listarMedicos = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
 	private static final String listarEspecialidades = "select esp.IdEspecialidad as IdEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	
 	private int agregarDomicilio(Medico medico) {
@@ -218,10 +218,10 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	}
 
 	@Override
-	public List<Medico> listarMedicos() {
+	public ArrayList<Medico> listarMedicos() {
 		
 		Statement st;
-		Statement st2;
+		//Statement st2;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
 		ArrayList<Medico> listaMedicos = new ArrayList<Medico>();
@@ -242,20 +242,20 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				//persona.setHorarioAtencionHasta(rs.getString("HorarioAtencionHasta"));
 				
 				
-				st2 = conexion.createStatement();
-				ResultSet rs2 = st2.executeQuery(listarEspecialidades);
+				//st2 = conexion.createStatement();
+				//ResultSet rs2 = st2.executeQuery(listarEspecialidades);
 				
-				while(rs2.next()) {
-					Especialidad especialidad = new Especialidad();
+				//while(rs2.next()) {
+					//Especialidad especialidad = new Especialidad();
 					
-					especialidad.setIdEspecialidad(Integer.parseInt(rs.getString("IdEspecialidad")));
-					especialidad.setDescripcion(rs.getString("Especialidad"));
+					//especialidad.setIdEspecialidad(Integer.parseInt(rs.getString("IdEspecialidad")));
+					//especialidad.setDescripcion(rs.getString("Especialidad"));
 					
-					ArrayList<Especialidad> ListaEspecialidades = new ArrayList<Especialidad>();
-					ListaEspecialidades.add(especialidad);
+					//ArrayList<Especialidad> ListaEspecialidades = new ArrayList<Especialidad>();
+					//ListaEspecialidades.add(especialidad);
 					
-					persona.setEspecialidades(ListaEspecialidades);					
-				}
+					//persona.setEspecialidades(ListaEspecialidades);					
+				//}
 				
 				
 				listaMedicos.add(persona);

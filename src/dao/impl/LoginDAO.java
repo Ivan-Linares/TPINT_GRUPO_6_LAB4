@@ -11,6 +11,7 @@ public class LoginDAO {
 	private String queryObtenerUsuario = "SELECT IdUsuario, EsAdministrador, Correo FROM Usuarios WHERE Correo = ?";
 	
 	public boolean iniciarSesion(Login login) {
+		System.out.println("entro inciar sesion");
 		PreparedStatement statement;
 		Conexion conexion = Conexion.getConexion();
 		
