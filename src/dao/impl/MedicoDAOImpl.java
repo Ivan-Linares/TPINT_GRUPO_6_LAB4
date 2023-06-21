@@ -1,6 +1,7 @@
 package dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,6 +30,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo=0 where dni=?";
 	private static final String listarMedicos = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
 	private static final String listarEspecialidades = "select esp.IdEspecialidad as IdEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
+	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	
 	private int agregarDomicilio(Medico medico) {
 		
@@ -213,8 +215,33 @@ public class MedicoDAOImpl implements IMedicoDAO{
 
 	@Override
 	public boolean modificar(Medico medico) {
-		// TODO Auto-generated method stub
-		return false;
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		boolean modificado = false;
+				
+		try {
+			statement = conexion.prepareStatement(updatePersona);
+				
+			statement.setString(1, medico.getDni());
+			statement.setString(2, medico.getNombre());
+			statement.setString(3, medico.getApellido());
+			statement.setString(4, medico.getSexo());
+			statement.setInt(5, medico.getNacionalidad().getIdPais());
+			statement.setDate(6, (Date) medico.getFechaNacimiento());
+			statement.setString(7, medico.getCorreo());
+			statement.setInt(8, medico.getDomicilio().getIdDomicilio());
+			statement.setBoolean(9, medico.isActivo());
+					
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				modificado = true;
+			}
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+				
+		return modificado;
 	}
 
 	@Override

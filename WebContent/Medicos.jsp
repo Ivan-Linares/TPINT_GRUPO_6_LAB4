@@ -1,3 +1,4 @@
+<%@page import="dominio.HorariosTrabajo"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="dominio.Usuario"%>
@@ -109,6 +110,18 @@
 				listaMedicos = null;
 			}		
 		}
+		
+	ArrayList<HorariosTrabajo> listaHT = new ArrayList<HorariosTrabajo>();
+		
+		if(request.getAttribute("listaHT") != null){
+			Object obj = request.getAttribute("listaHT");
+			if(obj instanceof ArrayList<?>){
+				listaHT = (ArrayList<HorariosTrabajo>) obj;
+			}
+			else{
+				listaHT = null;
+			}
+		}
 	%>
 	
 	<div>
@@ -130,19 +143,22 @@
 					for(Medico medico : listaMedicos){%>				
 					<tr> 
 				<% 
-					String nombreClase ="bg-green" ; 
-					String textButtonActivo ="Activo";
-					if(!(medico.isActivo())){
-						 nombreClase = "bg-red"; 
-						 textButtonActivo ="Inactivo";
-					}
+						for(HorariosTrabajo ht : listaHT){
+							if(ht.getIdMedico() == medico.getIdMedico()){
+							
+							String nombreClase ="bg-green" ; 
+							String textButtonActivo ="Activo";
+							if(!(medico.isActivo())){
+								 nombreClase = "bg-red"; 
+								 textButtonActivo ="Inactivo";
+							}
 				%>
 						<form action="serverletsMedicos" method="post" class="<%=nombreClase%>">
 							<td><strong><%=medico.getDni() %></strong></td> 
 							<td><%=medico.getNombre() %></td> 
 							<td><%=medico.getApellido() %></td>
-							<td>Lunes</td> 
-							<td>18 a 20 hrs</td> 
+							<td><%=ht.getDia() %></td> 
+							<td><%=ht.getHoraEntrada() %> a <%=ht.getHoraSalida() %> hrs</td> 
 							<td>Neurología, Psicología</td> 
 							<td class="d-flex">
 								<a href="#" class="btn bg-blue">Ver</a>
@@ -152,6 +168,8 @@
 						</form>
 					</tr> 
 					<% 
+							}
+						}
 					}
 				}%>				
 			</tbody> 

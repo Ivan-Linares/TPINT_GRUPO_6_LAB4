@@ -8,7 +8,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import dao.impl.HorariosTrabajoDAOImpl;
 import dao.impl.MedicoDAOImpl;
+import dominio.HorariosTrabajo;
 import dominio.Medico;
 import dominio.Usuario;
 
@@ -41,5 +44,11 @@ public class serverletsMedicos extends HttpServlet   {
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		ArrayList<Medico> listaMedicos  = medicoDao.listarMedicos();
 		request.setAttribute("listaMedicos", listaMedicos);
+	}
+	
+	protected void listarHorariosTrabajoMedico(HttpServletRequest request) {
+		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
+		ArrayList<HorariosTrabajo> listaHT = htDao.listar();
+		request.setAttribute("listaHT", listaHT);
 	}
 }

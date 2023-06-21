@@ -1,10 +1,12 @@
 package dao;
 
+import java.util.ArrayList;
+
 import dominio.HorariosTrabajo;
 
 public interface IHorariosTrabajo {
 	public boolean agregar(HorariosTrabajo horarioTrabajo);
-	public boolean eliminar();
-	public boolean modificar();
-	public boolean listar();
+	public boolean eliminar(String idMedico);	
+	public boolean modificar(HorariosTrabajo horarioTrabajo);
+	public ArrayList<HorariosTrabajo> listar();
 }
