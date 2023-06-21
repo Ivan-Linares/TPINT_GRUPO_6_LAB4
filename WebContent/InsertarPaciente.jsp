@@ -12,6 +12,7 @@
 	<jsp:include page="css/StyleSheet.css"></jsp:include>
 	</style>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+	<script src="js/code.jquery.com_jquery-3.7.0.min.js"></script>	
 </head>
 <body>
 	<div class="container">
@@ -54,11 +55,13 @@
 							<div class="d-flex fd-column">
 								<label>DNI</label>
 								<input type="number" required="true" name="dni" class="campo">
+								<span id="dniError" class="error"></span>
 							</div>
 					
 							<div class="d-flex fd-column">
 								<label>Fecha de Nacimiento</label>
 								<input type="Date" required="true" name="fechaNacimiento" class="campo">
+								<span id="fechaNacimientoError" class="error"></span>
 							</div>
 							
 							<div class="d-flex fd-column">
@@ -75,11 +78,13 @@
 							<div class="d-flex fd-column">
 								<label>Nombre</label>
 								<input type="text" required="true" name="nombre" class="campo">
+								<span id="nombreError" class="error"></span>
 							</div>
 					
 							<div class="d-flex fd-column">
 								<label>Apellido</label>
 								<input type="text" required="true" name="apellido" class="campo">
+								<span id="apellidoError" class="error"></span>
 							</div>
 							
 							<div class="d-flex fd-column">
@@ -101,7 +106,7 @@
 				<%
 				}%>
 								
-								</select>
+								</select>								
 							</div>
 						</div>
 						
@@ -109,11 +114,13 @@
 							<div class="d-flex fd-column w-50">
 								<label>Correo Electrónico</label>
 								<input type="mail" required="true" name="correo" class="campo">
+								<span id="mailError" class="error"></span>
 							</div>
 					
 							<div class="d-flex fd-column w-50">
 								<label>Telefono</label>
 								<input type="number" required="true" name="telefono" class="campo">
+								<span id="telefonoError" class="error"></span>
 							</div>							
 						</div>
 					
@@ -123,17 +130,17 @@
 					<div class="d-flex row">					
 						<div class="d-flex fd-column">
 							<label>Dirección</label>
-							<input type="Text" required="true"  name="direccion" class="campo">
+							<input type="Text" required="true"  name="direccion" class="campo">							
 						</div>
 						
 						<div class="d-flex fd-column">
 							<label>Localidad</label>
-							<input type="Text" required="true" name="localidad"  class="campo">
+							<input type="Text" required="true" name="localidad"  class="campo">							
 						</div>
 						
 						<div class="d-flex fd-column">
 							<label>Provincia</label>
-							<input type="Text" required="true" name="provincia"  class="campo">
+							<input type="Text" required="true" name="provincia"  class="campo">							
 						</div>				
 					</div>	
 
@@ -186,5 +193,41 @@
 			</div>
 		</div>
 	</div>
+	<script src="js/validaciones.js"></script>	
 	</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

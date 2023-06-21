@@ -204,3 +204,7 @@ width:30%;
 	width:70%;
 }
 
+.error {
+  color: red;
+  font-size: 12px;
+}
