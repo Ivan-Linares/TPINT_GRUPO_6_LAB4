@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.impl.EspecialidadesDAOImpl;
 import dao.impl.HorariosTrabajoDAOImpl;
 import dao.impl.MedicoDAOImpl;
 import dao.impl.PaisDAOImpl;
+import dominio.Especialidad;
 import dominio.HorariosTrabajo;
 import dominio.Medico;
 import dominio.Pais;
@@ -60,5 +62,11 @@ public class serverletsMedicos extends HttpServlet   {
 		PaisDAOImpl paisDao = new PaisDAOImpl();
 		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisDao.listarPaises();
 		request.setAttribute("listaPaises", listaPaises);
+	}
+	
+	protected void agregarListaEspecialidades(HttpServletRequest request) {
+		EspecialidadesDAOImpl espDao = new EspecialidadesDAOImpl();
+		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>) espDao.listarEspecialidades();
+		request.setAttribute("listaEspecialidades", listaEspecialidades);
 	}
 }

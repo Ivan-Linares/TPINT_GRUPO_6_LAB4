@@ -1,3 +1,4 @@
+<%@page import="dominio.Especialidad"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="dominio.Pais"%>
@@ -186,6 +187,27 @@
 								
 								</select>
 							</div>	
+			</div>
+			<div class="d-flex row">
+				<div class="d-flex fd-column">
+					<label>Especialidades</label>
+					<select name="especialidadSelect" class="select">
+						<option value="-1">Selecciona una especialidad</option>
+						<%
+						ArrayList<Especialidad> listaEspecialidades = new ArrayList<Especialidad>();
+						if(request.getAttribute("listaEspecialidades") != null){
+							listaEspecialidades = (ArrayList<Especialidad>)request.getAttribute("listaEspecialidades");
+						}
+						
+						ListIterator <Especialidad> it3 = listaEspecialidades.listIterator();
+						while(it3.hasNext()){
+							Especialidad esp = it3.next();
+						%>
+						<option value="<%=esp.getIdEspecialidad() %>"><%=esp.getDescripcion() %></option>
+						<%
+						}%>
+					</select>
+				</div>
 			</div>
 			</div>
 		</form>
