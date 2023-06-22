@@ -28,7 +28,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String deleteMedico = "update medicos set Activo=0 where dni=?";
 	private static final String deletePersona = "update personas set Activo=0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo=0 where dni=?";
-	private static final String listarMedicos = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
+	private static final String listarMedicos = "select med.idMedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
 	private static final String listarEspecialidades = "select esp.IdEspecialidad as IdEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	
@@ -260,6 +260,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 			
 			while(rs.next()) {
 				Medico persona = new Medico();
+				persona.setIdMedico(rs.getInt("idMedico"));
 				persona.setDni(rs.getString("dni"));
 				persona.setNombre(rs.getString("nombre"));
 				persona.setApellido(rs.getString("apellido"));

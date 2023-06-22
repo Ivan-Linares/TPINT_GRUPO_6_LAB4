@@ -34,7 +34,6 @@ public class serverletsMedicos extends HttpServlet   {
 			rd.forward(request, response);
 		}
 		else {
-			System.out.println("entro get");
 			listarMedicos(request);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
@@ -46,12 +45,15 @@ public class serverletsMedicos extends HttpServlet   {
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		ArrayList<Medico> listaMedicos  = medicoDao.listarMedicos();
 		request.setAttribute("listaMedicos", listaMedicos);
+		System.out.println(listaMedicos.size());
+		listarHorariosTrabajoMedico(request);
 	}
 	
 	protected void listarHorariosTrabajoMedico(HttpServletRequest request) {
 		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
 		ArrayList<HorariosTrabajo> listaHT = htDao.listar();
 		request.setAttribute("listaHT", listaHT);
+	
 	}
 	
 	protected void agregarListaPaises(HttpServletRequest request) {

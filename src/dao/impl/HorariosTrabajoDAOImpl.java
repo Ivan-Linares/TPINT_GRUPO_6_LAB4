@@ -14,6 +14,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	private static final String insertHorariosTrabajoMedico = "Insert into HorariosTrabajo (IdMedico, Dia, HoraEntrada, HoraSalida, Libre) values (?,?,?,?,?)";
 	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=?";
 	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo";
+	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo where idMedico = ";
 	private static final String updateHorariosTrabajoMedico = "update horariostrabajo set Dia=?, HorarioEntrada=?, HorarioSalida=? where idMedico=?";
 	
 	@Override
@@ -46,7 +47,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 
 
 	@Override
-	public boolean eliminar(String idMedico) {
+	public boolean eliminar(int idMedico) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -65,7 +66,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 		{
 
 			statement = conexion.prepareStatement(deleteHorariosTrabajoMedico);
-			statement.setString(1, idMedico);
+			statement.setInt(1, idMedico);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -124,6 +125,40 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 		{
 			st = conexion.createStatement();
 			ResultSet rs = st.executeQuery(listarHorariosTrabajoMedico);
+			
+			while(rs.next()) {
+				HorariosTrabajo ht = new HorariosTrabajo();
+				ht.setIdMedico(rs.getInt("idMedico"));
+				ht.setDia(rs.getString("Dia"));
+				ht.setHoraEntrada(rs.getInt("HoraEntrada"));
+				ht.setHoraSalida(rs.getInt("HoraSalida"));
+				
+				listaHT.add(ht);
+				
+				System.out.println(ht.getDia());
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaHT;
+	}
+
+
+	@Override
+	public ArrayList<HorariosTrabajo> listarPorMedico(int IdMedico) {
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<HorariosTrabajo> listaHT = new ArrayList<HorariosTrabajo>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			
+			ResultSet rs = st.executeQuery(listarHorariosTrabajoPorMedico + IdMedico);
 			
 			while(rs.next()) {
 				HorariosTrabajo ht = new HorariosTrabajo();

@@ -143,22 +143,51 @@
 					for(Medico medico : listaMedicos){%>				
 					<tr> 
 				<% 
+					ArrayList<HorariosTrabajo> horariosMedico = new ArrayList<HorariosTrabajo>();
 						for(HorariosTrabajo ht : listaHT){
 							if(ht.getIdMedico() == medico.getIdMedico()){
-							
+								horariosMedico.add(ht);
+							}}
 							String nombreClase ="bg-green" ; 
 							String textButtonActivo ="Activo";
 							if(!(medico.isActivo())){
 								 nombreClase = "bg-red"; 
 								 textButtonActivo ="Inactivo";
 							}
+							
 				%>
 						<form action="serverletsMedicos" method="post" class="<%=nombreClase%>">
 							<td><strong><%=medico.getDni() %></strong></td> 
 							<td><%=medico.getNombre() %></td> 
 							<td><%=medico.getApellido() %></td>
-							<td><%=ht.getDia() %></td> 
-							<td><%=ht.getHoraEntrada() %> a <%=ht.getHoraSalida() %> hrs</td> 
+							
+							<%if(horariosMedico.size() > 0){ %>
+								<td style="display:flex; flex-direction:column;">
+										<%for(HorariosTrabajo horarioMedico : horariosMedico){ %>									
+											<div style="border-bottom:1px solid blue; padding:4px 0px 4px 0px">
+												<%=horarioMedico.getDia() %>
+											</div>
+										<%}%>
+								</td>
+								 
+								<td>
+					           	 <%for(HorariosTrabajo horarioMedico : horariosMedico){ %>									
+									<div style="border-bottom:1px solid blue;padding:4px 0px 4px 0px">
+										<%=horarioMedico.getHoraEntrada() %> 
+											hs a
+										<%=horarioMedico.getHoraSalida() %> hs
+									</div>
+									<%}%>
+								</td> 
+							<%}
+							else{%>								
+								<td>
+Sin días asginados
+							</td> 
+							<td>
+							Sin horarios Asignados</td> 
+							<%}%>
+							
 							<td>Neurología, Psicología</td> 
 							<td class="d-flex">
 								<a href="#" class="btn bg-blue">Ver</a>
@@ -167,10 +196,7 @@
 							 </td>
 						</form>
 					</tr> 
-					<% 
-							}
-						}
-					}
+					<% }
 				}%>				
 			</tbody> 
 		</table>
