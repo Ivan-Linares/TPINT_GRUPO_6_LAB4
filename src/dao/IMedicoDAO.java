@@ -11,4 +11,5 @@ public interface IMedicoDAO {
 	public boolean modificar (Medico medico);
 	public ArrayList<Medico> listarMedicos();
 	public Medico obtenerMedico(String dniMedico);
+	public ArrayList<Medico> listarEspecialidadesMedico();
 }

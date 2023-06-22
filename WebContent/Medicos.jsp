@@ -1,3 +1,4 @@
+<%@page import="dominio.Especialidad"%>
 <%@page import="dominio.HorariosTrabajo"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -111,7 +112,7 @@
 			}		
 		}
 		
-	ArrayList<HorariosTrabajo> listaHT = new ArrayList<HorariosTrabajo>();
+		ArrayList<HorariosTrabajo> listaHT = new ArrayList<HorariosTrabajo>();
 		
 		if(request.getAttribute("listaHT") != null){
 			Object obj = request.getAttribute("listaHT");
@@ -120,6 +121,18 @@
 			}
 			else{
 				listaHT = null;
+			}
+		}
+		
+		ArrayList<Medico> listaEspecialidadesMedico = new ArrayList<Medico>();
+		
+		if(request.getAttribute("listaEspMedico") != null){
+			Object obj = request.getAttribute("listaEspMedico");
+			if(obj instanceof ArrayList<?>){
+				listaEspecialidadesMedico = (ArrayList<Medico>) obj;
+			}
+			else{
+				listaEspecialidadesMedico = null;
 			}
 		}
 	%>
@@ -182,13 +195,18 @@
 							<%}
 							else{%>								
 								<td>
-Sin días asginados
+							Sin días asginados
 							</td> 
 							<td>
 							Sin horarios Asignados</td> 
 							<%}%>
+							<%for(Medico med : listaEspecialidadesMedico){ 
+								if(med.getIdMedico() == medico.getIdMedico()){
+									ArrayList<Especialidad> listaEsp = med.getEspecialidades();
+									for(Especialidad esp : listaEsp){
+							%>
+							<td><%=esp.getDescripcion() %> </td> 
 							
-							<td>Neurología, Psicología</td> 
 							<td class="d-flex">
 								<a href="#" class="btn bg-blue">Ver</a>
 								<a href="#" class="btn bg-green">Editar</a>
@@ -196,7 +214,10 @@ Sin días asginados
 							 </td>
 						</form>
 					</tr> 
-					<% }
+					<% 			}
+								}
+							}
+					}
 				}%>				
 			</tbody> 
 		</table>

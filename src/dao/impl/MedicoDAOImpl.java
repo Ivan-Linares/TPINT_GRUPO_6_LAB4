@@ -29,8 +29,9 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String deletePersona = "update personas set Activo=0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo=0 where dni=?";
 	private static final String listarMedicos = "select med.idMedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
-	private static final String listarEspecialidades = "select esp.IdEspecialidad as IdEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
+	private static final String listarEspecialidades = "select med.IdMedico as idMedico, esp.IdEspecialidad as idEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
+	private static final String listarIDMedico = "select IdMedico from medicos";
 	
 	private int agregarDomicilio(Medico medico) {
 		
@@ -271,7 +272,8 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				
 				
 				//st2 = conexion.createStatement();
-				//ResultSet rs2 = st2.executeQuery(listarEspecialidades);
+				//ResultSet rs2 = st2.executeQuery(
+;
 				
 				//while(rs2.next()) {
 					//Especialidad especialidad = new Especialidad();
@@ -301,6 +303,55 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	public Medico obtenerMedico(String dniMedico) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public ArrayList<Medico> listarEspecialidadesMedico() {
+		Statement st;
+		Statement st2;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<Medico> listaEspMedicos = new ArrayList<Medico>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(listarIDMedico);
+			
+			while(rs.next()) {
+				Medico medico = new Medico();
+				medico.setIdMedico(rs.getInt("IdMedico"));
+				
+				st2 = conexion.createStatement();
+				ResultSet rs2 = st2.executeQuery(listarEspecialidades);
+				
+				ArrayList<Especialidad> listaEspecialidades = new ArrayList<Especialidad>();
+				
+				while(rs2.next()) {
+					
+					int id = rs2.getInt("idMedico");
+					
+					if(id == rs.getInt("IdMedico")) {
+						Especialidad esp = new Especialidad();
+						esp.setIdEspecialidad(rs.getInt("idEspecialidad"));
+						esp.setDescripcion(rs.getString("Especialidad"));
+						
+						listaEspecialidades.add(esp);
+					}
+					
+				}
+				
+				medico.setEspecialidades(listaEspecialidades);
+				
+				listaEspMedicos.add(medico);
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaEspMedicos;
 	}
 
 }

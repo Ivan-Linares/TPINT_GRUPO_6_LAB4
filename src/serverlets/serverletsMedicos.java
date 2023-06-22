@@ -55,7 +55,12 @@ public class serverletsMedicos extends HttpServlet   {
 		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
 		ArrayList<HorariosTrabajo> listaHT = htDao.listar();
 		request.setAttribute("listaHT", listaHT);
+	}
 	
+	protected void listarEspecialidadesMedico(HttpServletRequest request) {
+		MedicoDAOImpl espMedDao = new MedicoDAOImpl();
+		ArrayList<Medico> listaEspecialidadesMedico = (ArrayList<Medico>) espMedDao.listarEspecialidadesMedico();
+		request.setAttribute("listaEspMedico", listaEspecialidadesMedico);
 	}
 	
 	protected void agregarListaPaises(HttpServletRequest request) {
