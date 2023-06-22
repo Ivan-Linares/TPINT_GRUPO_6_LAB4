@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.impl.HorariosTrabajoDAOImpl;
 import dao.impl.MedicoDAOImpl;
+import dao.impl.PaisDAOImpl;
 import dominio.HorariosTrabajo;
 import dominio.Medico;
+import dominio.Pais;
 import dominio.Usuario;
 
 @WebServlet("/serverletsMedicos")
@@ -50,5 +52,11 @@ public class serverletsMedicos extends HttpServlet   {
 		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
 		ArrayList<HorariosTrabajo> listaHT = htDao.listar();
 		request.setAttribute("listaHT", listaHT);
+	}
+	
+	protected void agregarListaPaises(HttpServletRequest request) {
+		PaisDAOImpl paisDao = new PaisDAOImpl();
+		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisDao.listarPaises();
+		request.setAttribute("listaPaises", listaPaises);
 	}
 }
