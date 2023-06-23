@@ -3,6 +3,7 @@
     pageEncoding="ISO-8859-1"%>
     <%@ page import="dominio.Pais"%>
         <%@ page import="dominio.Medico"%>
+         <%@ page import="dominio.HorariosTrabajo"%>
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
@@ -10,7 +11,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Agregar Médico</title>
+<title>Ver Médico</title>
 <style>
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
@@ -221,9 +222,64 @@
 	</div>
 	
 	
-<div style="visibility: <% if(idMedico > 0 ){%> visible <%} else{%> hidden <%}%>">
+<div style="margin-top:40px">
 
-	<div >	
+	
+	<br/>	
+			<div >	
+	<div  class="filtro">
+	<h3>Horarios Médico</h3> 
+	
+	<form action="serverletsHorariosMedico" method="get">
+	<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Nuevo Horario</button>
+	</form>
+	
+	</div>	
+	<%
+	ArrayList<HorariosTrabajo> horariosMedico = new ArrayList<HorariosTrabajo>();
+
+	if(request.getAttribute("listaHorariosMedico") != null){
+		Object obj = request.getAttribute("listaHorariosMedico");
+		if(obj instanceof ArrayList<?>){
+			horariosMedico = (ArrayList<HorariosTrabajo>) obj;
+		}
+	}
+	%>
+		<table class="content-table header-table-blue" id="tablaMedicos"> 
+			<thead> 
+				<tr> 
+					<th>DNI</th>
+					<th>Día</th>
+					<th>Hora Entrada</th>
+					<th>Hora Salida</th>
+					<th>Acciones</th>
+				</tr>
+			</thead> 
+			<tbody>		
+	<% if(horariosMedico.size() > 0){
+	for(HorariosTrabajo horario: horariosMedico){%>
+		
+		<tr>
+		<form action="serverletsHorariosTrabajo" method="post" class="">
+		<td><strong><%= medico.getDni() %></strong></td> 
+		<td><%=horario.getDia() %></td> 
+		<td><%=horario.getHoraEntrada() %>hs</td> 
+		<td><%=horario.getHoraSalida() %>hs</td> 
+		<td class="d-flex">
+		<a href="#" class="btn bg-green">Editar</a>
+		<a href="#" class="btn bg-red w-100">Eliminar  </a>
+		 </td>
+	</form>
+
+
+	</tr> 
+	<% }} %>
+			</tbody> 
+		</table>
+	</div>
+	
+	
+	<div style="margin-top:100px;" >	
 		<div  class="filtro">
 			<h3>Telefonos Médico</h3> 
 			<!--  <button type="submit" name="btn-agregar-telefono" class="btn bg-green">Agregar Telefono</button>-->
@@ -268,57 +324,6 @@
 			</tbody> 
 		</table>
 	</div>
-	
-	<br/>	
-			<div >	
-	<div  class="filtro">
-	<h3>Horarios Médico</h3> 
-	<!--  <button type="submit" name="btn-agregar-telefono" class="btn bg-green">Agregar Telefono</button>-->
-	<a href="InsertarTelefono.jsp" name="btn-agregar-telefono" class="btn bg-green">Agregar Nuevo Horario</a>
-	</div>	
-		<table class="content-table header-table-blue" id="tablaMedicos"> 
-			<thead> 
-				<tr> 
-					<th>DNI</th>
-					<th>Día</th>
-					<th>Hora Entrada</th>
-					<th>Hora Salida</th>
-					<th>Acciones</th>
-				</tr>
-			</thead> 
-			<tbody>		
-			<tr>
-						<form action="serverletsHorariosTrabajo" method="post" class="">
-							<td><strong>44095935</strong></td> 
-							<td>Lunes</td> 
-							<td>8hs</td> 
-							<td>10hs</td> 
-							<td class="d-flex">
-								<a href="#" class="btn bg-green">Editar</a>
-								<a href="#" class="btn bg-red w-100">Eliminar  </a>
-							 </td>
-						</form>
-						
-
-					</tr> 
-					
-					<tr>	
-											<form action="serverletsHorariosTrabajo" method="post" class="">
-							<td><strong>44095935</strong></td> 
-							<td>Miercoles</td> 
-							<td>10hs</td> 
-							<td>14hs</td>  
-
-							<td class="d-flex">
-								<a href="#" class="btn bg-green">Editar</a>
-								<a href="#" class="btn bg-red w-100">Eliminar  </a>
-							 </td>
-						</form>
-					</tr> 	
-			</tbody> 
-		</table>
-	</div>
-	
 	</div>
 	</div>
 	
