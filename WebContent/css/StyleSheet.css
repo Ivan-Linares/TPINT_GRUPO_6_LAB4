@@ -194,7 +194,7 @@ width:30%;
 }
 
 .bg-red{
-	background-color: #eb2a2a;
+	background-color: #eb2a2a !important;
 }
 
 .filtro{

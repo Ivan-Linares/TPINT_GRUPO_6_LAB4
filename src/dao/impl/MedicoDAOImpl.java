@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 
 import dao.IMedicoDAO;
+import dominio.Domicilio;
 import dominio.Especialidad;
 import dominio.HorariosTrabajo;
 import dominio.Medico;
@@ -32,6 +33,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String listarEspecialidades = "select med.IdMedico as idMedico, esp.IdEspecialidad as idEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listarIDMedico = "select IdMedico from medicos";
+	private static final String listarMedico = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, telefono.telefono as telefono from personas per inner join medicos med on per.dni = med.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
 	
 	private int agregarDomicilio(Medico medico) {
 		
@@ -301,8 +303,45 @@ public class MedicoDAOImpl implements IMedicoDAO{
 
 	@Override
 	public Medico obtenerMedico(String dniMedico) {
-		// TODO Auto-generated method stub
-		return null;
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		Medico medico = new Medico();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(listarMedico + "'"+ dniMedico +"'");
+			
+			rs.next();
+			
+			medico.setDni(rs.getString("dni"));
+			medico.setNombre(rs.getString("nombre"));
+				
+				System.out.println("entro al impl medico" + medico.getDni());
+				medico.setApellido(rs.getString("apellido"));
+				medico.setSexo(rs.getString("sexo"));
+				medico.setFechaNacimiento(rs.getDate("fechaNacimiento"));
+				medico.setCorreo(rs.getString("correo"));
+				medico.setActivo(rs.getBoolean("activo"));
+				
+				Pais nacionalidad = new Pais();
+				nacionalidad.setDescripcion(rs.getString("nacionalidad"));
+				
+				medico.setNacionalidad(nacionalidad);		
+				
+				Domicilio domicilio = new Domicilio();
+				domicilio.setDireccion(rs.getString("direccion"));
+				domicilio.setLocalidad(rs.getString("localidad"));
+				domicilio.setProvincia(rs.getString("provincia"));
+				
+				medico.setDomicilio(domicilio);		
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return medico;
 	}
 
 	@Override

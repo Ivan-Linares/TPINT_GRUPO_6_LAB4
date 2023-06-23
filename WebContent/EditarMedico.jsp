@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="dominio.Pais"%>
+        <%@ page import="dominio.Medico"%>
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
@@ -56,19 +57,21 @@
 			</ul>
 		</div>
 	</div>
-	
+	<%		
+		Medico medico = (Medico)request.getAttribute("medico"); 	
+		%>
 	
 	<div class="container fd-column m-auto" style="width:100%;
-    margin: 0px 100px;">
-	<div class="title-section d-flex jc-sb">
-		<h1>Nuevo Médico</h1>
+    margin: 0px 100px;" visible="<% if(medico == null) {%> false <%}%>">
+	<div class="title-section d-flex jc-sb" >
+		<h1> Médico</h1>
 
 		
 		
 	</div>
 	
 	<div>		
-		<form method="post" action="serverletsMedicos">
+		<form method="post" action="serverletsMedico">
 		
 		<%
 		Integer idMedico = 0;
@@ -81,22 +84,22 @@
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>DNI</label>
-						<input type="number" required="true" name="dni" class="campo">
+						<input type="number" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
 						<span id="dniError" class="error"></span>
 					</div>
 			
 					<div class="d-flex fd-column">
 						<label>Fecha de Nacimiento</label>
-						<input type="Date" required="true" name="fechaNacimiento" class="campo">
+						<input type="Date" required="true" name="fechaNacimiento" class="campo" value="<%= medico.getFechaNacimiento()%>">
 						<span id="fechaNacimientoError" class="error"></span>
 					</div>
 					
 					<div class="d-flex fd-column">
 						<label>Sexo</label>
 						<select name="sexoSelect" class="select">
-							<option value="F">Femenino</option>
-							<option  value="M">Masculino</option>
-							<option  value="O">Otro</option>
+							<option value="F" <%if(medico.getSexo().contains("F")){%> selected="true"<%}%>>Femenino</option>
+							<option  value="M" <%if(medico.getSexo().contains("M")){%> selected="true"<%}%>>Masculino</option>
+							<option  value="O" <%if(medico.getSexo().contains("O")){%> selected="true"<%}%>>Otro</option>
 						</select>
 					</div>
 					
@@ -105,20 +108,19 @@
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>Nombre</label>
-						<input  type="text" required="true" name="nombre" class="campo">
+						<input  type="text" required="true" name="nombre" class="campo" value="<%= medico.getNombre()%>">
 						<span id="nombreError" class="error"></span>
 					</div>
 			
 					<div class="d-flex fd-column">
 						<label>Apellido</label>
-						<input type="text" required="true" name="apellido" class="campo">
+						<input type="text" required="true" name="apellido" class="campo" value="<%= medico.getApellido()%>">
 						<span id="apellidoError" class="error"></span>
 					</div>
 					
 					<div class="d-flex fd-column">
 						<label>Nacionalidad</label>
 						<select name="nacionalidadSelect" class="select">
-							<option value="-1">Escoge un Pais: </option>
 								<% 
 								ArrayList<Pais> listaPaises = new ArrayList<Pais>();
 								if(request.getAttribute("listaPaises") != null){
@@ -130,7 +132,7 @@
 				{
 					Pais pais = it.next();
 				%>
-				<option value="<%= pais.getIdPais()%>"><%= pais.getDescripcion() %></option>
+				<option value="<%= pais.getIdPais()%>"  <%if(medico.getNacionalidad().getDescripcion() == pais.getDescripcion()){%> selected="true"<%}%> ><%= pais.getDescripcion() %></option>
 				<%
 				}%>
 						</select>
@@ -140,14 +142,15 @@
 				<div class="d-flex row">
 					<div class="d-flex fd-column w-50">
 						<label>Correo Electrónico</label>
-						<input type="mail" required="true" name="correo" class="campo">
+						<input type="mail" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>">
 						<span id="mailError" class="error"></span>
 					</div>
 			
-					<div class="d-flex fd-column w-50">
-						<label>Dirección</label>
-								<input type="Text" required="true"  name="direccion" class="campo">
-					</div>
+				
+								<div class="d-flex fd-column w-50">
+								<label>Dirección</label>
+								<input type="Text" required="true"  name="direccion" class="campo" value="<%= medico.getDomicilio().getDireccion()%>">
+				</div>
 						
 				</div>
 			
@@ -156,22 +159,22 @@
 			</div>
 			
 			<div class="d-flex row">
-				
 
 				
 								<div class="d-flex fd-column">
 								<label>Localidad</label>
-<input type="Text" required="true" name="localidad"  class="campo">
+<input type="Text" required="true" name="localidad"  class="campo" value="<%= medico.getDomicilio().getLocalidad()%>">
 				</div>
 				
 				<div class="d-flex fd-column">
 								<label>Provincia</label>
-<input type="Text" required="true" name="provincia"  class="campo">
+<input type="Text" required="true" name="provincia"  class="campo" value="<%= medico.getDomicilio().getProvincia()%>">
 				</div>
-											<div class="d-flex fd-column">
+			
+			
+			<div class="d-flex fd-column">
 								<label>Pais</label>
 								<select name="paisSelect" class="select">
-								<option value="-1">Escoge un Pais: </option>
 								<% 
 								
 								ListIterator <Pais> it2 = listaPaises.listIterator();
@@ -179,19 +182,16 @@
 				{
 					Pais pais = it2.next();
 				%>
-				<option value="<%= pais.getIdPais()%>"><%= pais.getDescripcion() %></option>
+				<option value="<%= pais.getIdPais()%>"  <%if(medico.getNacionalidad().getDescripcion().toLowerCase() == pais.getDescripcion().toLowerCase()){%> selected="true"<%}%>><%= pais.getDescripcion() %></option>
 				<%
 				}%>
 								
 								</select>
-				</div>
-			</div>
-			
+							</div>	
+							</div>
 			<div class="d-flex row">
 			
-			<div class="d-flex fd-column">
-								
-							</div>	
+			
 			</div>
 			<div class="d-flex row">
 				<div class="d-flex fd-column">

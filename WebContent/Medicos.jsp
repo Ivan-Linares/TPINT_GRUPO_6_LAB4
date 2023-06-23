@@ -83,7 +83,8 @@
 	<div class="title-section d-flex jc-sb">
 		<h1>Médicos</h1>
 		
-		<div class="filtro">
+		
+		<form method="get" action="serverletsMedicos"  class="filtro">
 		<h3>Filtrar por:</h3>
 		<select name="filtroMedicos" id="filtroMedicos">
 			<option>Nombre</option>
@@ -95,8 +96,9 @@
 		
 		<input type="text">
 		
-		<a href="InsertarMedico.jsp" class="btn bg-green">Agregar Médico</a>
-		</div>
+		<button type="submit" name="btn-nuevo-medico" class="btn bg-green">Agregar Médico</button>
+		</form>
+		
 	</div>
 	
 	<%
@@ -147,6 +149,7 @@
 					<th>Día de Atención</th> 
 					<th>Horario de Atención</th> 
 					<th>Especialidad</th> 
+					<th>Activo</th>
 					<th>Acciones</th> 
 				</tr>
 			</thead> 
@@ -161,6 +164,7 @@
 							if(ht.getIdMedico() == medico.getIdMedico()){
 								horariosMedico.add(ht);
 							}}
+						
 							String nombreClase ="bg-green" ; 
 							String textButtonActivo ="Activo";
 							if(!(medico.isActivo())){
@@ -170,7 +174,7 @@
 							
 				%>
 						<form action="serverletsMedicos" method="post" class="<%=nombreClase%>">
-							<td><strong><%=medico.getDni() %></strong></td> 
+							<td><strong><%=medico.getDni() %></strong> <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">  </td> 
 							<td><%=medico.getNombre() %></td> 
 							<td><%=medico.getApellido() %></td>
 							
@@ -200,23 +204,39 @@
 							<td>
 							Sin horarios Asignados</td> 
 							<%}%>
-							<%for(Medico med : listaEspecialidadesMedico){ 
-								if(med.getIdMedico() == medico.getIdMedico()){
-									ArrayList<Especialidad> listaEsp = med.getEspecialidades();
-									for(Especialidad esp : listaEsp){
-							%>
-							<td><%=esp.getDescripcion() %> </td> 
 							
+							<%
+							ArrayList<Especialidad> listaEsp = new ArrayList<Especialidad>();
+							for(Medico med : listaEspecialidadesMedico){ 
+								if(med.getIdMedico() == medico.getIdMedico()){
+									listaEsp = med.getEspecialidades();
+								}
+							}%>
+							<td> 
+							<%if(listaEsp.size() > 0){
+								for(Especialidad esp : listaEsp){%>
+									<%=esp.getDescripcion() %>
+								<%}
+							}
+							else{%>
+								Sin Especialidades
+								<%}	
+							%>
+							</td> 
+									
+							<td>
+							<button class="btn w-100 <%= nombreClase%>">
+							 <%= textButtonActivo%>
+							</button>
+							</td> 	
 							<td class="d-flex">
-								<a href="#" class="btn bg-blue">Ver</a>
-								<a href="#" class="btn bg-green">Editar</a>
-								<a href="#" class="btn bg-red">Eliminar</a>
+								<button type="submit" name="btn-ver-medico" class="btn bg-blue">Ver</a>
+								<button type="submit" name="btn-editar-medico" class="btn bg-green">Editar</a>
+								<button type="submit" name="btn-eliminar-medico" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al Medico?');">Eliminar</a>
 							 </td>
 						</form>
 					</tr> 
-					<% 			}
-								}
-							}
+					<% 			
 					}
 				}%>				
 			</tbody> 
