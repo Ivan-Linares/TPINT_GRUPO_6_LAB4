@@ -1,4 +1,6 @@
+<%@ page import="java.util.ArrayList"%>
 <%@ page import="dominio.Usuario"%>
+<%@ page import="dominio.Turnos"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -69,19 +71,35 @@
 <div class="container fd-column m-auto">
 	<div class="title-section d-flex jc-sb">
 			<h1>Turnos</h1>
-			
-			<div class="filtro">
-			<h3>Filtrar por:</h3>
-			<select name="filtroTurnos" id="filtroTurnos">
-				<option>Especialidad</option>
-				<option>Medico</option>
-				<option>Paciente</option>				
-			</select>			
-			<input type="text">
-			<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
-			<a href="InsertarTurno.jsp" class="btn bg-green">Agregar Turno</a>			
-			</div>
+			<form action="servletsTurnos" method="get">
+				<div class="filtro">
+				<h3>Filtrar por:</h3>
+				<select name="filtroTurnos" id="filtroTurnos">
+					<option>Especialidad</option>
+					<option>Medico</option>
+					<option>Paciente</option>				
+				</select>			
+				<input type="text">
+				<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
+				<a href="InsertarTurno.jsp" class="btn bg-green">Agregar Turno</a>			
+				</div>
+			</form>
 		</div>
+		
+	<%
+	ArrayList<Turnos> listaTurnos = new ArrayList<Turnos>();
+
+	if(request.getAttribute("listaTurnos") != null){
+		Object obj = request.getAttribute("listaTurnos");
+		if(obj instanceof ArrayList<?>){
+			listaTurnos = (ArrayList<Turnos>) obj;
+		}
+		else{
+			listaTurnos = null;
+		}		
+	}
+	%>
+	
 	<div>
 		<table class="content-table header-table-blue"> 
 			<thead> 
@@ -97,36 +115,36 @@
 				</tr>
 			</thead> 
 			<tbody>
-				<tr> 
-					<td>1</td> 
-					<td>09/06/2023</td> 
-					<td>14hs</td>
-					<td>Juan Perez</td> 
-					<td>Cirugia</td> 
-					<td>Julian Cristobal</td> 
-					<td>Pendiente</td> 
-					<td>Ocupado</td> 
-				</tr> 
-				 <tr> 
-				 	<td>2</td> 
-					<td>016/08/2023</td> 
-					<td>9hs</td>
-					<td>Trinidad Morera</td> 
-					<td>Oftalmología</td> 
-					<td>Cristian Nadal</td> 
-					<td>Pendiente</td> 
-					<td>Ocupado</td> 
-				 </tr> 
-				 <tr> 
-				 	<td>3</td> 
-					<td>06/06/2023</td> 
-					<td>14hs</td>
-					<td>Oscar Merchan</td> 
-					<td>Neurología</td> 
-					<td>Nadia Alcantara</td> 
-					<td>Realizado</td> 
-					<td>Presente</td> 
-				 </tr>
+			<%if(listaTurnos != null) {%>
+				<%for(Turnos turno : listaTurnos) {%>
+					<tr> 
+					<% String nombreClase ="bg-green" ; 
+					String textButtonActivo ="Activo";
+					if(!(turno.isActivo())){
+						 nombreClase = "bg-red"; 
+						 textButtonActivo ="Inactivo";
+					}  
+					%>
+					<form action="serverletsPacientes" method="post" class="<%=nombreClase%>">
+						<td><strong><%=turno.getIdTurno() %></strong> <input type="hidden" name="idTurno" value="<%=turno.getIdTurno() %>"></td> 
+						<td><%=turno.getFechaHora().getDayOfYear() %>/<%=turno.getFechaHora().getMonthValue() %>/<%=turno.getFechaHora().getYear() %></td> 
+						<td><%=turno.getFechaHora().getHour() %></td>
+						<td><%=turno.getMedico().getNombre() %> " " <%=turno.getMedico().getApellido() %></td>
+						<td><%=turno.getEspecialidad().getDescripcion() %></td> 
+						<td><%=turno.getPaciente().getNombre() %> " " <%=turno.getPaciente().getApellido() %> </td> 
+						<td><%=turno.getEstado().getDescripcion() %></td> 
+						<td><%=turno.getObservacion() %></td>
+						<td><button class="btn w-100 <%= nombreClase%>">
+							 <%= textButtonActivo%>
+							</button></td> 			
+							<td class="d-flex">
+								<button type="submit" name="btn-ver-turno" class="btn bg-blue">Ver</button>
+								<button type="submit" name="btn-editar-turno" class="btn bg-green">Editar</button>
+								<button type="submit" name="btn-eliminar-turno" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al turno ?');">Eliminar</button>
+						 	</td>
+					</tr>
+				<%} %>
+			<%} %>
 			</tbody> 
 		</table>
 	</div>

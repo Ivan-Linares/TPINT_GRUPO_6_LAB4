@@ -8,12 +8,13 @@ public class Turnos {
 	private LocalDateTime fechaHora;
 	private Especialidad especialidad;
 	private Paciente paciente;
+	private Medico medico;
 	private Estado estado;
 	private String observacion;
 	private boolean activo;
 	
 	
-	public Turnos(int idTurno, LocalDateTime fechaHora, Especialidad especialidad, Paciente paciente, Estado estado,
+	public Turnos(int idTurno, LocalDateTime fechaHora, Especialidad especialidad, Paciente paciente, Medico medico, Estado estado,
 			String observacion, boolean activo) {
 		super();
 		IdTurno = idTurno;
@@ -24,6 +25,8 @@ public class Turnos {
 		this.observacion = observacion;
 		this.activo = activo;
 	}
+	
+	public Turnos() {}
 	
 	public int getIdTurno() {
 		return IdTurno;
@@ -66,6 +69,14 @@ public class Turnos {
 	}
 	public void setActivo(boolean activo) {
 		this.activo = activo;
+	}
+
+	public Medico getMedico() {
+		return medico;
+	}
+
+	public void setMedico(Medico medico) {
+		this.medico = medico;
 	}
 	
 }

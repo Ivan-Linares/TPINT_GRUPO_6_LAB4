@@ -24,4 +24,6 @@ public class Estado {
 		this.idEstado = idEstado;
 		this.descripcion = descripcion;
 	}
+	
+	public Estado() {}
 }
