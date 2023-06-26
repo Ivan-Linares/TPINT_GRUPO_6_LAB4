@@ -16,6 +16,7 @@ import dao.impl.HorariosTrabajoDAOImpl;
 import dao.impl.MedicoDAOImpl;
 import dao.impl.PacienteDAOImpl;
 import dao.impl.PaisDAOImpl;
+import dao.impl.TelefonoDAOImpl;
 import dominio.Cobertura;
 import dominio.Domicilio;
 import dominio.Especialidad;
@@ -86,6 +87,7 @@ public class serverletsMedicos extends HttpServlet   {
 			agregarListaPaises(request);
 			agregarListaEspecialidades(request);
 			listarHorariosTrabajoPorMedico(request, medico.getIdMedico());
+			listarTelefonosPorMedico(request, medico.getDni());
 			RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
 			rd.forward(request, response);
 		}
@@ -108,6 +110,12 @@ public class serverletsMedicos extends HttpServlet   {
 		request.setAttribute("listaMedicos", listaMedicos);
 		System.out.println(listaMedicos.size());
 		listarHorariosTrabajoMedico(request);
+	}
+	
+	protected void listarTelefonosPorMedico(HttpServletRequest request, String dniMedico) {
+		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+		ArrayList<Telefono> listaT = tDao.listarPorPersona(dniMedico);
+		request.setAttribute("listaTelefonosMedico", listaT);
 	}
 	
 	protected void listarHorariosTrabajoPorMedico(HttpServletRequest request, int idMedico) {

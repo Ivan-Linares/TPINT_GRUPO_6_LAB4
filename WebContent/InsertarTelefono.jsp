@@ -17,21 +17,51 @@
 		<div class="title-section d-flex jc-sb">
 		<h1>Nuevo Telefono</h1>
 
-		<a href="InsertarMedico.jsp" class="btn bg-green">Volver Atrás</a>
+		<% 
+	String idMedico = ""; 
+	String dniMedico = ""; 
+	if(request.getAttribute("idMedico") != null){
+			 idMedico = request.getAttribute("idMedico").toString();
+	}		 
+			 if(request.getAttribute("dniMedico") != null){			 
+				 dniMedico = request.getAttribute("dniMedico").toString();
+			 %>
+			 <form action="serverletsTelefono" method="post">
+			<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
+		<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
+		</form>
+			 <% }%>
 		
 	</div>
 	
-		<form>
+
+		<form action="serverletsTelefono" method="post">
+				<%if(idMedico != ""){
+			%>
+			 <input type="hidden" name="idMedico" value="<%=idMedico %>">
+		<%} %>
+		<%if(dniMedico != ""){
+			%>
+			 <input type="hidden" name="dniMedico" value="<%=dniMedico %>">
+		<%} %>
 			<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 			
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>Telefono</label>
-						<input type="number" required="true" name="dni" class="campo">
+						<input type="number" required="true" name="telefono" class="campo">
 					</div>	
 				</div>
 			</div>
+			
+			<button type="submit" name="btn-agregar-telefono" class="btn bg-green">Agregar Telefono</button>
 		</form>
 	</div>
+	
+	<%if (request.getAttribute("estadoNuevoTelefono") != null) {
+	String mensaje = request.getAttribute("estadoNuevoTelefono").toString();%>
+	<br/>
+	<span> <%= mensaje %></span>
+	<%}%>
 </body>
 </html>

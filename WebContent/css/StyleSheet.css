@@ -7,7 +7,7 @@
 }
 .container{
 	display:flex;
-	height: 100vh;
+	min-height: 100vh;
 }
 
 .navbar{
@@ -208,3 +208,12 @@ width:30%;
   color: red;
   font-size: 12px;
 }
+
+.position-relative{
+	position: relative;
+}
+
+.position-absolute{
+	position: absolute;
+}
+

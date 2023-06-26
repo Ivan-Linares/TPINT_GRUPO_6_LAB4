@@ -1,9 +1,10 @@
 <%@page import="dominio.Especialidad"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@ page import="dominio.Pais"%>
-        <%@ page import="dominio.Medico"%>
-         <%@ page import="dominio.HorariosTrabajo"%>
+<%@ page import="dominio.Pais"%>
+<%@ page import="dominio.Medico"%>
+<%@ page import="dominio.HorariosTrabajo"%>
+<%@ page import="dominio.Telefono"%>
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
@@ -72,7 +73,7 @@
 	</div>
 	
 	<div>		
-		<form method="post" action="serverletsMedico">
+		<form method="post" action="serverletsMedico" class="position-relative">
 		
 		<%
 		Integer idMedico = 0;
@@ -217,20 +218,20 @@
 			</div>
 			</div>
 			
-			<button type="submit" name="btn-agregar-medico" class="btn bg-green">Agregar Médico</button>
+			<button type="submit" name="btn-agregar-medico" class="btn bg-green position-absolute" style="right:0;">Agregar Médico</button>
 		</form>
 	</div>
 	
 	
-<div style="margin-top:40px">
+<div style="margin:40px 0px;">
 
 	
 	<br/>	
-			<div >	
+			<div style="border: 1px solid blue; padding: 10px; border-radius:10px;">	
 	<div  class="filtro">
 	<h3>Horarios Médico</h3> 
 	
-	<form action="serverletsHorariosMedico" method="get">
+	<form action="serverletsHorariosMedico"  method="get">
 	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
 	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 	<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Nuevo Horario</button>
@@ -247,7 +248,7 @@
 		}
 	}
 	%>
-		<table class="content-table header-table-blue" id="tablaMedicos"> 
+		<table class="content-table header-table-blue w-100" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
 					<th>DNI</th>
@@ -281,12 +282,26 @@
 	</div>
 	
 	
-	<div style="margin-top:100px;" >	
+	<div  style="border: 1px solid blue; padding: 10px; border-radius:10px; margin-top:100px;">	
 		<div  class="filtro">
 			<h3>Telefonos Médico</h3> 
-			<!--  <button type="submit" name="btn-agregar-telefono" class="btn bg-green">Agregar Telefono</button>-->
-			<a href="InsertarTelefono.jsp" name="btn-agregar-telefono" class="btn bg-green">Agregar Telefono</a>
+				<form action="serverletsTelefono"  method="get">
+	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+	<button type="submit" name="btn-nuevo-telefono" class="btn bg-green w-100">Agregar Nuevo Horario</button>
+	</form>
 		</div>	
+		
+		<%
+	ArrayList<Telefono> telefonosMedico = new ArrayList<Telefono>();
+
+	if(request.getAttribute("listaTelefonosMedico") != null){
+		Object obj = request.getAttribute("listaTelefonosMedico");
+		if(obj instanceof ArrayList<?>){
+			telefonosMedico = (ArrayList<Telefono>) obj;
+		}
+	}
+	%>
 		<table class="content-table header-table-blue" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
@@ -296,10 +311,13 @@
 				</tr>
 			</thead> 
 			<tbody>		
+			<% if(telefonosMedico.size() > 0){
+			for(Telefono telefono: telefonosMedico){%>
+		
 			<tr>
 						<form action="serverletsTelefonos" method="post" class="">
-							<td><strong>44095935</strong></td> 
-							<td>1567890945</td> 
+							<td><strong><%= telefono.getDni() %></strong></td> 
+							<td><%=telefono.getTelefono() %></td> 
 
 							<td class="d-flex">
 								<a href="#" class="btn bg-green">Editar</a>
@@ -309,20 +327,7 @@
 						
 
 					</tr> 
-					
-					<tr>	
-											<form action="serverletsTelefonos" method="post" class="">
-							<td><strong>44095935</strong></td> 
-							<td>1547678231</td> 
-
-							<td class="d-flex">
-								<a href="#" class="btn bg-green">Editar</a>
-								<a href="#" class="btn bg-red w-100">Eliminar  </a>
-							 </td>
-							 
-							 
-						</form>
-					</tr> 	
+			<% }} %>
 			</tbody> 
 		</table>
 	</div>
