@@ -12,7 +12,7 @@
 
 </head>
 <body>
-<div class="container fd-column m-auto" style="max-width:100%; padding:20px">	
+<div class="container fd-column m-auto" style="max-width:100%; padding:100px">	
 		<div class="title-section d-flex jc-sb">
 		<h1>Nuevo Horario</h1>
 
