@@ -113,21 +113,26 @@ public class serverletsPacientes extends HttpServlet  {
 			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-agregar-paciente") != null) {
-			try {
-				if(AgregarPaciente(pDao, request)) {
-					//habria que hacer que muestre un msj de confirmacion antes de agregar 
-					//y que muestr un msj de que se agrego bien cdo se agrega el nuevo paciente
+			try {				
+				if(!AgregarPaciente(pDao, request)) {					
+					request.setAttribute("mensajeError", "Ya existe un registro con el DNI ingresado.");					
 					listarPacientes(request);
-					
+						
+					RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
+					rd.forward(request, response);
+				}	
+				else {
+					request.setAttribute("mensajeExito", "Registro dado de alta con exito ");
+					listarPacientes(request);
+						
 					RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 					rd.forward(request, response);
 				}
-			} catch (ParseException e) {
 				
+			} catch (ParseException e) {				
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 	}
 
 	protected void EliminarPaciente(PacienteDAOImpl pDao, String dniPaciente) {		
@@ -138,6 +143,9 @@ public class serverletsPacientes extends HttpServlet  {
 		
 		Paciente nuevoPaciente = new Paciente();
 		nuevoPaciente.setDni(request.getParameter("dni").toString());
+		if(pDao.existe(nuevoPaciente.getDni())){
+			return false;
+		}
 		nuevoPaciente.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
 		nuevoPaciente.setSexo(request.getParameter("sexoSelect"));
 		nuevoPaciente.setNombre(request.getParameter("nombre"));
@@ -204,4 +212,5 @@ public class serverletsPacientes extends HttpServlet  {
 		
 		return Modificado;
 	}
+	
 }

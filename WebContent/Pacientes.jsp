@@ -115,8 +115,24 @@
 			listaPacientes = null;
 		}		
 	}
-%>
+%>	
+	<% String mensaje = (String) request.getAttribute("mensajeExito");
+   if (mensaje != null) { %>
+   <h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      <%= mensaje %>
+   </h3>
+<% } %>
 
+<% String mensajeError = (String) request.getAttribute("mensajeError");
+   String dniError = (String) request.getAttribute("dniError");
+   if (mensajeError != null) { %>
+   <h3 style="font-weight: bold; color: red; margin: 20px 0 20px 0;">
+      <%= mensajeError%>
+   </h3>
+<% } %>
+
+
+	
 	<div>
 		<table class="content-table header-table-blue"  id="tablaPacientes"> 
 			<thead> 

@@ -32,6 +32,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";
 	private static final String listarPaciente = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
+	private static final String existePaciente = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS existe_registro FROM personas p WHERE p.dni = ?";
 	
 	private int agregarDomicilio(Paciente paciente) {
 		
@@ -108,11 +109,10 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			statement.setString(4, paciente.getSexo());	
 			statement.setInt(5, paciente.getNacionalidad().getIdPais());
 
-			SimpleDateFormat sdf = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);		
-			SimpleDateFormat print = new SimpleDateFormat("yyyyddMM");		
-			Long datesql = Long.parseLong(print.format(paciente.getFechaNacimiento()));
-			java.sql.Date sqlDate = new java.sql.Date(datesql);				
-			statement.setDate(6, sqlDate);	
+			SimpleDateFormat print = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaNacimientoString = print.format(paciente.getFechaNacimiento());
+			Date sqlDate = Date.valueOf(fechaNacimientoString);
+			statement.setDate(6, sqlDate);
 			
 			statement.setString(7, paciente.getCorreo());
 			statement.setInt(8, idDomicilio);
@@ -323,6 +323,25 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		}
 		
 		return paciente;
+	}
+
+	@Override
+	public boolean existe(String dniPaciente) {
+	    PreparedStatement st;
+	    Connection conexion = Conexion.getConexion().getSQLConexion();	    
+	    int existe = 0;
+	    try {
+	        st = conexion.prepareStatement(existePaciente);
+	        st.setString(1, dniPaciente);
+	        ResultSet rs = st.executeQuery();
+	        if (rs.next()) {
+	            existe = rs.getInt("existe_registro");	            
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    }	    
+		if (existe == 1) return true;
+	    return false;
 	}
 
 }

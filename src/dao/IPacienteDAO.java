@@ -9,4 +9,5 @@ public interface IPacienteDAO {
 	public boolean modificar (Paciente paciente);
 	public List<Paciente> listarPacientes();
 	public Paciente obtenerPaciente(String dniPaciente);
+	public boolean existe(String dniPaciente);
 }
