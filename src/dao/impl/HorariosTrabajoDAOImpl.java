@@ -30,8 +30,8 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 			statement.setInt(1, horarioTrabajo.getIdMedico());
 			statement.setString(2, horarioTrabajo.getDia());
 			statement.setInt(3, horarioTrabajo.getHoraEntrada());
-			statement.setInt(3, horarioTrabajo.getHoraSalida());
-			statement.setBoolean(4, horarioTrabajo.isLibre());
+			statement.setInt(4, horarioTrabajo.getHoraSalida());
+			statement.setBoolean(5, true);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();

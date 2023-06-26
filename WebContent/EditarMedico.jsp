@@ -231,6 +231,8 @@
 	<h3>Horarios Médico</h3> 
 	
 	<form action="serverletsHorariosMedico" method="get">
+	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 	<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Nuevo Horario</button>
 	</form>
 	

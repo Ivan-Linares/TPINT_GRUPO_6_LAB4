@@ -12,34 +12,72 @@
 
 </head>
 <body>
-<div class="container fd-column m-auto" style="width:100%;
-    margin: 0px 100px;">	
+<div class="container fd-column m-auto" style="max-width:100%; padding:20px">	
 		<div class="title-section d-flex jc-sb">
 		<h1>Nuevo Horario</h1>
 
-		<a href="InsertarMedico.jsp" class="btn bg-green">Volver Atrás</a>
+	<% 
+	String idMedico = ""; 
+	String dniMedico = ""; 
+	if(request.getAttribute("idMedico") != null){
+			 idMedico = request.getAttribute("idMedico").toString();
+	}		 
+			 if(request.getAttribute("dniMedico") != null){			 
+				 dniMedico = request.getAttribute("dniMedico").toString();
+			 %>
+			 <form action="serverletsMedicos" method="post">
+			<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
+		<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
+		</form>
+			 <% }%>
 		
 	</div>
 	
-		<form>
-			<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
+		<form method="post" action="serverletsHorariosMedico">
+		
+		<%if(idMedico != ""){
+			%>
+			 <input type="hidden" name="idMedico" value="<%=idMedico %>">
+		<%} %>
+		<%if(dniMedico != ""){
+			%>
+			 <input type="hidden" name="dniMedico" value="<%=dniMedico %>">
+		<%} %>
+			<div class="d-flex fd-column style-form" style="padding: 50px 0px;">
 			
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>Día</label>
-						<input type="text" required="true" name="dia" class="campo">
+						<select name="dia" class="select">
+									<option value="Lunes">Lunes</option>
+									<option value="Martes">Martes</option>		
+									<option value="Miércoles">Miércoles</option>				
+									<option value="Jueves">Jueves</option>		
+									<option value="Viernes">Viernes</option>	
+									<option value="Sábados">Sábado</option>		
+									<option value="Domingo">Domingo</option>				
+								</select>
 					</div>	
 					<div class="d-flex fd-column">
-						<label>Hora Desde</label>
-						<input type="text" required="true" name="dia" class="campo">
+						<label>Hora Entrada</label>
+						<input type="time"  id="horaDesde"  required="true" name="horaEntrada" class="campo">
 					</div>	
 					<div class="d-flex fd-column">
-						<label>Hora Hasta</label>
-						<input type="text" required="true" name="dia" class="campo">
+						<label>Hora Salida</label>
+						<input type="time"  id="horaHasta" required="true" name="horaSalida" class="campo">
 					</div>	
 				</div>
 			</div>
+			
+			<button type="submit" name="btn-agregar-medico" class="btn bg-green">Agregar Horario</button>
 		</form>
+		
+	<%if (request.getAttribute("estadoNuevoHorario") != null) {
+	String mensaje = request.getAttribute("estadoNuevoHorario").toString();%>
+	
+	<span> <%= mensaje %></span>
+	<%}%>
 	</div>
+	
 </body>
 </html>
