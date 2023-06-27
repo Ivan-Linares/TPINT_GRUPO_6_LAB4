@@ -1,4 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ page import="dominio.Paciente"%>
+<%@ page import="dominio.Especialidad"%>
+<%@ page import="java.util.ArrayList"%>
+<%@page import="java.util.ListIterator"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -43,26 +47,72 @@
 		<div class="container fd-column m-auto" style="width:100%;
 	    margin: 0px 100px;">		
 			<div>		
-				<form>
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 					
-						<div class="d-flex row">						
-							<div class="d-flex fd-column">
-								<label>Paciente</label>
-								<select name="paciente" class="select">
-									<option>Lucas Beltran</option>
-									<option>Rodrigo Aliendro</option>									
-								</select>
+					<form action="servletsTurnos" method="post">
+						<div class="d-flex fd-column">
+							<label>DNI</label>
+							<input type="number" class="campo" name="dniPaciente">
+							<input type="submit" name="btn-buscar-dni" class="btn bg-green" value="Buscar">
+						</div>
+					</form>
+					
+					<% 
+					boolean encontro = false; 
+					Paciente paciente = (Paciente)request.getAttribute("paciente");
+					String dni = (String)request.getAttribute("dni");
+					
+					if(request.getAttribute("encontroDNI") != null){
+						if((boolean)request.getAttribute("encontroDNI") == false){
+							%>
+							<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
+								<label>DNI <%=dni %> NO EXISTENTE</label>
+								<button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
 							</div>
-							
-							<div class="d-flex fd-column">
-								<label>Especialidad</label>
-								<select name="especialidad" class="select">
-									<option>Cirugia</option>
-									<option>Oftalmología</option>		
-									<option>Neurología</option>							
-								</select>
-							</div>	
+							<%
+						}else{
+							%>
+							<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
+								<div class="d-flex row">
+									<label>DNI</label>
+									<label>Nombre</label>
+									<label>Apellido</label>
+									<label>Fecha Nacimiento</label>
+								</div>
+								<div class="d-flex row">
+									<input type="number" disabled="disabled" class="campo" name="dniPaciente" value=<%=paciente.getDni() %>>
+									<input type="text" disabled="disabled" class="campo" name="nombrePaciente" value=<%=paciente.getNombre() %>>
+									<input type="text" disabled="disabled" class="campo" name="apellidoPaciente" value=<%=paciente.getApellido() %>>
+									<input type="text" disabled="disabled" class="campo" name="fechaNacPaciente" value=<%=paciente.getFechaNacimiento() %>>
+								</div>
+							</div>
+							<%
+						}
+						
+					}
+					%>
+						<div class="d-flex row">	
+							<form action="servletsTurnos" method="post">
+								<div class="d-flex fd-column">
+									<label>Especialidades</label>
+									<select name="especialidadSelect" class="select">
+										<option value="-1">Selecciona una especialidad</option>
+										<%
+										ArrayList<Especialidad> listaEspecialidades = new ArrayList<Especialidad>();
+										if(request.getAttribute("listaEspecialidades") != null){
+											listaEspecialidades = (ArrayList<Especialidad>)request.getAttribute("listaEspecialidades");
+										}
+										
+										ListIterator <Especialidad> it = listaEspecialidades.listIterator();
+										while(it.hasNext()){
+											Especialidad esp = it.next();
+										%>
+										<option value="<%=esp.getIdEspecialidad() %>"><%=esp.getDescripcion() %></option>
+										<%
+										}%>
+									</select>
+								</div>	
+							</form>
 							
 							<div class="d-flex fd-column">
 								<label>Medico</label>
@@ -91,8 +141,7 @@
 							</div>				
 						</div>
 					
-					</div>					
-				</form>
+					</div>		
 			</div>
 		</div>
 	</div>

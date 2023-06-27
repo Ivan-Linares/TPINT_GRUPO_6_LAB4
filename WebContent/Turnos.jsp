@@ -81,7 +81,7 @@
 				</select>			
 				<input type="text">
 				<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
-				<a href="InsertarTurno.jsp" class="btn bg-green">Agregar Turno</a>			
+				<button type="submit" name="btn-nuevo-turno" class="btn bg-green">Agregar Turno</button>	
 				</div>
 			</form>
 		</div>
