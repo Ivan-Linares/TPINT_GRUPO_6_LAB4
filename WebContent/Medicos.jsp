@@ -229,10 +229,14 @@
 							 <%= textButtonActivo%>
 							</button>
 							</td> 	
-							<td class="d-flex">
-								<button type="submit" name="btn-ver-medico" class="btn bg-blue">Ver</a>
+							<td>
+							
+							<div class="d-flex">
+							<button type="submit" name="btn-ver-medico" class="btn bg-blue">Ver</a>
 								<button type="submit" name="btn-editar-medico" class="btn bg-green">Editar</a>
 								<button type="submit" name="btn-eliminar-medico" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al Medico?');">Eliminar</a>
+							</div>
+								
 							 </td>
 						</form>
 					</tr> 

@@ -197,6 +197,13 @@ width:30%;
 	background-color: #eb2a2a !important;
 }
 
+.bg-yellow{
+	background-color: yellow;
+}
+
+.bg-blue-dark{
+		background-color: #30497d;
+}
 .filtro{
 	display:flex;
 	justify-content:space-between;

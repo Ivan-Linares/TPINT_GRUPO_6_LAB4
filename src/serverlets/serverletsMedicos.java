@@ -63,12 +63,10 @@ public class serverletsMedicos extends HttpServlet   {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		 String dniMedico ="";
-		 System.out.println("entro");
 		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico").toString();
 
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		if(request.getParameter("btn-agregar-medico") != null) {
-			 System.out.println("entro2");
 			try {
 				if(AgregarMedico(medicoDao, request)) {
 					listarMedicos(request);
@@ -88,6 +86,9 @@ public class serverletsMedicos extends HttpServlet   {
 			agregarListaEspecialidades(request);
 			listarHorariosTrabajoPorMedico(request, medico.getIdMedico());
 			listarTelefonosPorMedico(request, medico.getDni());
+			
+			if(request.getAttribute("estadoHorario") != null) request.setAttribute("estadoHorario", request.getAttribute("estadoHorario"));
+			
 			RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
 			rd.forward(request, response);
 		}

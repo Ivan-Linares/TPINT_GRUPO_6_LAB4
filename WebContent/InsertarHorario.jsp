@@ -69,7 +69,7 @@
 				</div>
 			</div>
 			
-			<button type="submit" name="btn-agregar-medico" class="btn bg-green">Agregar Horario</button>
+			<button type="submit" name="btn-agregar-horario-trabajo" class="btn bg-green">Agregar Horario</button>
 		</form>
 		
 	<%if (request.getAttribute("estadoNuevoHorario") != null) {

@@ -12,9 +12,9 @@ import dominio.HorariosTrabajo;
 public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	
 	private static final String insertHorariosTrabajoMedico = "Insert into HorariosTrabajo (IdMedico, Dia, HoraEntrada, HoraSalida, Libre) values (?,?,?,?,?)";
-	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=?";
+	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=? and dia=?";
 	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo";
-	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo where idMedico = ";
+	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida, Activo from horariostrabajo where idMedico = ";
 	private static final String updateHorariosTrabajoMedico = "update horariostrabajo set Dia=?, HorarioEntrada=?, HorarioSalida=? where idMedico=?";
 	
 	@Override
@@ -47,7 +47,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 
 
 	@Override
-	public boolean eliminar(int idMedico) {
+	public boolean eliminar(int idMedico, String dia) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -67,6 +67,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 
 			statement = conexion.prepareStatement(deleteHorariosTrabajoMedico);
 			statement.setInt(1, idMedico);
+			statement.setString(2, dia);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -166,6 +167,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 				ht.setDia(rs.getString("Dia"));
 				ht.setHoraEntrada(rs.getInt("HoraEntrada"));
 				ht.setHoraSalida(rs.getInt("HoraSalida"));
+				ht.setActivo(rs.getBoolean("activo"));
 				
 				listaHT.add(ht);
 			}

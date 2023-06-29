@@ -86,7 +86,7 @@
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>DNI</label>
-						<input type="number" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
+						<input disabled type="number" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
 						<span id="dniError" class="error"></span>
 					</div>
 			
@@ -218,7 +218,7 @@
 			</div>
 			</div>
 			
-			<button type="submit" name="btn-agregar-medico" class="btn bg-green position-absolute" style="right:0;">Agregar Médico</button>
+			<button type="submit" name="btn-agregar-medico" class="btn bg-green position-absolute" style="right:0;">Guardar Médico</button>
 		</form>
 	</div>
 	
@@ -248,6 +248,13 @@
 		}
 	}
 	%>
+	
+	<%if(request.getAttribute("estadoHorario") != null){
+	String mensaje = request.getAttribute("estadoHorario").toString(); %>
+		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      <%= mensaje %>
+   </h3>
+	<%}%>
 		<table class="content-table header-table-blue w-100" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
@@ -255,22 +262,39 @@
 					<th>Día</th>
 					<th>Hora Entrada</th>
 					<th>Hora Salida</th>
+					<th>Activo</th>
 					<th>Acciones</th>
 				</tr>
 			</thead> 
 			<tbody>		
 	<% if(horariosMedico.size() > 0){
-	for(HorariosTrabajo horario: horariosMedico){%>
+	for(HorariosTrabajo horario: horariosMedico){
+	String nombreClase = "bg-green" ;
+	String textButtonActivo ="Activo";
+	
+	if(!horario.isActivo()) {
+		nombreClase = "bg-red"; 
+		textButtonActivo = "Inactivo";
+	}
+	%>
 		
 		<tr>
-		<form action="serverletsHorariosTrabajo" method="post" class="">
+		<form action="serverletsHorariosMedico" method="post" >
+		<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+			 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+			 	 <input type="hidden" name="diaHorarioMedico" value="<%=horario.getDia() %>">
 		<td><strong><%= medico.getDni() %></strong></td> 
 		<td><%=horario.getDia() %></td> 
 		<td><%=horario.getHoraEntrada() %>hs</td> 
 		<td><%=horario.getHoraSalida() %>hs</td> 
+									<td>
+							<button class="btn w-100 <%= nombreClase%>">
+							 <%= textButtonActivo%>
+							</button>
+							</td> 	
 		<td class="d-flex">
-		<a href="#" class="btn bg-green">Editar</a>
-		<a href="#" class="btn bg-red w-100">Eliminar  </a>
+		<button type="submit" name="btn-editar-horario-trabajo" class="btn bg-blue">Editar</button>
+		<button  type="submit"  name="btn-eliminar-horario-trabajo" class="btn bg-red w-100">Eliminar  </button>
 		 </td>
 	</form>
 
