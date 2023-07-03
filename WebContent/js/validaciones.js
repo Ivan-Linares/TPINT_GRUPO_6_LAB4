@@ -9,16 +9,18 @@ $(document).ready(function() {
 		  let esValido = true;
 		  
 		  function validarDNI() {
-		    var dniInput = $(this);
-		    var dniError = $('#dniError');
+			  var dniInput = $(this);
+			  var dniError = $('#dniError');
 
-		    if (dniInput.val().trim().length < 8 || dniInput.val().trim() === '') {
-		      dniError.text('El DNI debe tener al menos 8 digitos');
-		      esValido = false;
-		    } else {
-		      dniError.text('');
-		    }
-		  }
+			  var dni = dniInput.val().trim();
+
+			  if (dni.length !== 8 || isNaN(dni)) {
+			    dniError.text('El DNI debe tener exactamente 8 números');
+			    esValido = false;
+			  } else {
+			    dniError.text('');
+			  }
+			}
 
 		  function validarFechaNacimiento() {
 		    var fechaNacimiento = $(this);

@@ -20,9 +20,28 @@
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#tablaMedicos').DataTable();
+$(document).ready(function() {
+	var table = $('#tablaPacientes').DataTable({	    
+	    initComplete: function() {
+	      
+	      $('.dataTables_filter input').css('display', 'none');
+	      
+	      //https://datatables.net/examples/basic_init/filter_only.html
+	      $('.dataTables_filter label').contents().filter(function() {
+	        return this.nodeType === 3;
+	      }).remove();
+	    }
+	  });
+	  
+	  $(document).on('keyup', "input[type='search']", function() {
+	    var searchTerm = $(this).val();
+	    table.search(searchTerm).draw();
+	  });	  
+	  
+	  $('.dataTables_length').hide();
+	  $('.dataTables_info').hide();
 	});
+
 </script>
 
 <style>
@@ -83,19 +102,9 @@
 	<div class="title-section d-flex jc-sb">
 		<h1>Médicos</h1>
 		
+		<input type="search" placeholder="Buscar médico por DNI, Nombre o Apellido" style="width: 500px; margin: 0 5rem;">
 		
-		<form method="get" action="serverletsMedicos"  class="filtro">
-		<h3>Filtrar por:</h3>
-		<select name="filtroMedicos" id="filtroMedicos">
-			<option>Nombre</option>
-			<option>Apellido</option>
-			<option>Día de Atención</option>
-			<option>Horario de Atención</option>
-			<option>Especialidad</option>
-		</select>
-		
-		<input type="text">
-		
+		<form method="get" action="serverletsMedicos"  class="filtro">	
 		<button type="submit" name="btn-nuevo-medico" class="btn bg-green">Agregar Médico</button>
 		</form>
 		

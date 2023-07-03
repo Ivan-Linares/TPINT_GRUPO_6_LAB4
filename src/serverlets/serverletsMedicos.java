@@ -26,6 +26,7 @@ import dominio.Paciente;
 import dominio.Pais;
 import dominio.Telefono;
 import dominio.Usuario;
+import util.ValidadorFormulario;
 
 @WebServlet("/serverletsMedicos")
 public class serverletsMedicos extends HttpServlet   {
@@ -68,15 +69,33 @@ public class serverletsMedicos extends HttpServlet   {
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		if(request.getParameter("btn-agregar-medico") != null) {
 			try {
-				if(AgregarMedico(medicoDao, request)) {
-					listarMedicos(request);
-					
-					RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
-					rd.forward(request, response);
-				}
+			    ValidadorFormulario validar = new ValidadorFormulario();
+			    
+			    if (validar.existeDni(request.getParameter("dni").toString())) {
+			        request.setAttribute("mensaje", "Existe registro con el DNI ingresado");
+			        RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+			        rd.forward(request, response);
+			        return;
+			    }
+			    
+			    if (validar.existeEmail(request.getParameter("correo"))) {
+			        request.setAttribute("mensaje", "Existe registro con el Email ingresado");
+			        RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+			        rd.forward(request, response);
+			        return;
+			    }
+			    
+			    if (AgregarMedico(medicoDao, request)) {
+			        listarMedicos(request);
+			        RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
+			        rd.forward(request, response);
+			    }
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			    e.printStackTrace();
+			    request.setAttribute("mensaje", "Error al procesar la solicitud");
+			    RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+			    rd.forward(request, response);
+			    return;
 			}
 		}
 		else if(request.getParameter("btn-ver-medico") != null) {

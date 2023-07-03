@@ -9,7 +9,7 @@
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<title>Inicio</title>
+<title>Error</title>
 </head>
 <body>
 
@@ -63,6 +63,10 @@
 			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
+	<div>
+	<h1>Error</h1>
+    <p style="color: red; font-size: 24px;"><strong>${mensaje}</strong></p>
+    <a href="Inicio.jsp">Volver al inicio</a></div>
 </div>
 
 </body>
