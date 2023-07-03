@@ -15,7 +15,7 @@
 	<div class="container">
 
 			
-		<form action="serverletsLogin" method="get" class="container-login">
+		<form action="serverletsLogin" method="post" class="container-login">
 		
 				<div class="title">
 						<span class="material-symbols-outlined">

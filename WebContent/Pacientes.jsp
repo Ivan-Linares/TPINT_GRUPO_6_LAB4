@@ -23,9 +23,28 @@
 	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#tablaPacientes').DataTable();
+$(document).ready(function() {
+	var table = $('#tablaPacientes').DataTable({	    
+	    initComplete: function() {
+	      
+	      $('.dataTables_filter input').css('display', 'none');
+	      
+	      //https://datatables.net/examples/basic_init/filter_only.html
+	      $('.dataTables_filter label').contents().filter(function() {
+	        return this.nodeType === 3;
+	      }).remove();
+	    }
+	  });
+	  
+	  $(document).on('keyup', "input[type='search']", function() {
+	    var searchTerm = $(this).val();
+	    table.search(searchTerm).draw();
+	  });	  
+	  
+	  $('.dataTables_length').hide();
+	  $('.dataTables_info').hide();
 	});
+
 </script>
 </head>
 <body>
@@ -81,27 +100,15 @@
 	</div>
 	
 	<div class="container fd-column m-auto">
-	<div class="title-section d-flex jc-sb">
-		<h1>Pacientes</h1>		
-		
-<form method="get" action="serverletsPacientes"  class="filtro">
-		<h3>Filtrar por:</h3>
-		<select name="filtroPacientes" id="filtroPacientes">
-			<option>DNI</option>
-			<option>Nombre</option>
-			<option>Apellido</option>
-			<option>Correo electrónico</option>
-			<option>Teléfono</option>			
-		</select>
-		
-		<input type="text">
-		 <input type="submit" name="btnBuscarPacientes" class="btn bg-blue" value="Buscar"/> 
-		 
-		 <button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
-		 </form>
-		
-		
-	</div>
+	
+		<div class="title-section d-flex jc-sb">		
+    <h1>Pacientes</h1>		    
+    <input type="search" placeholder="Buscar paciente por DNI, Nombre o Apellido" style="width: 500px; margin: 0 5rem;">	
+    <form method="get" action="serverletsPacientes" class="filtro">		 
+        <button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
+    </form>		
+</div>
+
 	
 	<%
 	ArrayList<Paciente> listaPacientes = new ArrayList<Paciente>();
@@ -134,7 +141,7 @@
 
 	
 	<div>
-		<table class="content-table header-table-blue"  id="tablaPacientes"> 
+		<table class="content-table header-table-blue"  id="tablaPacientes" style="margin: 2rem 0;"> 
 			<thead> 
 				<tr>
 					<th>DNI</th>
