@@ -20,7 +20,7 @@ import dominio.Turnos;
 public class TurnosDAOImpl implements ITurnosDAO{
 
 	private static final String insertTurno = "Insert into Turnos (FechaHora, IdEspecialidad, IdPaciente, IdEstado, Observacion, Activo) values (?, ?, ?, ?, ?, true)";
-	private static final String insertTurnoXMedico = "Insert into turnosxmedico (IdMedico, IdTurno, Activo) values (?, ?, true)";
+	private static final String insertTurnoXMedico = "Insert into turnosxmedico (IdMedico, IdEspecialidad, Activo) values (?, ?, true)";
 	private static final String updateTurno = "Update Turnos set FechaHora=?, IdEspecialidad=?, IdPaciente=?, IdEstado=?, Observacion=? where IdTurno = ?";
 	private static final String deleteTurno = "Update Turnos set Activo = 0 where IdTurno = ?";
 	private static final String listarTurnos = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true";
@@ -54,7 +54,7 @@ public class TurnosDAOImpl implements ITurnosDAO{
 			st2 = conexion.prepareStatement(insertTurnoXMedico);
 			
 			st2.setInt(1, turno.getMedico().getIdMedico());
-			st2.setInt(2, turno.getIdTurno());
+			st2.setInt(2, turno.getEspecialidad().getIdEspecialidad());
 			
 			if(st2.executeUpdate() > 0) {
 				conexion.commit();

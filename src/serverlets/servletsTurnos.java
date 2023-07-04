@@ -1,6 +1,8 @@
 package serverlets;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -69,20 +71,35 @@ public class servletsTurnos extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String dniPaciente ="";
-		boolean encontro = false;
-		Paciente paciente = null;
+		String idEsp = "";
+		String descEsp = "";
 		
-		if(request.getParameter("btn-buscar-dni") != null) {
-			dniPaciente = request.getParameter("dniPaciente").toString();
-			encontro = buscarDNI(request, dniPaciente);
-			paciente = buscarPaciente(request, dniPaciente);
+		if(request.getParameter("btn-buscar-medicos") != null) {
+			idEsp = request.getParameter("especialidadSelect").toString();
 			
-			request.setAttribute("encontroDNI", encontro);
-			request.setAttribute("paciente", paciente);
-			request.setAttribute("dni", dniPaciente);
+			EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+			ArrayList<Especialidad> listaEsp = (ArrayList<Especialidad>) eDao.listarEspecialidades();
+			
+			for (Especialidad esp : listaEsp) {
+				if(esp.getIdEspecialidad() == Integer.parseInt(idEsp)) {
+					descEsp = esp.getDescripcion();
+				}
+			}
+			
+			MedicoDAOImpl mDao = new MedicoDAOImpl();
+			ArrayList<Medico> listaMedico = mDao.listarMedicosXespecialidad(idEsp);
+			
+			request.setAttribute("listaMed", listaMedico);
+			request.setAttribute("espSelect", idEsp);
+			request.setAttribute("descripcionEsp", descEsp);
+			
+			listarEspecialidades(request);
 			
 			RequestDispatcher rd = request.getRequestDispatcher("InsertarTurno.jsp");
 			rd.forward(request, response);
+		}
+		if(request.getParameter("btn-agregar-turno") != null) {
+			
 		}
 		
 	}
@@ -127,6 +144,32 @@ public class servletsTurnos extends HttpServlet {
 		EspecialidadesDAOImpl espDao = new EspecialidadesDAOImpl();
 		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>)espDao.listarEspecialidades();
 		request.setAttribute("listaEspecialidades", listaEspecialidades);
+	}
+	
+	protected boolean agregarTurno(HttpServletRequest request) {
+		
+		TurnosDAOImpl tDao = new TurnosDAOImpl();
+		Turnos nuevoTurno = new Turnos(); 
+		
+		//nuevoTurno.setFechaHora(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
+		
+		Especialidad esp = new Especialidad();
+		esp.setIdEspecialidad(Integer.parseInt(request.getParameter("espSelect")));
+		esp.setDescripcion(request.getParameter("descripcionEsp"));
+		nuevoTurno.setEspecialidad(esp);
+		
+		Paciente pac = new Paciente();
+		pac.setDni(request.getParameter("dniPaciente"));
+		nuevoTurno.setPaciente(pac);
+		
+		nuevoTurno.setObservacion(request.getParameter("observaciones"));
+		
+		Medico med = new Medico();
+		med.setIdMedico(Integer.parseInt(request.getParameter("medico")));
+		nuevoTurno.setMedico(med);
+		
+		boolean agregado = tDao.agregarTurno(nuevoTurno);
+		return agregado;
 	}
 	
 }

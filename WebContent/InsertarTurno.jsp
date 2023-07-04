@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ page import="dominio.Paciente"%>
 <%@ page import="dominio.Especialidad"%>
+<%@ page import="dominio.Medico"%>
 <%@ page import="java.util.ArrayList"%>
 <%@page import="java.util.ListIterator"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -50,49 +51,7 @@
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 					
 					<form action="servletsTurnos" method="post">
-						<div class="d-flex fd-column">
-							<label>DNI</label>
-							<input type="number" class="campo" name="dniPaciente">
-							<input type="submit" name="btn-buscar-dni" class="btn bg-green" value="Buscar">
-						</div>
-					</form>
-					
-					<% 
-					boolean encontro = false; 
-					Paciente paciente = (Paciente)request.getAttribute("paciente");
-					String dni = (String)request.getAttribute("dni");
-					
-					if(request.getAttribute("encontroDNI") != null){
-						if((boolean)request.getAttribute("encontroDNI") == false){
-							%>
-							<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
-								<label>DNI <%=dni %> NO EXISTENTE</label>
-								<button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
-							</div>
-							<%
-						}else{
-							%>
-							<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
-								<div class="d-flex row">
-									<label>DNI</label>
-									<label>Nombre</label>
-									<label>Apellido</label>
-									<label>Fecha Nacimiento</label>
-								</div>
-								<div class="d-flex row">
-									<input type="number" disabled="disabled" class="campo" name="dniPaciente" value=<%=paciente.getDni() %>>
-									<input type="text" disabled="disabled" class="campo" name="nombrePaciente" value=<%=paciente.getNombre() %>>
-									<input type="text" disabled="disabled" class="campo" name="apellidoPaciente" value=<%=paciente.getApellido() %>>
-									<input type="text" disabled="disabled" class="campo" name="fechaNacPaciente" value=<%=paciente.getFechaNacimiento() %>>
-								</div>
-							</div>
-							<%
-						}
-						
-					}
-					%>
-						<div class="d-flex row">	
-							<form action="servletsTurnos" method="post">
+						<div>	
 								<div class="d-flex fd-column">
 									<label>Especialidades</label>
 									<select name="especialidadSelect" class="select">
@@ -111,37 +70,72 @@
 										<%
 										}%>
 									</select>
-								</div>	
-							</form>
+								</div>
+								<div class="d-flex fd-column">
+									<button type="submit" name="btn-buscar-medicos" class="btn bg-blue">Buscar Medicos</button>
+								</div>
+								<input type="hidden" class="campo" >
+							<%
+								ArrayList<Medico> listaMedicos = new ArrayList<Medico>();
+								if(request.getAttribute("listaMed") != null){
+									listaMedicos = (ArrayList<Medico>)request.getAttribute("listaMed");
+									%>
+									<div class="d-flex fd-column">
+										<label>Medico</label>
+										<select name="medico" class="select">	
+									<%
+								}
+										
+								ListIterator <Medico> it2 = listaMedicos.listIterator();
+								while(it2.hasNext()){
+									Medico med = it2.next();
+								%>
+										<option value="<%=med.getIdMedico() %>"><%=med.getNombre() %> <%=med.getApellido() %></option>
+								<%}%>
+										</select>
+									</div>
+						</div>		
 							
-							<div class="d-flex fd-column">
-								<label>Medico</label>
-								<select name="medico" class="select">
-									<option>Mario Gutierrez</option>
-									<option>Carla Montenegro</option>		
-									<option>Mariana Cantero</option>							
-								</select>
-							</div>					
-						</div>					
-						
-						<div class="d-flex row">
-							<div class="d-flex fd-column">
-								<label>Fecha</label>
-								<input type="date" class="campo" >
-							</div>				
+							<%
+							if(request.getAttribute("listaMed") != null){
+								String dniPaciente = (String)request.getAttribute("dni");
+								String idEsp = (String)request.getAttribute("espSelect");
+								String descripcion = (String)request.getAttribute("descripcionEsp");
+							%>
+							<div class="d-flex row">
+							<a>ESPECIALIDAD ELEGIDA: <%=descripcion %></a>
+							</div>
+							<input type="hidden" class="campo" name="espSelect" value="<%=idEsp %>">
+							<input type="hidden" class="campo" name="descripcionEsp" value="<%=descripcion %>">
 							
-							<div class="d-flex fd-column">
-								<label>Hora</label>
-								<input type="number" class="campo" >
+							<div class="d-flex row">
+								<div class="d-flex fd-column">
+									<label>DNI</label>
+									<input type="number" class="campo" name="dniPaciente" value="<%=dniPaciente %>">
+								</div>
 							</div>
 							
-							<div class="d-flex fd-column">
-								<label>Observaciones</label>
-								<input type="text" class="campo" >
-							</div>				
-						</div>
-					
-					</div>		
+							<div class="d-flex row">
+								<div class="d-flex fd-column">
+									<label>Fecha</label>
+									<input type="date" class="campo" name="fecha">
+								</div>				
+								
+								<div class="d-flex fd-column">
+									<label>Hora</label>
+									<input type="number" class="campo" name="hora">
+								</div>
+								
+								<div class="d-flex fd-column">
+									<label>Observaciones</label>
+									<input type="text" class="campo" disabled="disabled" name="observaciones">
+								</div>				
+							</div>
+							<button type="submit" name="btn-agregar-turno" class="btn bg-green">Agregar Turno</button>
+							<% }%>						
+						</form>
+						
+					</div>
 			</div>
 		</div>
 	</div>
