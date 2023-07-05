@@ -34,25 +34,49 @@ public class serverletsTelefono extends HttpServlet {
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		
-		Telefono nuevoTelefono = new Telefono();
-		if(request.getParameter("dniMedico") != null) {
-			String dniMedico = request.getParameter("dniMedico");
-			nuevoTelefono.setDni(dniMedico);
-		}		
-		
-		nuevoTelefono.setTelefono(request.getParameter("telefono"));
+		if(request.getParameter("btn-agregar-telefono") != null) {
+			Telefono nuevoTelefono = new Telefono();
+			if(request.getParameter("dniMedico") != null) {
+				String dniMedico = request.getParameter("dniMedico");
+				nuevoTelefono.setDni(dniMedico);
+			}		
+			
+			nuevoTelefono.setTelefono(request.getParameter("telefono"));
 
-		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
-		
-		String estadoNuevoTelefono = "";
-		if(tDao.agregar(nuevoTelefono)) {
-			setearAtributosIdDniMedico(request);
-			estadoNuevoTelefono = "Nuevo telefono agregado al Médico con éxito!";
-			request.setAttribute("estadoNuevoTelefono", estadoNuevoTelefono);
-			RequestDispatcher rd = request.getRequestDispatcher("InsertarTelefono.jsp");
+			TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+			
+			String estadoNuevoTelefono = "";
+			if(tDao.agregar(nuevoTelefono)) {
+				setearAtributosIdDniMedico(request);
+				estadoNuevoTelefono = "Nuevo telefono agregado al Médico con éxito!";
+				request.setAttribute("estadoNuevoTelefono", estadoNuevoTelefono);
+				RequestDispatcher rd = request.getRequestDispatcher("InsertarTelefono.jsp");
+				rd.forward(request, response);
+			}
+			
+		}
+		else if(request.getParameter("btn-eliminar-telefono") != null) {
+			String estadoTelefono = "";
+			if(eliminarTelefono(request)) estadoTelefono = "Se pudo eliminar el Telefono correctamente!";
+			request.setAttribute("estadoTelefono", estadoTelefono);
+			
+			String dniMedico = "";
+			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
+			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&btn-ver-medico=");
 			rd.forward(request, response);
 		}
 		
+	}
+	
+	protected boolean eliminarTelefono(HttpServletRequest request) {
+		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+		String dniMedico = "";
+		String telefonoMedico = "";
+		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
+		if(request.getParameter("telefonoMedico") != null) telefonoMedico = request.getParameter("telefonoMedico");
+		
+		if(tDao.eliminar(dniMedico, telefonoMedico)) return true;
+		return false;
 	}
 	
 	protected void setearAtributosIdDniMedico(HttpServletRequest request) {

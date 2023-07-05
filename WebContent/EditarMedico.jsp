@@ -326,26 +326,48 @@
 		}
 	}
 	%>
+	
+		<%if(request.getAttribute("estadoTelefono") != null){
+	String mensaje = request.getAttribute("estadoTelefono").toString(); %>
+		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      <%= mensaje %>
+   </h3>
+	<%}%>
 		<table class="content-table header-table-blue" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
 					<th>DNI</th>
 					<th>Número Telefono</th>
+					<th>Activo</th>
 					<th>Acciones</th>
 				</tr>
 			</thead> 
 			<tbody>		
 			<% if(telefonosMedico.size() > 0){
-			for(Telefono telefono: telefonosMedico){%>
+			for(Telefono telefono: telefonosMedico){
+			String nombreClase = "bg-green" ;
+	String textButtonActivo ="Activo";
+	
+	if(!telefono.isActivo()) {
+		nombreClase = "bg-red"; 
+		textButtonActivo = "Inactivo";
+	}
+	%>
 		
 			<tr>
-						<form action="serverletsTelefonos" method="post" class="">
+						<form action="serverletsTelefono" method="post" class="">
+						<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+						<input type="hidden" name="telefonoMedico" value="<%=telefono.getTelefono() %>">
 							<td><strong><%= telefono.getDni() %></strong></td> 
 							<td><%=telefono.getTelefono() %></td> 
-
+<td>
+							<button class="btn w-100 <%= nombreClase%>">
+							 <%= textButtonActivo%>
+							</button>
+							</td> 	
 							<td class="d-flex">
-								<a href="#" class="btn bg-green">Editar</a>
-								<a href="#" class="btn bg-red w-100">Eliminar  </a>
+								<button type="submit" name="btn-editar-telefono" class="btn bg-blue">Editar</button>
+								<button  type="submit"  name="btn-eliminar-telefono" class="btn bg-red w-100">Eliminar  </button>
 							 </td>
 						</form>
 						

@@ -56,12 +56,16 @@
 			
 			<button type="submit" name="btn-agregar-telefono" class="btn bg-green">Agregar Telefono</button>
 		</form>
-	</div>
-	
-	<%if (request.getAttribute("estadoNuevoTelefono") != null) {
+		
+		<%if (request.getAttribute("estadoNuevoTelefono") != null) {
 	String mensaje = request.getAttribute("estadoNuevoTelefono").toString();%>
 	<br/>
-	<span> <%= mensaje %></span>
+			<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      <%= mensaje %>
+   </h3>
 	<%}%>
+	</div>
+	
+	
 </body>
 </html>

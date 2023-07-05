@@ -12,7 +12,7 @@ import dominio.Telefono;
 
 public class TelefonoDAOImpl implements ITelefonoDAO {
 	private static final String insertTelefono = "insert into TelefonosXPersonas (DNI, Telefono) values (?,?)";
-	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=?";
+	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=? and telefono=?";
 	private static final String listarTelefonos = "select dni, telefono, activo from TelefonosXPersonas";
 	private static final String listarTelefonosPorPersona = "select dni, telefono, activo from TelefonosXPersonas where dni = '";
 	private static final String updateTelefono = "update TelefonosXPersonas set telefono=? where dni=?";
@@ -42,9 +42,42 @@ public class TelefonoDAOImpl implements ITelefonoDAO {
 	}
 
 	@Override
-	public boolean eliminar(String dni) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean eliminar(String dni, String telefono) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean eliminoTelefono = false;
+		
+		try
+		{
+
+			statement = conexion.prepareStatement(deleteTelefono);
+			statement.setString(1, dni);
+			statement.setString(2, telefono);
+			
+			System.out.println("entro eeliminsr" + dni + telefono);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				eliminoTelefono = true;
+			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return eliminoTelefono;
 	}
 
 	@Override
