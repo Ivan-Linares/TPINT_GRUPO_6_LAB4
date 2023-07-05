@@ -31,7 +31,7 @@
 					</li>
 					
 					<li>					
-					 	<a href="Medicos.jsp" class="active">
+					 	<a href="serverletsMedicos?method=get" class="active">
 					 		<span class="material-symbols-outlined">clinical_notes</span>Médicos
 					 	</a>
 					 </li>
