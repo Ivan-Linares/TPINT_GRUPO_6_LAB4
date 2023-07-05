@@ -95,12 +95,12 @@ public class serverletsHorariosMedico extends HttpServlet {
 		String horaEntrada = request.getParameter("horaEntrada").toString();
 		 String[] horaMinEntrada = horaEntrada.split(":");
 		 int horaEntradaInt = Integer.parseInt(horaMinEntrada[0]);
-		nuevoHorario.setHoraEntrada(horaEntradaInt);
+		nuevoHorario.setHoraEntrada(horaEntrada);
 		
 		String horaSalida = request.getParameter("horaSalida").toString();
 		 String[] horaMinSalida = horaSalida.split(":");
 		 int horaSalidaInt = Integer.parseInt(horaMinSalida[0]);
-		nuevoHorario.setHoraSalida(horaSalidaInt);
+		nuevoHorario.setHoraSalida(horaSalida);
 
 		HorariosTrabajoDAOImpl horarioDao = new HorariosTrabajoDAOImpl();
 		

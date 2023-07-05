@@ -285,8 +285,8 @@
 			 	 <input type="hidden" name="diaHorarioMedico" value="<%=horario.getDia() %>">
 		<td><strong><%= medico.getDni() %></strong></td> 
 		<td><%=horario.getDia() %></td> 
-		<td><%=horario.getHoraEntrada() %>hs</td> 
-		<td><%=horario.getHoraSalida() %>hs</td> 
+		<td><%=horario.getHoraEntrada().toString() %>hs</td> 
+		<td><%=horario.getHoraSalida().toString()  %>hs</td> 
 									<td>
 							<button class="btn w-100 <%= nombreClase%>">
 							 <%= textButtonActivo%>

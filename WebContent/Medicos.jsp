@@ -199,9 +199,9 @@ $(document).ready(function() {
 								<td>
 					           	 <%for(HorariosTrabajo horarioMedico : horariosMedico){ %>									
 									<div style="border-bottom:1px solid blue;padding:4px 0px 4px 0px">
-										<%=horarioMedico.getHoraEntrada() %> 
+										<%=horarioMedico.getHoraEntrada().toString() %> 
 											hs a
-										<%=horarioMedico.getHoraSalida() %> hs
+										<%=horarioMedico.getHoraSalida().toString() %> hs
 									</div>
 									<%}%>
 								</td> 

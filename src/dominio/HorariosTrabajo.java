@@ -4,8 +4,8 @@ public class HorariosTrabajo {
 
 	private int IdMedico;
 	private String dia;
-	private int horaEntrada;
-	private int horaSalida;
+	private String horaEntrada;
+	private String horaSalida;
 	private boolean libre;
 	private boolean activo;
 	
@@ -21,16 +21,16 @@ public class HorariosTrabajo {
 	public void setDia(String dia) {
 		this.dia = dia;
 	}
-	public int getHoraEntrada() {
+	public String getHoraEntrada() {
 		return horaEntrada;
 	}
-	public void setHoraEntrada(int horaEntrada) {
+	public void setHoraEntrada(String horaEntrada) {
 		this.horaEntrada = horaEntrada;
 	}
-	public int getHoraSalida() {
+	public String getHoraSalida() {
 		return horaSalida;
 	}
-	public void setHoraSalida(int horaSalida) {
+	public void setHoraSalida(String horaSalida) {
 		this.horaSalida = horaSalida;
 	}
 	public boolean isLibre() {
