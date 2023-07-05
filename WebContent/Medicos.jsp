@@ -183,7 +183,9 @@ $(document).ready(function() {
 							
 				%>
 						<form action="serverletsMedicos" method="post" class="<%=nombreClase%>">
-							<td><strong><%=medico.getDni() %></strong> <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">  </td> 
+							<td><strong><%=medico.getDni() %></strong> <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>"> 
+							 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>"> 
+							  </td> 
 							<td><%=medico.getNombre() %></td> 
 							<td><%=medico.getApellido() %></td>
 							

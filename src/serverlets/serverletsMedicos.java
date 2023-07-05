@@ -65,6 +65,8 @@ public class serverletsMedicos extends HttpServlet   {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		 String dniMedico ="";
 		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico").toString();
+		
+		int idMedico = Integer.parseInt(request.getParameter("idMedico"));
 
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		if(request.getParameter("btn-agregar-medico") != null) {
@@ -112,7 +114,7 @@ public class serverletsMedicos extends HttpServlet   {
 			
 		}
 		else if(request.getParameter("btn-eliminar-medico") != null) {
-			EliminarMedico(medicoDao, dniMedico);
+			EliminarMedico(medicoDao, dniMedico, idMedico);
 			
 			listarMedicos(request);			
 			RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
@@ -199,7 +201,7 @@ public class serverletsMedicos extends HttpServlet   {
 		return agregado;
 	}
 	
-	protected boolean EliminarMedico(MedicoDAOImpl mDao, String dniMedico) {		
-		return mDao.eliminar(dniMedico);	
+	protected boolean EliminarMedico(MedicoDAOImpl mDao, String dniMedico, int idMedico) {		
+		return mDao.eliminar(dniMedico, idMedico);	
 	}
 }

@@ -16,6 +16,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	
 	private static final String insertHorariosTrabajoMedico = "Insert into HorariosTrabajo (IdMedico, Dia, HoraEntrada, HoraSalida, Libre) values (?,?,?,?,?)";
 	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=? and dia=?";
+	private static final String deleteAllHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=?";
 	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo";
 	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida, Activo from horariostrabajo where idMedico = ";
 	private static final String updateHorariosTrabajoMedico = "update horariostrabajo set Dia=?, HorarioEntrada=?, HorarioSalida=? where idMedico=?";
@@ -189,5 +190,42 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 		}
 		
 		return listaHT;
+	}
+
+
+	@Override
+	public boolean eliminarTodos(int idMedico) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean eliminoHT = false;
+		
+		try
+		{
+
+			statement = conexion.prepareStatement(deleteAllHorariosTrabajoMedico);
+			statement.setInt(1, idMedico);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				eliminoHT = true;
+			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return eliminoHT;
 	}
 }

@@ -35,7 +35,7 @@
 				
 				<li> 
 				
-				 <a href="Medicos.jsp">
+				 <a href="serverletsMedicos?method=get" >
 				 	<span class="material-symbols-outlined">
 						clinical_notes
 					</span>	

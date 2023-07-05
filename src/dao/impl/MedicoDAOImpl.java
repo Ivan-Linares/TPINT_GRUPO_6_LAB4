@@ -159,7 +159,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	}
 
 	@Override
-	public boolean eliminar(String dniMedico) {
+	public boolean eliminar(String dniMedico, int idMedico) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -195,7 +195,6 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				eliminoPersona = true;			
 			}
 			
-			//agregar validacion si tiene tel asociados
 			statement = conexion.prepareStatement(deleteTelefono);
 			statement.setString(1, dniMedico);
 			
@@ -203,6 +202,9 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				conexion.commit();
 				eliminoTelefono = true;
 			}
+			
+			HorariosTrabajoDAOImpl horariosTrabajoDAO = new HorariosTrabajoDAOImpl();
+			horariosTrabajoDAO.eliminarTodos(idMedico);
 			
 		}
 		catch(Exception e)
