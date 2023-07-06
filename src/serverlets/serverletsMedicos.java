@@ -66,7 +66,8 @@ public class serverletsMedicos extends HttpServlet   {
 		 String dniMedico ="";
 		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico").toString();
 		
-		int idMedico = Integer.parseInt(request.getParameter("idMedico"));
+		int idMedico = 0;
+		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
 
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		if(request.getParameter("btn-agregar-medico") != null) {

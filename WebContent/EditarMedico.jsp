@@ -8,6 +8,7 @@
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
+    <%@ page import="dominio.Usuario"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -57,6 +58,17 @@
 				</span>	Turnos</a>
 				</li>
 			</ul>
+		</div>
+		
+				<div class="user-container">
+			
+			
+			<%if(session.getAttribute("usuario") != null){
+				Usuario user = (Usuario)session.getAttribute("usuario");
+				%>	
+				<strong><%= user.getCorreo() %></strong>
+			<%} %>
+			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
 	<%		
@@ -222,19 +234,62 @@
 		</form>
 	</div>
 	
+	<div style="margin:60px 0px 0px 0px;border-top:1px solid blue; padding:10px 0px;">
 	
-<div style="margin:40px 0px;">
+	
+	<div>	
+	<div  class="filtro">
+	<h3>Especialidades</h3> 
+	
+	<form action="serverletsEspecialidades"  method="get">
+	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+		<button type="submit" name="btn-nueva-especialidad" class="btn bg-green w-100">Agregar Especialidad</button>
+	</form>
+	</div>
+	
+	<table class="content-table header-table-blue w-100" id="tablaMedicos"> 
+			<thead> 
+				<tr> 
+					<th>Especialidad</th>
+					<th>Activo</th>
+					<th>Acciones</th>
+				</tr>
+			</thead> 
+			<tbody>		
+			<tr>
+			<form action="serverletsHorariosMedico" method="post" >
+				<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+			 	<input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+			 	<input type="hidden" name="idEspecialidad" value="id">
+				<td>Nutrición</td>
+				<td><button class="btn w-100 bg-green">Activo</button></td> 	
+				<td class="d-flex">
+					<button  type="submit"  name="btn-eliminar-especialidad " class="btn bg-red w-100">Eliminar  </button>
+		 		</td>
+			</form>
+			</tr> 
+			</tbody> 
+		</table>
+	</div>
+	
+	
+	</div>	
+	
+	
+	
+<div style="margin:60px 0px 0px 0px; display:flex; border-top:1px solid blue; padding:10px 0px;">
 
 	
 	<br/>	
-			<div style="border: 1px solid blue; padding: 10px; border-radius:10px;">	
+			<div style="margin-right:5px">	
 	<div  class="filtro">
-	<h3>Horarios Médico</h3> 
+	<h3>Horarios</h3> 
 	
 	<form action="serverletsHorariosMedico"  method="get">
 	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
 	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
-	<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Nuevo Horario</button>
+	<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Horario</button>
 	</form>
 	
 	</div>	
@@ -258,7 +313,6 @@
 		<table class="content-table header-table-blue w-100" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
-					<th>DNI</th>
 					<th>Día</th>
 					<th>Hora Entrada</th>
 					<th>Hora Salida</th>
@@ -283,7 +337,6 @@
 		<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 			 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
 			 	 <input type="hidden" name="diaHorarioMedico" value="<%=horario.getDia() %>">
-		<td><strong><%= medico.getDni() %></strong></td> 
 		<td><%=horario.getDia() %></td> 
 		<td><%=horario.getHoraEntrada().toString() %>hs</td> 
 		<td><%=horario.getHoraSalida().toString()  %>hs</td> 
@@ -306,13 +359,13 @@
 	</div>
 	
 	
-	<div  style="border: 1px solid blue; padding: 10px; border-radius:10px; margin-top:100px;">	
+	<div  style="border-radius:10px;height:100%;">	
 		<div  class="filtro">
-			<h3>Telefonos Médico</h3> 
+			<h3>Telefonos</h3> 
 				<form action="serverletsTelefono"  method="get">
 	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
 	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
-	<button type="submit" name="btn-nuevo-telefono" class="btn bg-green w-100">Agregar Nuevo Horario</button>
+	<button type="submit" name="btn-nuevo-telefono" class="btn bg-green w-100">Agregar Telefono</button>
 	</form>
 		</div>	
 		
@@ -336,8 +389,7 @@
 		<table class="content-table header-table-blue" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
-					<th>DNI</th>
-					<th>Número Telefono</th>
+					<th>Telefono</th>
 					<th>Activo</th>
 					<th>Acciones</th>
 				</tr>
@@ -358,7 +410,6 @@
 						<form action="serverletsTelefono" method="post" class="">
 						<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 						<input type="hidden" name="telefonoMedico" value="<%=telefono.getTelefono() %>">
-							<td><strong><%= telefono.getDni() %></strong></td> 
 							<td><%=telefono.getTelefono() %></td> 
 <td>
 							<button class="btn w-100 <%= nombreClase%>">

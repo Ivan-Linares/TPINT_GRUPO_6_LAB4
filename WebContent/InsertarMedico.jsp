@@ -5,6 +5,7 @@
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
+    <%@ page import="dominio.Usuario"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -54,6 +55,17 @@
 				</span>	Turnos</a>
 				</li>
 			</ul>
+		</div>
+		
+				<div class="user-container">
+			
+			
+			<%if(session.getAttribute("usuario") != null){
+				Usuario user = (Usuario)session.getAttribute("usuario");
+				%>	
+				<strong><%= user.getCorreo() %></strong>
+			<%} %>
+			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
 	
@@ -186,34 +198,8 @@
 								</select>
 				</div>
 			</div>
+
 			
-			<div class="d-flex row">
-			
-			<div class="d-flex fd-column">
-								
-							</div>	
-			</div>
-			<div class="d-flex row">
-				<div class="d-flex fd-column">
-					<label>Especialidades</label>
-					<select name="especialidadSelect" class="select">
-						<option value="-1">Selecciona una especialidad</option>
-						<%
-						ArrayList<Especialidad> listaEspecialidades = new ArrayList<Especialidad>();
-						if(request.getAttribute("listaEspecialidades") != null){
-							listaEspecialidades = (ArrayList<Especialidad>)request.getAttribute("listaEspecialidades");
-						}
-						
-						ListIterator <Especialidad> it3 = listaEspecialidades.listIterator();
-						while(it3.hasNext()){
-							Especialidad esp = it3.next();
-						%>
-						<option value="<%=esp.getIdEspecialidad() %>"><%=esp.getDescripcion() %></option>
-						<%
-						}%>
-					</select>
-				</div>
-			</div>
 			</div>
 			
 			<button type="submit" name="btn-agregar-medico" class="btn bg-green">Agregar Médico</button>
