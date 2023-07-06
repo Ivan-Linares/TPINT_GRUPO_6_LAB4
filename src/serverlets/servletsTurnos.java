@@ -104,19 +104,19 @@ public class servletsTurnos extends HttpServlet {
 		if(request.getParameter("btn-agregar-turno") != null) {
 			
 			try {
-				if(!agregarTurno(request)) {
-					request.setAttribute("mensajeError", "No se pudo dar de alta el turno.");					
+				if(agregarTurno(request)) {
+					request.setAttribute("mensajeExito", "Turno dado de alta con exito ");
 					
 				}
 				else {
-					request.setAttribute("mensajeExito", "Turno dado de alta con exito ");
+					request.setAttribute("mensajeError", "No se pudo dar de alta el turno.");					
 					
-					RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
-					rd.forward(request, response);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
+			rd.forward(request, response);
 		}
 		
 	}
@@ -169,7 +169,6 @@ public class servletsTurnos extends HttpServlet {
 		Turnos nuevoTurno = new Turnos();
 		String dni = "";
 		boolean agregoTurno = false;
-		boolean agregoTurnoxMedico = false;
 		
 		try {
 			
@@ -205,12 +204,7 @@ public class servletsTurnos extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-		if(agregoTurno == true && agregoTurnoxMedico == true) {
-			return true;
-		}
-		else {
-			return false;
-		}
+		return agregoTurno;
 	}
 	
 }
