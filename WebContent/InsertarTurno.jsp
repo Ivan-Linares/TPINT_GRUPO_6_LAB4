@@ -79,6 +79,7 @@
 								ArrayList<Medico> listaMedicos = new ArrayList<Medico>();
 								if(request.getAttribute("listaMed") != null){
 									listaMedicos = (ArrayList<Medico>)request.getAttribute("listaMed");
+									
 									%>
 									<div class="d-flex fd-column">
 										<label>Medico</label>

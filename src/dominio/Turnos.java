@@ -1,11 +1,13 @@
 package dominio;
 
+import java.util.Date;
 import java.time.LocalDateTime;
 
 public class Turnos {
 	
 	private int IdTurno;
-	private LocalDateTime fechaHora;
+	private Date fecha;
+	private int hora;
 	private Especialidad especialidad;
 	private Paciente paciente;
 	private Medico medico;
@@ -14,11 +16,11 @@ public class Turnos {
 	private boolean activo;
 	
 	
-	public Turnos(int idTurno, LocalDateTime fechaHora, Especialidad especialidad, Paciente paciente, Medico medico, Estado estado,
+	public Turnos(int idTurno, Date fecha, Especialidad especialidad, Paciente paciente, Medico medico, Estado estado,
 			String observacion, boolean activo) {
 		super();
 		IdTurno = idTurno;
-		this.fechaHora = fechaHora;
+		this.fecha = fecha;
 		this.especialidad = especialidad;
 		this.paciente = paciente;
 		this.estado = estado;
@@ -34,11 +36,11 @@ public class Turnos {
 	public void setIdTurno(int idTurno) {
 		IdTurno = idTurno;
 	}
-	public LocalDateTime getFechaHora() {
-		return fechaHora;
+	public Date getFechaHora() {
+		return fecha;
 	}
-	public void setFechaHora(LocalDateTime fechaHora) {
-		this.fechaHora = fechaHora;
+	public void setFechaHora(Date date) {
+		this.fecha = date;
 	}
 	public Especialidad getEspecialidad() {
 		return especialidad;
@@ -77,6 +79,13 @@ public class Turnos {
 
 	public void setMedico(Medico medico) {
 		this.medico = medico;
+	}
+
+	@Override
+	public String toString() {
+		return "Turnos [IdTurno=" + IdTurno + ", fecha=" + fecha + ", hora=" + hora + ", especialidad=" + especialidad
+				+ ", paciente=" + paciente + ", medico=" + medico + ", estado=" + estado + ", observacion="
+				+ observacion + ", activo=" + activo + "]";
 	}
 	
 }

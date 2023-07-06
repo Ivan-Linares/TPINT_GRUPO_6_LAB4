@@ -99,6 +99,20 @@
 		}		
 	}
 	%>
+	<% String mensaje = (String) request.getAttribute("mensajeExito");
+   if (mensaje != null) { %>
+   <h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      <%= mensaje %>
+   </h3>
+<% } %>
+
+<% String mensajeError = (String) request.getAttribute("mensajeError");
+   String dniError = (String) request.getAttribute("dniError");
+   if (mensajeError != null) { %>
+   <h3 style="font-weight: bold; color: red; margin: 20px 0 20px 0;">
+      <%= mensajeError%>
+   </h3>
+<% } %>
 	
 	<div>
 		<table class="content-table header-table-blue"> 
@@ -127,8 +141,8 @@
 					%>
 					<form action="serverletsPacientes" method="post" class="<%=nombreClase%>">
 						<td><strong><%=turno.getIdTurno() %></strong> <input type="hidden" name="idTurno" value="<%=turno.getIdTurno() %>"></td> 
-						<td><%=turno.getFechaHora().getDayOfYear() %>/<%=turno.getFechaHora().getMonthValue() %>/<%=turno.getFechaHora().getYear() %></td> 
-						<td><%=turno.getFechaHora().getHour() %></td>
+						<td><%=turno.getFechaHora().getDay() %>/<%=turno.getFechaHora().getMonth() %>/<%=turno.getFechaHora().getYear() %></td> 
+						<td><%=turno.getFechaHora().getHours() %></td>
 						<td><%=turno.getMedico().getNombre() %> " " <%=turno.getMedico().getApellido() %></td>
 						<td><%=turno.getEspecialidad().getDescripcion() %></td> 
 						<td><%=turno.getPaciente().getNombre() %> " " <%=turno.getPaciente().getApellido() %> </td> 

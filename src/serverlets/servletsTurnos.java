@@ -1,9 +1,11 @@
 package serverlets;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -56,11 +58,13 @@ public class servletsTurnos extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("InsertarTurno.jsp");
 				rd.forward(request, response);
 			}
+			else {
+				listarTurnos(request);
+				
+				RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
+				rd.forward(request, response);				
+			}
 			
-			listarTurnos(request);
-			
-			RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
-			rd.forward(request, response);
 		}
 		
 	}
@@ -70,13 +74,12 @@ public class servletsTurnos extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String dniPaciente ="";
 		String idEsp = "";
 		String descEsp = "";
 		
 		if(request.getParameter("btn-buscar-medicos") != null) {
 			idEsp = request.getParameter("especialidadSelect").toString();
-			
+
 			EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
 			ArrayList<Especialidad> listaEsp = (ArrayList<Especialidad>) eDao.listarEspecialidades();
 			
@@ -100,6 +103,20 @@ public class servletsTurnos extends HttpServlet {
 		}
 		if(request.getParameter("btn-agregar-turno") != null) {
 			
+			try {
+				if(!agregarTurno(request)) {
+					request.setAttribute("mensajeError", "No se pudo dar de alta el turno.");					
+					
+				}
+				else {
+					request.setAttribute("mensajeExito", "Turno dado de alta con exito ");
+					
+					RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
+					rd.forward(request, response);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}
@@ -149,27 +166,51 @@ public class servletsTurnos extends HttpServlet {
 	protected boolean agregarTurno(HttpServletRequest request) {
 		
 		TurnosDAOImpl tDao = new TurnosDAOImpl();
-		Turnos nuevoTurno = new Turnos(); 
+		Turnos nuevoTurno = new Turnos();
+		String dni = "";
+		boolean agregoTurno = false;
+		boolean agregoTurnoxMedico = false;
 		
-		//nuevoTurno.setFechaHora(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
+		try {
+			
+			nuevoTurno.setFechaHora(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
+			Especialidad esp = new Especialidad();
+			esp.setIdEspecialidad(Integer.parseInt(request.getParameter("espSelect")));
+			esp.setDescripcion(request.getParameter("descripcionEsp"));
+			nuevoTurno.setEspecialidad(esp);
+			
+			Paciente pac = new Paciente();
+			PacienteDAOImpl pDao = new PacienteDAOImpl();
+			ArrayList<Paciente> listaPaciente = pDao.listarPacientes();
+			
+			dni = request.getParameter("dniPaciente");
+			
+			for (Paciente paciente : listaPaciente) {
+				if(paciente.getDni().equals(dni)) {
+					pac.setIdPaciente(paciente.getIdPaciente());
+				}
+			}
+			nuevoTurno.setPaciente(pac);
+			
+			nuevoTurno.setObservacion(request.getParameter("observaciones"));
+			
+			Medico med = new Medico();
+			med.setIdMedico(Integer.parseInt(request.getParameter("medico")));
+			nuevoTurno.setMedico(med);
+			
+			agregoTurno = tDao.agregarTurno(nuevoTurno);
+			
+		} catch (ParseException e) {
+			
+			e.printStackTrace();
+		}
 		
-		Especialidad esp = new Especialidad();
-		esp.setIdEspecialidad(Integer.parseInt(request.getParameter("espSelect")));
-		esp.setDescripcion(request.getParameter("descripcionEsp"));
-		nuevoTurno.setEspecialidad(esp);
-		
-		Paciente pac = new Paciente();
-		pac.setDni(request.getParameter("dniPaciente"));
-		nuevoTurno.setPaciente(pac);
-		
-		nuevoTurno.setObservacion(request.getParameter("observaciones"));
-		
-		Medico med = new Medico();
-		med.setIdMedico(Integer.parseInt(request.getParameter("medico")));
-		nuevoTurno.setMedico(med);
-		
-		boolean agregado = tDao.agregarTurno(nuevoTurno);
-		return agregado;
+		if(agregoTurno == true && agregoTurnoxMedico == true) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 }

@@ -1,6 +1,7 @@
 package dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -19,11 +20,10 @@ import dominio.Turnos;
 
 public class TurnosDAOImpl implements ITurnosDAO{
 
-	private static final String insertTurno = "Insert into Turnos (FechaHora, IdEspecialidad, IdPaciente, IdEstado, Observacion, Activo) values (?, ?, ?, ?, ?, true)";
-	private static final String insertTurnoXMedico = "Insert into turnosxmedico (IdMedico, IdEspecialidad, Activo) values (?, ?, true)";
+	private static final String insertTurno = "Insert into Turnos (FechaHora, IdEspecialidad, IdPaciente, IdMedico, IdEstado, Observacion, Activo) values (?, ?, ?, ?, ?, ?, true)";
 	private static final String updateTurno = "Update Turnos set FechaHora=?, IdEspecialidad=?, IdPaciente=?, IdEstado=?, Observacion=? where IdTurno = ?";
 	private static final String deleteTurno = "Update Turnos set Activo = 0 where IdTurno = ?";
-	private static final String listarTurnos = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true";
+	private static final String listarTurnos = "select t.IdTurno as IdTurno, t.FechaHora as Fecha, m.IdMedico, esp.IdEspecialidad as IdEspecialidad, esp.Descripcion as Especialidad, pac.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join medicos m on m.IdMedico = t.IdMedico inner join pacientes pac on pac.IdPaciente = t.IdPaciente inner join especialidadxmedico exm on exm.IdEspecialidad = t.IdEspecialidad inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	private static final String listarTurnosXid = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true and t.IdTurno = ?";
 	private static final String listarTurnosPaciente = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true and t.IdPaciente =";
 	private static final String listarTurnosMedico = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true and txm.IdMedico =";
@@ -31,33 +31,27 @@ public class TurnosDAOImpl implements ITurnosDAO{
 	@Override
 	public boolean agregarTurno(Turnos turno) {
 		PreparedStatement statement;
-		PreparedStatement st2;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		boolean agregoTurno = false;
 		
 		try {
-			Timestamp timestamp = Timestamp.valueOf(turno.getFechaHora()); /// por lo q lei, no se puede mandar un localdatetime de una, asi q lo paso a timestamp
+			//Timestamp timestamp = Timestamp.valueOf(turno.getFechaHora()); /// por lo q lei, no se puede mandar un localdatetime de una, asi q lo paso a timestamp
 			
 			statement = conexion.prepareStatement(insertTurno);
 			
-			statement.setTimestamp(1, timestamp); //aca se supone q se inserta el timestamp, oremos
+			@SuppressWarnings("deprecation")
+			java.sql.Date date = new Date(turno.getFechaHora().getDay(), turno.getFechaHora().getMonth(), turno.getFechaHora().getYear());
+			
+			statement.setDate(1, date); //aca se supone q se inserta el timestamp, oremos
 			statement.setInt(2, turno.getEspecialidad().getIdEspecialidad());
 			statement.setInt(3, turno.getPaciente().getIdPaciente());
-			statement.setInt(4, turno.getEstado().getIdEstado());
-			statement.setString(5, turno.getObservacion());
+			statement.setInt(4, turno.getMedico().getIdMedico());
+			statement.setInt(5, 1);
+			statement.setString(6, turno.getObservacion());
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				agregoTurno = true;
-			}
-			
-			st2 = conexion.prepareStatement(insertTurnoXMedico);
-			
-			st2.setInt(1, turno.getMedico().getIdMedico());
-			st2.setInt(2, turno.getEspecialidad().getIdEspecialidad());
-			
-			if(st2.executeUpdate() > 0) {
-				conexion.commit();
 			}
 			
 		} catch (Exception e) {
@@ -66,7 +60,7 @@ public class TurnosDAOImpl implements ITurnosDAO{
 		
 		return agregoTurno;
 	}
-
+	
 	@Override
 	public boolean eliminarTurno(int idTurno) {
 		PreparedStatement statement;
@@ -100,11 +94,12 @@ public class TurnosDAOImpl implements ITurnosDAO{
 		boolean modificoTurno = false;
 		
 		try {
-			Timestamp timestamp = Timestamp.valueOf(turno.getFechaHora()); /// por lo q lei, no se puede mandar un localdatetime de una, asi q lo paso a timestamp
+			//Timestamp timestamp = Timestamp.valueOf(turno.getFechaHora()); /// por lo q lei, no se puede mandar un localdatetime de una, asi q lo paso a timestamp
 			
 			statement = conexion.prepareStatement(updateTurno);
 			
-			statement.setTimestamp(1, timestamp); //aca se supone q se inserta el timestamp, oremos
+			//statement.setTimestamp(1, timestamp); //aca se supone q se inserta el timestamp, oremos
+			statement.setDate(1, (Date) turno.getFechaHora());
 			statement.setInt(2, turno.getEspecialidad().getIdEspecialidad());
 			statement.setInt(3, turno.getPaciente().getIdPaciente());
 			statement.setInt(4, turno.getEstado().getIdEstado());
@@ -138,7 +133,8 @@ public class TurnosDAOImpl implements ITurnosDAO{
 			while(rs.next()) {
 				Turnos turno = new Turnos();
 				turno.setIdTurno(rs.getInt("IdTurno"));
-				turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
+				turno.setFechaHora(rs.getDate("Fecha"));
+				//turno.setFechaHora(Date.parse((CharSequence)rs.getDate("FechaHora")));
 				
 				Medico medico = new Medico();
 				int idMed = rs.getInt("IdMedico");
@@ -204,7 +200,8 @@ public class TurnosDAOImpl implements ITurnosDAO{
 			while(rs.next()) {
 				Turnos turno = new Turnos();
 				turno.setIdTurno(rs.getInt("IdTurno"));
-				turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
+				turno.setFechaHora(rs.getDate("FechaHora"));
+				//turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
 				
 				Medico medico = new Medico();
 				int idMed = rs.getInt("IdMedico");
@@ -267,7 +264,8 @@ public class TurnosDAOImpl implements ITurnosDAO{
 			while(rs.next()) {
 				Turnos turno = new Turnos();
 				turno.setIdTurno(rs.getInt("IdTurno"));
-				turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
+				turno.setFechaHora(rs.getDate("FechaHora"));
+				//turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
 				
 				Medico medico = new Medico();
 				MedicoDAOImpl mDao = new MedicoDAOImpl();

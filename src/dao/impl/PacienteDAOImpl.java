@@ -30,7 +30,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=?";
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
-	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";
+	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono, pac.IdPaciente as IdPaciente from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";
 	private static final String listarPaciente = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
 	private static final String existePaciente = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS existe_registro FROM personas p WHERE p.dni = ?";
 	
@@ -229,6 +229,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				persona.setFechaNacimiento(rs.getDate("fechaNacimiento"));
 				persona.setCorreo(rs.getString("correo"));
 				persona.setActivo(rs.getBoolean("activo"));
+				persona.setIdPaciente(rs.getInt("IdPaciente"));
 				
 				Pais nacionalidad = new Pais();
 				nacionalidad.setDescripcion(rs.getString("nacionalidad"));
