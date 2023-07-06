@@ -156,31 +156,41 @@
 						<span id="mailError" class="error"></span>
 					</div>
 			
-					<div class="d-flex fd-column w-50">
-						<label>Dirección</label>
-								<input type="Text" required="true"  name="direccion" class="campo">
+								<div class="d-flex fd-column w-50">
+						<label>Contraseña</label>
+						<input  type="password" required="true" name="password" class="campo">
+						<span id="contraseñaError" class="error"></span>
 					</div>
+					
+
 						
 				</div>
 			
-				<div class="d-flex row">
-				
-			</div>
+
 			
 			<div class="d-flex row">
 				
-
+					<div class="d-flex fd-column w-50"> 
+					
+						<label>Dirección</label>
+								<input type="Text" required="true"  name="direccion" class="campo">
+					</div>
 				
-								<div class="d-flex fd-column">
+								<div class="d-flex fd-column w-50">
 								<label>Localidad</label>
 <input type="Text" required="true" name="localidad"  class="campo">
 				</div>
 				
-				<div class="d-flex fd-column">
+
+											
+			</div>
+			
+							<div class="d-flex row">
+											<div class="d-flex fd-column w-50">
 								<label>Provincia</label>
 <input type="Text" required="true" name="provincia"  class="campo">
 				</div>
-											<div class="d-flex fd-column">
+				<div class="d-flex fd-column w-50">
 								<label>Pais</label>
 								<select name="paisSelect" class="select">
 								<option value="-1">Escoge un Pais: </option>

@@ -108,7 +108,7 @@ public class serverletsPacientes extends HttpServlet  {
 			
 			EliminarPaciente(pDao, dniPaciente);
 			listarPacientes(request);
-			
+			request.setAttribute("mensajeExito", "El Paciente fue eliminado Correctamente!");
 			RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 			rd.forward(request, response);
 		}

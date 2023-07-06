@@ -115,8 +115,10 @@ public class serverletsMedicos extends HttpServlet   {
 			
 		}
 		else if(request.getParameter("btn-eliminar-medico") != null) {
-			EliminarMedico(medicoDao, dniMedico, idMedico);
-			
+			String mensaje ="";
+			if(EliminarMedico(medicoDao, dniMedico, idMedico)) mensaje ="El médico fue eliminado con exito!";
+			else  mensaje ="Hubo un error al intentar eliminar el Médico";
+			request.setAttribute("mensaje", mensaje);	
 			listarMedicos(request);			
 			RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
 			rd.forward(request, response);

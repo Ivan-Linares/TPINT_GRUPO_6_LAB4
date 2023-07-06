@@ -41,8 +41,9 @@ $(document).ready(function() {
 	    table.search(searchTerm).draw();
 	  });	  
 	  
-	  $('.dataTables_length').hide();
+	  /*$('.dataTables_length').hide();
 	  $('.dataTables_info').hide();
+	  */
 	});
 
 </script>
@@ -182,7 +183,7 @@ $(document).ready(function() {
 							<td class="d-flex">
 								<button type="submit" name="btn-ver-paciente" class="btn bg-blue">Ver</button>
 								<button type="submit" name="btn-editar-paciente" class="btn bg-green">Editar</button>
-								<button type="submit" name="btn-eliminar-paciente" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al Paciente ?');">Eliminar</button>
+								<button type="submit" name="btn-eliminar-paciente" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al Paciente?');">Eliminar</button>
 						 	</td>
 						 
 						 </form>

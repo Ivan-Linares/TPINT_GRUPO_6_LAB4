@@ -76,11 +76,9 @@
 		%>
 	
 	<div class="container fd-column m-auto" style="width:100%;
-    margin: 0px 100px;" visible="<% if(medico == null) {%> false <%}%>">
+    margin: 0px 100px; margin-bottom:60px" visible="<% if(medico == null) {%> false <%}%>">
 	<div class="title-section d-flex jc-sb" >
 		<h1> Médico</h1>
-
-		
 		
 	</div>
 	
@@ -277,8 +275,17 @@
 	</div>	
 	
 	
+		<%if(request.getAttribute("estadoHorario") != null){
+		String mensaje = request.getAttribute("estadoHorario").toString(); %>
+			<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;"><%= mensaje %></h3>
+		<%}%>
 	
-<div style="margin:60px 0px 0px 0px; display:flex; border-top:1px solid blue; padding:10px 0px;">
+		<%if(request.getAttribute("estadoTelefono") != null){
+		String mensaje = request.getAttribute("estadoTelefono").toString(); %>
+		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;"><%= mensaje %></h3>
+		<%}%>
+	
+<div style=" display:flex; border-top:1px solid blue; padding:10px 0px;">
 
 	
 	<br/>	
@@ -304,12 +311,7 @@
 	}
 	%>
 	
-	<%if(request.getAttribute("estadoHorario") != null){
-	String mensaje = request.getAttribute("estadoHorario").toString(); %>
-		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
-      <%= mensaje %>
-   </h3>
-	<%}%>
+
 		<table class="content-table header-table-blue w-100" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
@@ -347,7 +349,7 @@
 							</td> 	
 		<td class="d-flex">
 		<button type="submit" name="btn-editar-horario-trabajo" class="btn bg-blue">Editar</button>
-		<button  type="submit"  name="btn-eliminar-horario-trabajo" class="btn bg-red w-100">Eliminar  </button>
+		<button  type="submit"  name="btn-eliminar-horario-trabajo" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Horario seleccionado?');">Eliminar  </button>
 		 </td>
 	</form>
 
@@ -380,12 +382,7 @@
 	}
 	%>
 	
-		<%if(request.getAttribute("estadoTelefono") != null){
-	String mensaje = request.getAttribute("estadoTelefono").toString(); %>
-		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
-      <%= mensaje %>
-   </h3>
-	<%}%>
+
 		<table class="content-table header-table-blue" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
@@ -418,7 +415,7 @@
 							</td> 	
 							<td class="d-flex">
 								<button type="submit" name="btn-editar-telefono" class="btn bg-blue">Editar</button>
-								<button  type="submit"  name="btn-eliminar-telefono" class="btn bg-red w-100">Eliminar  </button>
+								<button  type="submit"  name="btn-eliminar-telefono" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Telefono seleccionado?');">Eliminar  </button>
 							 </td>
 						</form>
 						

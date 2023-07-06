@@ -21,7 +21,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	var table = $('#tablaPacientes').DataTable({	    
+	var table = $('#tablaMedicos').DataTable({	    
 	    initComplete: function() {
 	      
 	      $('.dataTables_filter input').css('display', 'none');
@@ -38,10 +38,10 @@ $(document).ready(function() {
 	    table.search(searchTerm).draw();
 	  });	  
 	  
-	  $('.dataTables_length').hide();
+	  /*$('.dataTables_length').hide();
 	  $('.dataTables_info').hide();
+	  */
 	});
-
 </script>
 
 <style>
@@ -147,6 +147,12 @@ $(document).ready(function() {
 			}
 		}
 	%>
+	
+		<% String mensaje = "";
+		if(request.getAttribute("mensaje") != null) mensaje = request.getAttribute("mensaje").toString();
+   		if (mensaje != "") { %>
+   		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;"><%= mensaje %></h3>
+<% } %>
 	
 	<div>
 		<table class="content-table header-table-blue" id="tablaMedicos"> 

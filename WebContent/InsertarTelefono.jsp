@@ -76,7 +76,7 @@
 			 if(request.getAttribute("dniMedico") != null){			 
 				 dniMedico = request.getAttribute("dniMedico").toString();
 			 %>
-			 <form action="serverletsTelefono" method="post">
+			 <form action="serverletsMedicos" method="post">
 			<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
 		<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
 		</form>
