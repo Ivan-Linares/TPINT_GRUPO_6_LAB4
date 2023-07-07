@@ -49,6 +49,7 @@ public class servletsTurnos extends HttpServlet {
 		
 		if(var == null){
 			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
+			System.out.println("entro en usuario");
 			rd.forward(request, response);
 		}
 		else {
@@ -106,10 +107,12 @@ public class servletsTurnos extends HttpServlet {
 			try {
 				if(agregarTurno(request)) {
 					request.setAttribute("mensajeExito", "Turno dado de alta con exito ");
+					listarTurnos(request);
 					
 				}
 				else {
-					request.setAttribute("mensajeError", "No se pudo dar de alta el turno.");					
+					request.setAttribute("mensajeError", "No se pudo dar de alta el turno.");
+					listarTurnos(request);
 					
 				}
 			} catch (Exception e) {

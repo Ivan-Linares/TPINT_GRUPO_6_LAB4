@@ -38,7 +38,7 @@
 				
 				<li> 
 				
-				 <a href="Medicos.jsp">
+				 <a href="serverletsMedicos?method=get">
 				 	<span class="material-symbols-outlined">
 						clinical_notes
 					</span>	
@@ -48,7 +48,7 @@
 				
 				<li>
 
-					<a href="Turnos.jsp" class="active">				<span class="material-symbols-outlined">
+					<a href="servletsTurnos?method=get" class="active">				<span class="material-symbols-outlined">
 					calendar_month
 				</span>	Turnos</a>
 				</li>
@@ -88,7 +88,7 @@
 		
 	<%
 	ArrayList<Turnos> listaTurnos = new ArrayList<Turnos>();
-
+	
 	if(request.getAttribute("listaTurnos") != null){
 		Object obj = request.getAttribute("listaTurnos");
 		if(obj instanceof ArrayList<?>){
@@ -126,6 +126,7 @@
 					<th>Paciente</th> 
 					<th>Estado</th> 
 					<th>Observacion</th> 
+					<th>Acciones</th>
 				</tr>
 			</thead> 
 			<tbody>
@@ -141,13 +142,23 @@
 					%>
 					<form action="serverletsPacientes" method="post" class="<%=nombreClase%>">
 						<td><strong><%=turno.getIdTurno() %></strong> <input type="hidden" name="idTurno" value="<%=turno.getIdTurno() %>"></td> 
-						<td><%=turno.getFechaHora().getDay() %>/<%=turno.getFechaHora().getMonth() %>/<%=turno.getFechaHora().getYear() %></td> 
-						<td><%=turno.getFechaHora().getHours() %></td>
-						<td><%=turno.getMedico().getNombre() %> " " <%=turno.getMedico().getApellido() %></td>
+						<td><%=turno.getFechaHora()%></td> 
+						<td><%=turno.getFechaHora() %></td>
+						<td><%=turno.getMedico().getNombre() %> <%=turno.getMedico().getApellido() %></td>
 						<td><%=turno.getEspecialidad().getDescripcion() %></td> 
-						<td><%=turno.getPaciente().getNombre() %> " " <%=turno.getPaciente().getApellido() %> </td> 
-						<td><%=turno.getEstado().getDescripcion() %></td> 
-						<td><%=turno.getObservacion() %></td>
+						<td><%=turno.getPaciente().getNombre() %> <%=turno.getPaciente().getApellido() %> </td> 
+						<td><%if(turno.getEstado().getDescripcion() == null){ %>
+							Sin Estado
+						<%}else{ %>
+							<%=turno.getEstado().getDescripcion() %>
+						<%} %>
+						</td> 
+						<td><%if(turno.getObservacion() == null){ %>
+							Sin Observaciones
+						<%}else{ %>
+							<%=turno.getObservacion() %>
+						<%} %>
+						</td>
 						<td><button class="btn w-100 <%= nombreClase%>">
 							 <%= textButtonActivo%>
 							</button></td> 			
@@ -156,6 +167,7 @@
 								<button type="submit" name="btn-editar-turno" class="btn bg-green">Editar</button>
 								<button type="submit" name="btn-eliminar-turno" class="btn bg-red" onclick="return confirm('Esta seguro que desea eliminar al turno ?');">Eliminar</button>
 						 	</td>
+					</form>
 					</tr>
 				<%} %>
 			<%} %>

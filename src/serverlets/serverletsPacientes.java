@@ -64,7 +64,6 @@ public class serverletsPacientes extends HttpServlet  {
 		ArrayList<Paciente> listaPacientes  = pDao.listarPacientes();
 		
 		request.setAttribute("listaPacientes", listaPacientes);
-		
 	}
 	
 	protected void agregarListaPaises(HttpServletRequest request) {

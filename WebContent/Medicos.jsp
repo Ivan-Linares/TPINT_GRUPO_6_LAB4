@@ -77,7 +77,7 @@ $(document).ready(function() {
 				 </li>
 								
 				<li>
-					<a href="Turnos.jsp">				
+					<a href="servletsTurnos?method=get">				
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
 					</a>
