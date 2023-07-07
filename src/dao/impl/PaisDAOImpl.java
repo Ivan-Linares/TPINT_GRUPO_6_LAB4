@@ -23,12 +23,10 @@ public class PaisDAOImpl implements IPaisDAO {
 		{
 			st = conexion.createStatement();
 			ResultSet rs = st.executeQuery(listarPaises);
-			System.out.println("entro");
 			while(rs.next()) {
 				Pais pais = new Pais();
 				pais.setIdPais(rs.getInt("idPais"));	
 				pais.setDescripcion(rs.getString("descripcion"));	
-				System.out.println(pais.getDescripcion());
 				listaPaises.add(pais);
 			}
 			

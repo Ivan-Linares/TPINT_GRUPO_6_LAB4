@@ -6,6 +6,7 @@ public class Domicilio {
 	private String direccion;
 	private String localidad;
 	private String provincia;
+	private Pais pais;
 	private boolean activo;
 	
 	public Domicilio() {		
@@ -56,6 +57,14 @@ public class Domicilio {
 	}
 	public void setActivo(boolean activo) {
 		this.activo = activo;
+	}
+
+	public Pais getPais() {
+		return pais;
+	}
+
+	public void setPais(Pais pais) {
+		this.pais = pais;
 	}
 		
 }

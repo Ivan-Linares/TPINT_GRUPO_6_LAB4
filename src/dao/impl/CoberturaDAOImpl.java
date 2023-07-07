@@ -25,8 +25,7 @@ public class CoberturaDAOImpl implements ICoberturaDAO {
 			while(rs.next()) {
 				Cobertura cobertura = new Cobertura();
 				cobertura.setId(rs.getInt("idCobertura"));	
-				cobertura.setDescripcion(rs.getString("descripcion"));	
-				System.out.println(cobertura.getDescripcion());
+				cobertura.setDescripcion(rs.getString("descripcion"));					
 				listaCoberturas.add(cobertura);
 			}
 			

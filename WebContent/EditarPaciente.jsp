@@ -92,7 +92,7 @@
 							<div class="d-flex fd-column">
 								<label>Nacionalidad</label>
 								<select name="nacionalidadSelect" class="select">
-								<option value="-1">Escoge un Pais: </option>
+								
 								<% 
 								ArrayList<Pais> listaPaises = new ArrayList<Pais>();
 								if(request.getAttribute("listaPaises") != null){
@@ -103,8 +103,10 @@
 												while(it.hasNext())
 				{
 					Pais pais = it.next();
+					String paisPaciente= paciente.getDomicilio().getPais().getDescripcion().toString();
+					String paisSelect = pais.getDescripcion().toString();
 				%>
-				<option value="<%= pais.getIdPais()%>"><%= pais.getDescripcion() %></option>
+				<option value="<%= pais.getIdPais()%>"  <%if(paisPaciente.equals(paisSelect)){%> selected="true"<%}%> ><%= pais.getDescripcion() %></option>
 				<%
 				}%>				
 								</select>
@@ -147,16 +149,17 @@
 					
 												<div class="d-flex fd-column">
 								<label>Pais</label>
-								<select name="paisSelect" class="select">
-								<option value="-1">Escoge un Pais: </option>
+								<select name="paisSelect" class="select">								
 								<% 
 								
 								ListIterator <Pais> it2 = listaPaises.listIterator();
 												while(it2.hasNext())
 				{
 					Pais pais = it2.next();
+					String paisPaciente= paciente.getDomicilio().getPais().getDescripcion().toString();
+					String paisSelect = pais.getDescripcion().toString();
 				%>
-				<option value="<%= pais.getIdPais()%>"><%= pais.getDescripcion() %></option>
+				<option value="<%= pais.getIdPais()%>" <%if(paisPaciente.equals(paisSelect)){ %> selected="true" <%}%>><%= pais.getDescripcion() %></option>
 				<%
 				}%>							
 								</select>
@@ -175,8 +178,11 @@
 												while(it3.hasNext())
 				{
 					Cobertura cobertura = it3.next();
+					//String coberturaPaciente = paciente.getCobertura().getDescripcion();
+					String coberturaPaciente = "Galeno";
+					String coberturaSelect = cobertura.getDescripcion();
 				%>
-				<option value="<%= cobertura.getId()%>"><%= cobertura.getDescripcion() %></option>
+				<option value="<%= cobertura.getId()%>"  <%if(coberturaPaciente.equals(coberturaSelect)){%> selected="true"<%}%>><%= cobertura.getDescripcion() %></option>
 				<%
 				}%>
 								

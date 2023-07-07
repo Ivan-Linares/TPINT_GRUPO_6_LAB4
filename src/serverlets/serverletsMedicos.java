@@ -197,10 +197,12 @@ public class serverletsMedicos extends HttpServlet   {
 		domicilioMedico.setDireccion(request.getParameter("direccion"));
 		domicilioMedico.setLocalidad(request.getParameter("localidad"));
 		domicilioMedico.setProvincia(request.getParameter("provincia"));
+		Pais paisDomicilioMedico = new Pais();
+		paisDomicilioMedico.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect")));
+		domicilioMedico.setPais(paisDomicilioMedico);
 		
 		nuevoMedico.setDomicilio(domicilioMedico);
-		boolean agregado = mDao.agregar(nuevoMedico);
-		if(agregado) request.setAttribute("idMedico", 1); //aca tiene que retornar el id Medico y se lo asignamos
+		boolean agregado = mDao.agregar(nuevoMedico);		
 		return agregado;
 	}
 	

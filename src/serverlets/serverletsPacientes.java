@@ -165,6 +165,9 @@ public class serverletsPacientes extends HttpServlet  {
 		domicilioPaciente.setDireccion(request.getParameter("direccion"));
 		domicilioPaciente.setLocalidad(request.getParameter("localidad"));
 		domicilioPaciente.setProvincia(request.getParameter("provincia"));
+		Pais paisDomicilioPaciente = new Pais();
+		paisDomicilioPaciente.setIdPais(Integer.parseInt(request.getParameter("paisSelect")));
+		domicilioPaciente.setPais(paisDomicilioPaciente);
 		
 		nuevoPaciente.setDomicilio(domicilioPaciente);
 		

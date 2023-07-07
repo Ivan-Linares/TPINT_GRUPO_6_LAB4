@@ -44,7 +44,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 		
 		try {
 			statement = conexion.createStatement();			
-			String query = insertDomicilio + "values('"+medico.getDomicilio().getDireccion() +"','"+medico.getDomicilio().getLocalidad() +"', '"+ medico.getDomicilio().getProvincia() +"', 1)";
+			String query = insertDomicilio + "values('"+medico.getDomicilio().getDireccion() +"','"+medico.getDomicilio().getLocalidad() +"', '"+ medico.getDomicilio().getProvincia() +"', "+ medico.getDomicilio().getPais().getIdPais()+ ")";
 			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);	
 			ResultSet rs = statement.getGeneratedKeys();
 			

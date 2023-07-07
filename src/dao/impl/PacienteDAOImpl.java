@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import dao.IPacienteDAO;
+import dominio.Cobertura;
 import dominio.Domicilio;
 import dominio.Paciente;
 import dominio.Pais;
@@ -31,7 +32,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String updatePaciente = "update pacientes set idCobertura=?, activo=? where dni=?";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono, pac.IdPaciente as IdPaciente from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";
-	private static final String listarPaciente = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
+	private static final String listarPaciente = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, nacionalidad.idPais as idNacionalidad, nacionalidad.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, pais.idPais as idpais, pais.descripcion as pais,telefono.telefono as telefono from personas per inner join pacientes pac on per.dni = pac.dni left join Paises nacionalidad on per.idNacionalidad = nacionalidad.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join Paises pais on domicilio.Pais = pais.idPais left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
 	private static final String existePaciente = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS existe_registro FROM personas p WHERE p.dni = ?";
 	
 	private int agregarDomicilio(Paciente paciente) {
@@ -42,7 +43,7 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		
 		try {
 			statement = conexion.createStatement();			
-			String query = insertDomicilio + "values('"+paciente.getDomicilio().getDireccion() +"','"+paciente.getDomicilio().getLocalidad() +"', '"+ paciente.getDomicilio().getProvincia() +"', 1)";
+			String query = insertDomicilio + "values('"+paciente.getDomicilio().getDireccion() +"','"+paciente.getDomicilio().getLocalidad() +"', '"+ paciente.getDomicilio().getProvincia() +"'," + paciente.getDomicilio().getPais().getIdPais()+")";
 			statement.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);	
 			ResultSet rs = statement.getGeneratedKeys();
 			
@@ -185,7 +186,6 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				eliminoPersona = true;			
 			}
 			
-			//agregar validacion si tiene tel asociados
 			statement = conexion.prepareStatement(deleteTelefono);
 			statement.setString(1, dniPaciente);
 			
@@ -294,8 +294,6 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			
 				paciente.setDni(rs.getString("dni"));
 				paciente.setNombre(rs.getString("nombre"));
-				
-				System.out.println("entro al impl" + paciente.getDni());
 				paciente.setApellido(rs.getString("apellido"));
 				paciente.setSexo(rs.getString("sexo"));
 				paciente.setFechaNacimiento(rs.getDate("fechaNacimiento"));
@@ -312,12 +310,21 @@ public class PacienteDAOImpl implements IPacienteDAO{
 				domicilio.setLocalidad(rs.getString("localidad"));
 				domicilio.setProvincia(rs.getString("provincia"));
 				
+				Pais paisDomicilio = new Pais();
+				paisDomicilio.setIdPais(rs.getInt("idPais"));
+				paisDomicilio.setDescripcion(rs.getString("pais"));
+				domicilio.setPais(paisDomicilio);
+				
 				paciente.setDomicilio(domicilio);		
 				
 				Telefono telefono = new Telefono();
 				telefono.setTelefono(rs.getString("telefono"));
 				
 				paciente.setTelefono(telefono);
+				
+				//agregar para que lea la cobertura en la query y desp la guarde
+				Cobertura coberturaPaciente = new Cobertura();
+				paciente.setCobertura(coberturaPaciente);
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
