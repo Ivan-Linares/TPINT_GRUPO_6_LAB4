@@ -193,7 +193,7 @@
 					
 					</div>					
 					
-					<%if(request.getParameter("btn-editar-paciente") != null){
+					<%if(request.getAttribute("editar-paciente") != null){
 					%>
 					<button type="submit" name="btn-guardar-paciente" class="btn bg-green">Guardar Cambios</button>
 					<%} %>

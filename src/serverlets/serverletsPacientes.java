@@ -101,11 +101,12 @@ public class serverletsPacientes extends HttpServlet  {
 			
 			agregarListaPaises(request);
 			agregarListaCoberturas(request);
-		
+			request.setAttribute("editar-paciente", true);
 			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
 			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-guardar-paciente") != null) {
+			dniPaciente = request.getParameter("dni").toString();
 			try {
 				ModificarPaciente(pDao, request);
 			} catch (ParseException e) {
@@ -118,6 +119,7 @@ public class serverletsPacientes extends HttpServlet  {
 			agregarListaPaises(request);
 			agregarListaCoberturas(request);
 		
+			request.setAttribute("editar-paciente", true);
 			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
 			rd.forward(request, response);
 		}
