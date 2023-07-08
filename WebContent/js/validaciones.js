@@ -5,6 +5,11 @@ $(document).ready(function() {
 		  $('input[name="apellido"]').blur(validarApellido);
 		  $('input[name="correo"]').blur(validarCorreo);
 		  $('input[name="telefono"]').blur(validarTelefono);
+		  $('select[name="sexoSelect"]').blur(validarSelect);
+		  $('select[name="nacionalidadSelect"]').blur(validarSelect);
+		  $('select[name="paisSelect"]').blur(validarSelect);
+		  $('select[name="coberturaSelect"]').blur(validarSelect);
+		  
 		  
 		  let esValido = true;
 		  
@@ -79,6 +84,17 @@ $(document).ready(function() {
 		    }
 		  }
 		  
+		  function validarSelect(){
+			  var select = $(this);
+			  var selectError = $('#'+select.attr("name")+'Error');
+
+			  if(select.val() < 0){
+				  selectError.text('Seleccione una opción valida');
+				  esValido = false;
+			  }
+			  else selectError.text('');
+		  }
+		  
 		  function validarTelefono() {
 		    var telefono = $(this);
 		    var telefonoError = $('#telefonoError');
@@ -95,6 +111,35 @@ $(document).ready(function() {
 		  if(!esValido){
 			event.preventDefault();
 		  }
+		  
+		  var form = $("#formulario");
+		  form.on("submit", function() { 
+			  var formInvalid = false;
+			  if($('select[name="sexoSelect"]').val() < 0) {
+				  var selectError = $('#sexoSelectError');
+				  selectError.text('Seleccione una opción valida');
+				  formInvalid = true;
+			  }		
+			  if($('select[name="nacionalidadSelect"]').val() < 0) {
+				  var selectError = $('#nacionalidadSelectError');
+				  selectError.text('Seleccione una opción valida');
+				  formInvalid = true;
+			  }
+			  
+			  if($('select[name="paisSelect"]').val() < 0) {
+				  var selectError = $('#paisSelectError');
+				  selectError.text('Seleccione una opción valida');
+				  formInvalid = true;
+			  }
+			  if($('select[name="coberturaSelect"]').val() < 0) {
+				  var selectError = $('#coberturaSelectError');
+				  selectError.text('Seleccione una opción valida');
+				  formInvalid = true;			  
+			  }
+			  
+			  if(formInvalid)event.preventDefault();
+		  });
+		  
 		});
 
 

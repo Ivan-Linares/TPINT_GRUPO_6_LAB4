@@ -48,7 +48,7 @@
 		<div class="container fd-column m-auto" style="width:100%;
 	    margin: 0px 100px;">		
 			<div>		
-				<form method="post" action="serverletsPacientes">
+				<form method="post" action="serverletsPacientes" id="formulario">
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 					
 						<div class="d-flex row">
@@ -65,6 +65,7 @@
 							</div>
 							
 							<div class="d-flex fd-column">
+								<span id="sexoSelectError" class="error"></span>
 								<label>Sexo</label>
 								<select name="sexoSelect" class="select">
 									<option value="F">Femenino</option>
@@ -88,6 +89,7 @@
 							</div>
 							
 							<div class="d-flex fd-column">
+							<span id="nacionalidadSelectError" class="error"></span>
 								<label>Nacionalidad</label>
 								<select name="nacionalidadSelect" class="select">
 								<option value="-1">Escoge un Pais: </option>
@@ -147,7 +149,9 @@
 					
 					<div class="d-flex row">
 																	<div class="d-flex fd-column">
+																	<span id="paisSelectError" class="error"></span>
 								<label>Pais</label>
+								
 								<select name="paisSelect" class="select">
 								<option value="-1">Escoge un Pais: </option>
 								<% 
@@ -165,6 +169,7 @@
 							</div>
 							
 					<div class="d-flex fd-column">
+					<span id="coberturaSelectError" class="error"></span>
 								<label>Cobertura</label>
 								<select name="coberturaSelect" class="select">
 									<option value="-1">Escoge una Cobertura: </option>
