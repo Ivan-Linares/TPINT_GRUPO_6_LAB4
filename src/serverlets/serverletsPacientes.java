@@ -95,13 +95,31 @@ public class serverletsPacientes extends HttpServlet  {
 			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
 			rd.forward(request, response);
 		}
-		
 		else if(request.getParameter("btn-editar-paciente") != null) {
+			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
+			request.setAttribute("paciente", paciente);
+			
+			agregarListaPaises(request);
+			agregarListaCoberturas(request);
+		
+			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
+			rd.forward(request, response);
+		}
+		else if(request.getParameter("btn-guardar-paciente") != null) {
 			try {
 				ModificarPaciente(pDao, request);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
+			
+			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
+			request.setAttribute("paciente", paciente);
+			
+			agregarListaPaises(request);
+			agregarListaCoberturas(request);
+		
+			RequestDispatcher rd = request.getRequestDispatcher("EditarPaciente.jsp");
+			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-eliminar-paciente") != null) {
 			
@@ -140,25 +158,43 @@ public class serverletsPacientes extends HttpServlet  {
 	
 	protected boolean AgregarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
 		
-		Paciente nuevoPaciente = new Paciente();
-		nuevoPaciente.setDni(request.getParameter("dni").toString());
-		if(pDao.existe(nuevoPaciente.getDni())){
+		if(pDao.existe(request.getParameter("dni").toString())){
 			return false;
 		}
-		nuevoPaciente.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
-		nuevoPaciente.setSexo(request.getParameter("sexoSelect"));
-		nuevoPaciente.setNombre(request.getParameter("nombre"));
-		nuevoPaciente.setApellido(request.getParameter("apellido"));
+		
+		Paciente nuevoPaciente = setearDatosPaciente(pDao, request);
+		
+		boolean agregado = pDao.agregar(nuevoPaciente);
+		return agregado;
+	}
+	
+
+	
+	protected boolean ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+		Paciente UpdatePaciente = setearDatosPaciente(pDao, request);
+		boolean Modificado = pDao.modificar(UpdatePaciente) == 1;
+		
+		return Modificado;
+	}
+	
+	protected Paciente setearDatosPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+		Paciente paciente = new Paciente();
+		paciente.setDni(request.getParameter("dni").toString());
+
+		paciente.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
+		paciente.setSexo(request.getParameter("sexoSelect"));
+		paciente.setNombre(request.getParameter("nombre"));
+		paciente.setApellido(request.getParameter("apellido"));
 		
 		Pais nacionalidad = new Pais();
 		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
-		nuevoPaciente.setNacionalidad(nacionalidad);
-		nuevoPaciente.setCorreo(request.getParameter("correo"));
+		paciente.setNacionalidad(nacionalidad);
+		paciente.setCorreo(request.getParameter("correo"));
 		
 		Telefono telefono = new Telefono();
-		telefono.setDni(nuevoPaciente.getDni());
+		telefono.setDni(paciente.getDni());
 		telefono.setTelefono(request.getParameter("telefono"));
-		nuevoPaciente.setTelefono(telefono);
+		paciente.setTelefono(telefono);
 		
 		Domicilio domicilioPaciente = new Domicilio();
 		domicilioPaciente.setDireccion(request.getParameter("direccion"));
@@ -168,51 +204,13 @@ public class serverletsPacientes extends HttpServlet  {
 		paisDomicilioPaciente.setIdPais(Integer.parseInt(request.getParameter("paisSelect")));
 		domicilioPaciente.setPais(paisDomicilioPaciente);
 		
-		nuevoPaciente.setDomicilio(domicilioPaciente);
+		paciente.setDomicilio(domicilioPaciente);
 		
 		Cobertura cobertura = new Cobertura();
 		cobertura.setId(Integer.parseInt(request.getParameter("coberturaSelect").toString()));
-		nuevoPaciente.setCobertura(cobertura);
+		paciente.setCobertura(cobertura);
 		
-		boolean agregado = pDao.agregar(nuevoPaciente);
-		return agregado;
-	}
-	
-
-	
-	protected boolean ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
-		Paciente UpdatePaciente = new Paciente();
-		UpdatePaciente.setDni(request.getParameter("dni").toString());
-		UpdatePaciente.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
-		System.out.println(UpdatePaciente.getFechaNacimiento());
-		
-		UpdatePaciente.setSexo(request.getParameter("sexoSelect"));
-		UpdatePaciente.setNombre(request.getParameter("nombre"));
-		UpdatePaciente.setApellido(request.getParameter("apellido"));
-		
-		Pais nacionalidad = new Pais();
-		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
-		
-		UpdatePaciente.setCorreo(request.getParameter("correo"));
-		
-		Telefono telefono = new Telefono();
-		telefono.setTelefono(request.getParameter("telefono"));
-		UpdatePaciente.setTelefono(telefono);
-		
-		Domicilio domicilioPaciente = new Domicilio();
-		domicilioPaciente.setDireccion(request.getParameter("direccion"));
-		domicilioPaciente.setLocalidad(request.getParameter("localidad"));
-		domicilioPaciente.setProvincia(request.getParameter("provincia"));
-		
-		UpdatePaciente.setDomicilio(domicilioPaciente);
-		
-		Cobertura cobertura = new Cobertura();
-		cobertura.setId(Integer.parseInt(request.getParameter("coberturaSelect").toString()));
-		UpdatePaciente.setCobertura(cobertura);
-		
-		boolean Modificado = pDao.modificar(UpdatePaciente);
-		
-		return Modificado;
+		return paciente;
 	}
 	
 }

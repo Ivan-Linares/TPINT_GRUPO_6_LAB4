@@ -52,7 +52,8 @@
 		
 		%>
 		<div class="container fd-column m-auto" style="width:100%;
-	    margin: 0px 100px;" visible="<% if(paciente == null) {%> false <%}%>">		
+	    margin: 40px 100px;" visible="<% if(paciente == null) {%> false <%}%>">	
+	    <a href="serverletsPacientes?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
 			<div>		
 				<form method="post" action="serverletsPacientes">
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
@@ -178,8 +179,7 @@
 												while(it3.hasNext())
 				{
 					Cobertura cobertura = it3.next();
-					//String coberturaPaciente = paciente.getCobertura().getDescripcion();
-					String coberturaPaciente = "Galeno";
+					String coberturaPaciente = paciente.getCobertura().getDescripcion();
 					String coberturaSelect = cobertura.getDescripcion();
 				%>
 				<option value="<%= cobertura.getId()%>"  <%if(coberturaPaciente.equals(coberturaSelect)){%> selected="true"<%}%>><%= cobertura.getDescripcion() %></option>
@@ -193,11 +193,9 @@
 					
 					</div>					
 					
-					<%if(request.getAttribute("editarPaciente") != null){
+					<%if(request.getParameter("btn-editar-paciente") != null){
 					%>
-					<button type="submit" name="btn-agregar-paciente" class="btn bg-green">Editar Paciente</button>
-					<%}else{ %>
-						<a href="serverletsPacientes?method=get" name="btn-volver" class="btn bg-green">Volver al Listado</a>
+					<button type="submit" name="btn-guardar-paciente" class="btn bg-green">Guardar Cambios</button>
 					<%} %>
 				</form>
 			</div>
