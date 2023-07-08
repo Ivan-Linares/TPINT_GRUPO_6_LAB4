@@ -54,6 +54,14 @@
 		<div class="container fd-column m-auto" style="width:100%;
 	    margin: 40px 100px;" visible="<% if(paciente == null) {%> false <%}%>">	
 	    <a href="serverletsPacientes?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+	    <br>
+	    <% String mensaje = "";
+	    if(request.getAttribute("mensaje") != null) mensaje = (String) request.getAttribute("mensaje");
+   if (mensaje != "") { %>
+   <h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      <%= mensaje %>
+   </h3>
+   <%} %>
 			<div>		
 				<form method="post" action="serverletsPacientes">
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">

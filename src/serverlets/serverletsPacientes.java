@@ -107,8 +107,11 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else if(request.getParameter("btn-guardar-paciente") != null) {
 			dniPaciente = request.getParameter("dni").toString();
+			int modificado = 0;
 			try {
-				ModificarPaciente(pDao, request);
+				modificado = ModificarPaciente(pDao, request);
+				if(modificado == 1)request.setAttribute("mensaje", "El Paciente fue modificado Correctamente!");
+				else request.setAttribute("mensaje", "Ocurrió un error al intentar modificar al Paciente!");
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -172,11 +175,11 @@ public class serverletsPacientes extends HttpServlet  {
 	
 
 	
-	protected boolean ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+	protected int ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
 		Paciente UpdatePaciente = setearDatosPaciente(pDao, request);
 		boolean Modificado = pDao.modificar(UpdatePaciente) == 1;
 		
-		return Modificado;
+		return 1;
 	}
 	
 	protected Paciente setearDatosPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
