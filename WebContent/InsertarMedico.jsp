@@ -80,7 +80,7 @@
 	</div>
 	
 	<div>		
-		<form method="post" action="serverletsMedicos">
+		<form method="post" action="serverletsMedicos" id="formulario">
 		
 		<%
 		Integer idMedico = 0;

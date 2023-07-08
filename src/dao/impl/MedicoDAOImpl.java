@@ -29,11 +29,12 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String deleteMedico = "update medicos set Activo=0 where dni=?";
 	private static final String deletePersona = "update personas set Activo=0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo=0 where dni=?";
+	private static final String deleteDomicilio = "update domicilio set Activo = 0 where idDomicilio=?";
 	private static final String listarMedicos = "select med.idMedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
 	private static final String listarEspecialidades = "select med.IdMedico as idMedico, esp.IdEspecialidad as idEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listarIDMedico = "select IdMedico from medicos";
-	private static final String listarMedico = "select med.idmedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad,domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, telefono.telefono as telefono from personas per inner join medicos med on per.dni = med.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
+	private static final String listarMedico = "select med.idmedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, nac.idPais as idNacionalidad, nac.descripcion AS nacionalidad, domicilio.idDomicilio as idDomicilio, domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, pais.idpais as idpais, pais.descripcion as pais,telefono.telefono as telefono from personas per inner join medicos med on per.dni = med.dni left join Paises nac on per.idNacionalidad = nac.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join Paises pais on pais.idpais= domicilio.pais left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
 	private static final String listarMedicoXEspecialidad = "select m.IdMedico as IdMedico, m.DNI as DNI, p.Nombre as Nombre, p.Apellido as Apellido from especialidades e inner join especialidadxmedico exm on exm.IdEspecialidad = e.IdEspecialidad inner join medicos m on m.IdMedico = exm.IdMedico inner join personas p on p.DNI = m.DNI where e.IdEspecialidad =";
 	
 	private int agregarDomicilio(Medico medico) {
@@ -175,6 +176,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 		boolean eliminoMedico = false;
 		boolean eliminoPersona = false;
 		boolean eliminoTelefono = false;
+		boolean eliminoDomicilio = false;
 		
 		try
 		{
@@ -206,13 +208,21 @@ public class MedicoDAOImpl implements IMedicoDAO{
 			HorariosTrabajoDAOImpl horariosTrabajoDAO = new HorariosTrabajoDAOImpl();
 			horariosTrabajoDAO.eliminarTodos(idMedico);
 			
+			Medico medico = obtenerMedico(dniMedico);
+			statement = conexion.prepareStatement(deleteDomicilio);
+			statement.setInt(1, medico.getDomicilio().getIdDomicilio());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				eliminoDomicilio = true;
+			}
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
 		}
 		
-		if(eliminoMedico == true && eliminoPersona == true && eliminoTelefono == true) {
+		if(eliminoMedico == true && eliminoPersona == true && eliminoTelefono == true && eliminoDomicilio == true) {
 			return true;
 		}else {
 			return false;
@@ -320,8 +330,6 @@ public class MedicoDAOImpl implements IMedicoDAO{
 			medico.setIdMedico(rs.getInt("idMedico"));
 			medico.setDni(rs.getString("dni"));
 			medico.setNombre(rs.getString("nombre"));
-				
-				System.out.println("entro al impl medico" + medico.getDni());
 				medico.setApellido(rs.getString("apellido"));
 				medico.setSexo(rs.getString("sexo"));
 				medico.setFechaNacimiento(rs.getDate("fechaNacimiento"));
@@ -329,14 +337,19 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				medico.setActivo(rs.getBoolean("activo"));
 				
 				Pais nacionalidad = new Pais();
-				nacionalidad.setDescripcion(rs.getString("nacionalidad"));
-				
+				nacionalidad.setIdPais(rs.getInt("idNacionalidad"));;
+				nacionalidad.setDescripcion(rs.getString("nacionalidad"));		
 				medico.setNacionalidad(nacionalidad);		
 				
 				Domicilio domicilio = new Domicilio();
+				domicilio.setIdDomicilio(rs.getInt("idDomicilio"));
 				domicilio.setDireccion(rs.getString("direccion"));
 				domicilio.setLocalidad(rs.getString("localidad"));
 				domicilio.setProvincia(rs.getString("provincia"));
+				Pais paisDomicilio = new Pais();
+				paisDomicilio.setDescripcion(rs.getString("pais"));
+				paisDomicilio.setIdPais(rs.getInt("idPais"));
+				domicilio.setPais(paisDomicilio);
 				
 				medico.setDomicilio(domicilio);		
 		}

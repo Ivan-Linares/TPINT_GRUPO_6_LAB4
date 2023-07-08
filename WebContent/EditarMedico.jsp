@@ -143,8 +143,10 @@
 												while(it.hasNext())
 				{
 					Pais pais = it.next();
+					String nacionalidadMedico= medico.getNacionalidad().getDescripcion();
+					String nacionalidadSelect = pais.getDescripcion().toString();
 				%>
-				<option value="<%= pais.getIdPais()%>"  <%if(medico.getNacionalidad().getDescripcion() == pais.getDescripcion()){%> selected="true"<%}%> ><%= pais.getDescripcion() %></option>
+				<option value="<%= pais.getIdPais()%>"  <%if(nacionalidadSelect.equals(nacionalidadMedico)){%> selected="true"<%}%> ><%= pais.getDescripcion() %></option>
 				<%
 				}%>
 						</select>
@@ -193,8 +195,10 @@
 												while(it2.hasNext())
 				{
 					Pais pais = it2.next();
+					String paisMedico= medico.getDomicilio().getPais().getDescripcion().toString();
+					String paisSelect = pais.getDescripcion().toString();
 				%>
-				<option value="<%= pais.getIdPais()%>"  <%if(medico.getNacionalidad().getDescripcion().toLowerCase() == pais.getDescripcion().toLowerCase()){%> selected="true"<%}%>><%= pais.getDescripcion() %></option>
+				<option value="<%= pais.getIdPais()%>"  <%if(paisSelect.equals(paisMedico)){%> selected="true"<%}%>><%= pais.getDescripcion() %></option>
 				<%
 				}%>
 								

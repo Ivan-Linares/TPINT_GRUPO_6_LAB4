@@ -147,8 +147,6 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 				ht.setHoraSalida(rs.getString("HoraSalida"));
 				
 				listaHT.add(ht);
-				
-				System.out.println(ht.getDia());
 			}
 			
 		}
