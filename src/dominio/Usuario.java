@@ -2,13 +2,32 @@ package dominio;
 
 public class Usuario {
 	private int id;
+	private String dni;
 	private boolean esAdministrador;
 	private String correo;
+	private String password;
+	private boolean activo;
 	
 	public Usuario() {
 		
 	}
 	
+	public String getDni() {
+		return dni;
+	}
+
+	public void setDni(String dni) {
+		this.dni = dni;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Usuario(int id, boolean esAdministrador, String correo) {
 		super();
 		this.id = id;
@@ -38,6 +57,14 @@ public class Usuario {
 
 	public void setCorreo(String correo) {
 		this.correo = correo;
+	}
+
+	public boolean isActivo() {
+		return activo;
+	}
+
+	public void setActivo(boolean activo) {
+		this.activo = activo;
 	}	
 	
 }

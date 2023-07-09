@@ -17,6 +17,7 @@ import dao.impl.MedicoDAOImpl;
 import dao.impl.PacienteDAOImpl;
 import dao.impl.PaisDAOImpl;
 import dao.impl.TelefonoDAOImpl;
+import dao.impl.UsuarioDAOImpl;
 import dominio.Cobertura;
 import dominio.Domicilio;
 import dominio.Especialidad;
@@ -88,7 +89,8 @@ public class serverletsMedicos extends HttpServlet   {
 			        return;
 			    }
 			    
-			    if (AgregarMedico(medicoDao, request)) {			    	
+			    if (AgregarMedico(medicoDao, request)) {	
+			    	AgregarUsuario(request);
 			         dniMedico = request.getParameter("dni").toString();
 			         agregarDetallesVerMedico(request, dniMedico);
 						RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
@@ -204,6 +206,17 @@ public class serverletsMedicos extends HttpServlet   {
 		nuevoMedico.setDomicilio(domicilioMedico);
 		boolean agregado = mDao.agregar(nuevoMedico);		
 		return agregado;
+	}
+	
+	protected boolean AgregarUsuario(HttpServletRequest request) throws ParseException  {
+		Usuario usuario = new Usuario();
+		usuario.setDni(request.getParameter("dni").toString());
+		usuario.setCorreo(request.getParameter("correo"));
+		usuario.setPassword(request.getParameter("password").toString());
+		usuario.setEsAdministrador(false);
+		
+		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
+		return uDao.agregar(usuario);
 	}
 	
 	protected boolean EliminarMedico(MedicoDAOImpl mDao, String dniMedico, int idMedico) {		

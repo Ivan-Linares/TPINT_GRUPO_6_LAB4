@@ -269,21 +269,21 @@ public class PacienteDAOImpl implements IPacienteDAO{
 			String fechaNacimientoString = print.format(paciente.getFechaNacimiento());
 			Date sqlDate = Date.valueOf(fechaNacimientoString);
 			String updatePersona = "update personas set nombre='"+paciente.getNombre()+ "', apellido='" + paciente.getApellido()+"', sexo='"+paciente.getSexo() +"', idNacionalidad='"+ paciente.getNacionalidad().getIdPais()+"', fechaNacimiento='"+sqlDate+"', correo='"+ paciente.getCorreo()+"' where dni ='"+paciente.getDni()+"'";
-			System.out.println(updatePersona);
+
 			statement = conexion.prepareStatement(updatePersona);
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				modificado = 1;			
 			}
+			
 			String updatePaciente = "update pacientes set idCobertura="+ paciente.getCobertura().getId()+" where dni='"+ paciente.getDni()+"'";	
-			System.out.println(updatePaciente);
 			statement = conexion.prepareStatement(updatePaciente);
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				modificado = 1;			
 			}
+			
 			String updateDomicilio = "update domicilio set direccion='"+ paciente.getDomicilio().getDireccion()+"', localidad='"+ paciente.getDomicilio().getLocalidad()+"', provincia='"+paciente.getDomicilio().getProvincia()+"', pais="+paciente.getDomicilio().getPais().getIdPais()+" where idDomicilio="+ paciente.getDomicilio().getIdDomicilio();
-			System.out.println(updateDomicilio);
 			statement = conexion.prepareStatement(updateDomicilio);
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();

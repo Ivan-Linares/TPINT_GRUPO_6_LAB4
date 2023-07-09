@@ -133,9 +133,6 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				insertarMedico = true;
 			}
 			
-			//agregarTelefono(medico.getTelefono());
-			//agregarHorariosMedico(medico);
-
 			
 		} catch (Exception e) {
 			e.printStackTrace();
