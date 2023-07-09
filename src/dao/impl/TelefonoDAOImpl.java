@@ -59,13 +59,9 @@ public class TelefonoDAOImpl implements ITelefonoDAO {
 		
 		try
 		{
-
 			statement = conexion.prepareStatement(deleteTelefono);
 			statement.setString(1, dni);
 			statement.setString(2, telefono);
-			
-			System.out.println("entro eeliminsr" + dni + telefono);
-			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				eliminoTelefono = true;

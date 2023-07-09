@@ -52,8 +52,33 @@ public class serverletsEspecialidades extends HttpServlet {
 				rd.forward(request, response);
 			}
 		}
+		else if(request.getParameter("btn-eliminar-especialidad") != null) {
+			System.out.println("entro elimnar");
+			String estadoEspecialidad = "";
+			if(eliminarEspecialidadMedico(request)) estadoEspecialidad = "Se pudo eliminar la Especialidad correctamente!";
+			else estadoEspecialidad ="Ocurrió un error al intentar eliminar la Especialidad!";
+			request.setAttribute("estadoEspecialidad", estadoEspecialidad);
+			
+			String dniMedico = "";
+			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
+			int idMedico = 0;
+			if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
+			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-ver-medico=");
+			rd.forward(request, response);
+		}
 
 		
+	}
+	
+	protected boolean eliminarEspecialidadMedico(HttpServletRequest request) {
+		EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+		int idMedico = 0;
+		int idEspecialidad = 0;
+		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
+		if(request.getParameter("idEspecialidad") != null) idEspecialidad = Integer.parseInt(request.getParameter("idEspecialidad"));
+		System.out.println(idMedico + idEspecialidad);
+		if(eDao.eliminarEspecialidadMedico(idEspecialidad, idMedico)) return true;
+		return false;
 	}
 	
 	protected void setearAtributosIdDniMedico(HttpServletRequest request) {

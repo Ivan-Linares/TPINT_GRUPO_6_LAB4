@@ -219,6 +219,10 @@
 	
 	
 	<div>	
+			<%if(request.getAttribute("estadoEspecialidad") != null){
+		String mensaje = request.getAttribute("estadoEspecialidad").toString(); %>
+			<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;"><%= mensaje %></h3>
+		<%}%>
 	<div  class="filtro">
 	<h3>Especialidades</h3> 
 	
@@ -228,7 +232,16 @@
 		<button type="submit" name="btn-nueva-especialidad" class="btn bg-green w-100">Agregar Especialidad</button>
 	</form>
 	</div>
-	
+		<%
+	ArrayList<Especialidad> especialidadesMedico = new ArrayList<Especialidad>();
+
+	if(request.getAttribute("listaEspecialidadesMedico") != null){
+		Object obj = request.getAttribute("listaEspecialidadesMedico");
+		if(obj instanceof ArrayList<?>){
+			especialidadesMedico = (ArrayList<Especialidad>) obj;
+		}
+	}
+	%>
 	<table class="content-table header-table-blue w-100" id="tablaMedicos"> 
 			<thead> 
 				<tr> 
@@ -237,19 +250,28 @@
 					<th>Acciones</th>
 				</tr>
 			</thead> 
-			<tbody>		
+			<tbody>	
+	<% if(especialidadesMedico.size() > 0){
+		for(Especialidad especialidad: especialidadesMedico){
+			String nombreClase = "bg-green" ;
+			String textButtonActivo ="Activo";
+	
+		if(!especialidad.isActivo()) {
+			nombreClase = "bg-red"; 
+			textButtonActivo = "Inactivo";}%>	
 			<tr>
-			<form action="serverletsHorariosMedico" method="post" >
+			<form action="serverletsEspecialidades" method="post" >
 				<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 			 	<input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
-			 	<input type="hidden" name="idEspecialidad" value="id">
-				<td>Nutrición</td>
-				<td><button class="btn w-100 bg-green">Activo</button></td> 	
+			 	<input type="hidden" name="idEspecialidad" value="<%=especialidad.getIdEspecialidad()%>">
+				<td><%=especialidad.getDescripcion() %></td>
+				<td><button class="btn w-100 <%=nombreClase%>"><%=textButtonActivo %></button></td> 	
 				<td class="d-flex">
-					<button  type="submit"  name="btn-eliminar-especialidad " class="btn bg-red w-100">Eliminar  </button>
+					<button  type="submit"  name="btn-eliminar-especialidad" class="btn bg-red w-100">Eliminar  </button>
 		 		</td>
 			</form>
 			</tr> 
+			<% }} %>
 			</tbody> 
 		</table>
 	</div>

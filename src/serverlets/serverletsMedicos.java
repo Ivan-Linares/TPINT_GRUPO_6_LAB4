@@ -91,7 +91,7 @@ public class serverletsMedicos extends HttpServlet   {
 			    if (AgregarMedico(medicoDao, request)) {	
 			    	AgregarUsuario(request);
 			         dniMedico = request.getParameter("dni").toString();
-			         agregarDetallesVerMedico(request, dniMedico);
+			         agregarDetallesVerMedico(request, dniMedico, idMedico);
 						RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
 						rd.forward(request, response);
 
@@ -106,7 +106,7 @@ public class serverletsMedicos extends HttpServlet   {
 		}
 		else if(request.getParameter("btn-ver-medico") != null) {
 
-			agregarDetallesVerMedico(request, dniMedico);
+			agregarDetallesVerMedico(request, dniMedico, idMedico);
 			if(request.getAttribute("estadoHorario") != null) request.setAttribute("estadoHorario", request.getAttribute("estadoHorario"));
 			
 			RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
@@ -127,13 +127,14 @@ public class serverletsMedicos extends HttpServlet   {
 		
 	}
 	
-	protected void agregarDetallesVerMedico(HttpServletRequest request, String dniMedico) {
+	protected void agregarDetallesVerMedico(HttpServletRequest request, String dniMedico, int idMedico) {
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		Medico medico = medicoDao.obtenerMedico(dniMedico);
 		request.setAttribute("medico", medico);
 		agregarListaPaises(request);
 		listarHorariosTrabajoPorMedico(request, medico.getIdMedico());
 		listarTelefonosPorMedico(request, medico.getDni());
+		listarEspecialidadesPorMedico(request, idMedico);
 	}
 	
 	protected void listarMedicos(HttpServletRequest request) {
@@ -150,6 +151,12 @@ public class serverletsMedicos extends HttpServlet   {
 		request.setAttribute("listaTelefonosMedico", listaT);
 	}
 	
+	protected void listarEspecialidadesPorMedico(HttpServletRequest request, int idMedico) {
+		EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+		ArrayList<Especialidad> listaEspecialidadesMedico = eDao.listarEspecialidadesPorMedico(idMedico);
+		request.setAttribute("listaEspecialidadesMedico", listaEspecialidadesMedico);
+	}
+	
 	protected void listarHorariosTrabajoPorMedico(HttpServletRequest request, int idMedico) {
 		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
 		ArrayList<HorariosTrabajo> listaHT = htDao.listarPorMedico(idMedico);
@@ -163,6 +170,7 @@ public class serverletsMedicos extends HttpServlet   {
 	}
 	
 	protected void listarEspecialidadesMedico(HttpServletRequest request) {
+		//chequear!
 		MedicoDAOImpl espMedDao = new MedicoDAOImpl();
 		ArrayList<Medico> listaEspecialidadesMedico = (ArrayList<Medico>) espMedDao.listarEspecialidadesMedico();
 		request.setAttribute("listaEspMedico", listaEspecialidadesMedico);

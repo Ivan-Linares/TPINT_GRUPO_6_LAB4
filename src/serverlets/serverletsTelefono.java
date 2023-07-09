@@ -61,8 +61,9 @@ public class serverletsTelefono extends HttpServlet {
 			request.setAttribute("estadoTelefono", estadoTelefono);
 			
 			String dniMedico = "";
-			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
-			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&btn-ver-medico=");
+			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");			int idMedico = 0;
+			if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
+			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-ver-medico=");
 			rd.forward(request, response);
 		}
 		
