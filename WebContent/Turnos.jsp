@@ -140,10 +140,10 @@
 						 textButtonActivo ="Inactivo";
 					}  
 					%>
-					<form action="serverletsPacientes" method="post" class="<%=nombreClase%>">
+					<form action="servletsTurnos" method="post" class="<%=nombreClase%>">
 						<td><strong><%=turno.getIdTurno() %></strong> <input type="hidden" name="idTurno" value="<%=turno.getIdTurno() %>"></td> 
-						<td><%=turno.getFechaHora()%></td> 
-						<td><%=turno.getFechaHora() %></td>
+						<td><%=turno.getFecha() %></td> 
+						<td><%=turno.getHora() %>hs</td>
 						<td><%=turno.getMedico().getNombre() %> <%=turno.getMedico().getApellido() %></td>
 						<td><%=turno.getEspecialidad().getDescripcion() %></td> 
 						<td><%=turno.getPaciente().getNombre() %> <%=turno.getPaciente().getApellido() %> </td> 
