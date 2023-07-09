@@ -17,7 +17,7 @@ import dominio.Usuario;
 
 public class UsuarioDAOImpl implements IUsuarioDAO {
 	private static final String insertUsuario="Insert into Usuarios(DNI, Correo, Password, EsAdministrador) values (?,?,?,?)";
-	private static final String deleteUsuario="update Usuarios set Activo = 0 where idUsuario=?";
+	private static final String deleteUsuario="update Usuarios set Activo = 0 where dni=?";
 	private static final String listarUsuarios="select idusuario, dni, correo, password, esadministrador, activo from Usuarios";
 	private static final String listarUsuario="select idusuario, dni, correo, password, esadministrador, activo from Usuarios where idusuario=";
 
@@ -57,7 +57,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 	}
 
 	@Override
-	public boolean eliminar(int idUsuario) {
+	public boolean eliminar(String dniUsuario) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -76,11 +76,15 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		{
 
 			statement = conexion.prepareStatement(deleteUsuario);
-			statement.setInt(1, idUsuario);
+			System.out.println(deleteUsuario);
+			System.out.println(dniUsuario);
+			statement.setString(1, dniUsuario);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				state = true;
+				
+				state=true;
 			}
 			
 		}

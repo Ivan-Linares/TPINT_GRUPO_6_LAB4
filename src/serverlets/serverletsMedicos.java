@@ -118,7 +118,7 @@ public class serverletsMedicos extends HttpServlet   {
 		}
 		else if(request.getParameter("btn-eliminar-medico") != null) {
 			String mensaje ="";
-			if(EliminarMedico(medicoDao, dniMedico, idMedico)) mensaje ="El médico fue eliminado con exito!";
+			if(EliminarMedico(medicoDao, dniMedico, idMedico) && EliminarUsuarioMedico(dniMedico)) mensaje ="El médico fue eliminado con exito!";
 			else  mensaje ="Hubo un error al intentar eliminar el Médico";
 			request.setAttribute("mensaje", mensaje);	
 			listarMedicos(request);			
@@ -221,5 +221,9 @@ public class serverletsMedicos extends HttpServlet   {
 	
 	protected boolean EliminarMedico(MedicoDAOImpl mDao, String dniMedico, int idMedico) {		
 		return mDao.eliminar(dniMedico, idMedico);	
+	}
+	protected boolean EliminarUsuarioMedico(String dniMedico) {		
+		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
+		return uDao.eliminar(dniMedico);
 	}
 }

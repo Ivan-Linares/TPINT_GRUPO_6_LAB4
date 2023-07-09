@@ -194,14 +194,19 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				eliminoPersona = true;			
 			}
 			
-			statement = conexion.prepareStatement(deleteTelefono);
-			statement.setString(1, dniMedico);
-			
-			if(statement.executeUpdate() > 0) {
-				conexion.commit();
-				eliminoTelefono = true;
+			TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+			if(tDao.listarPorPersona(dniMedico).size() > 0) {
+				statement = conexion.prepareStatement(deleteTelefono);
+				statement.setString(1, dniMedico);
+				
+				if(statement.executeUpdate() > 0) {
+					conexion.commit();
+					eliminoTelefono = true;
+				}			
 			}
+			else eliminoTelefono = true;
 			
+
 			HorariosTrabajoDAOImpl horariosTrabajoDAO = new HorariosTrabajoDAOImpl();
 			horariosTrabajoDAO.eliminarTodos(idMedico);
 			
@@ -218,7 +223,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 		{
 			e.printStackTrace();
 		}
-		
+		System.out.println(eliminoMedico + "-" +eliminoPersona + "-" + eliminoTelefono + "-" + eliminoDomicilio);
 		if(eliminoMedico == true && eliminoPersona == true && eliminoTelefono == true && eliminoDomicilio == true) {
 			return true;
 		}else {
