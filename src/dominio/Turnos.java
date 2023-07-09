@@ -36,10 +36,10 @@ public class Turnos {
 	public void setIdTurno(int idTurno) {
 		IdTurno = idTurno;
 	}
-	public Date getFechaHora() {
+	public Date getFecha() {
 		return fecha;
 	}
-	public void setFechaHora(Date date) {
+	public void setFecha(Date date) {
 		this.fecha = date;
 	}
 	public Especialidad getEspecialidad() {
@@ -79,6 +79,14 @@ public class Turnos {
 
 	public void setMedico(Medico medico) {
 		this.medico = medico;
+	}
+
+	public int getHora() {
+		return hora;
+	}
+
+	public void setHora(int hora) {
+		this.hora = hora;
 	}
 
 	@Override

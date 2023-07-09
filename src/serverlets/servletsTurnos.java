@@ -77,6 +77,7 @@ public class servletsTurnos extends HttpServlet {
 		
 		String idEsp = "";
 		String descEsp = "";
+		TurnosDAOImpl tDao = new TurnosDAOImpl();
 		
 		if(request.getParameter("btn-buscar-medicos") != null) {
 			idEsp = request.getParameter("especialidadSelect").toString();
@@ -118,6 +119,15 @@ public class servletsTurnos extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
+			rd.forward(request, response);
+		}
+		if(request.getParameter("btn-eliminar-turno") != null) {
+			
+			int idTurno = Integer.parseInt(request.getParameter("idTurno"));
+			EliminarTurno(tDao, idTurno);
+			listarTurnos(request);
+			request.setAttribute("mensajeExito", "El Turno fue eliminado correctamente!");
 			RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
 			rd.forward(request, response);
 		}
@@ -175,11 +185,13 @@ public class servletsTurnos extends HttpServlet {
 		
 		try {
 			
-			nuevoTurno.setFechaHora(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
+			nuevoTurno.setFecha(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
 			Especialidad esp = new Especialidad();
 			esp.setIdEspecialidad(Integer.parseInt(request.getParameter("espSelect")));
 			esp.setDescripcion(request.getParameter("descripcionEsp"));
 			nuevoTurno.setEspecialidad(esp);
+			
+			nuevoTurno.setHora(Integer.parseInt(request.getParameter("hora")));
 			
 			Paciente pac = new Paciente();
 			PacienteDAOImpl pDao = new PacienteDAOImpl();
@@ -208,6 +220,10 @@ public class servletsTurnos extends HttpServlet {
 		}
 		
 		return agregoTurno;
+	}
+	
+	protected void EliminarTurno(TurnosDAOImpl tDao, int idTurno) {		
+		tDao.eliminarTurno(idTurno);
 	}
 	
 }
