@@ -9,8 +9,8 @@ $(document).ready(function() {
 		  $('select[name="nacionalidadSelect"]').blur(validarSelect);
 		  $('select[name="paisSelect"]').blur(validarSelect);
 		  $('select[name="coberturaSelect"]').blur(validarSelect);
-		  
-		  
+		  $('select[name="especialidadSelect"]').blur(validarSelect);
+		    
 		  let esValido = true;
 		  
 		  function validarDNI() {
@@ -133,6 +133,11 @@ $(document).ready(function() {
 			  }
 			  if($('select[name="coberturaSelect"]').val() < 0) {
 				  var selectError = $('#coberturaSelectError');
+				  selectError.text('Seleccione una opción valida');
+				  formInvalid = true;			  
+			  }
+			  if($('select[name="especialidadSelect"]').val() < 0) {
+				  var selectError = $('#especialidadSelectError');
 				  selectError.text('Seleccione una opción valida');
 				  formInvalid = true;			  
 			  }

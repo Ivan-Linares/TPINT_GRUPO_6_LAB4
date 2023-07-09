@@ -82,27 +82,41 @@
 		
 	</div>
 	
+
+	    <a href="serverletsMedicos?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+	    <br>
+	    <% String mensajeModifico = "";
+	    if(request.getAttribute("mensaje") != null) mensajeModifico = (String) request.getAttribute("mensaje");
+ 		 if (mensajeModifico != "") { %>
+   		<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
+      		<%= mensajeModifico %>
+  		</h3>
+   		<%} %>
+	    
 	<div>		
-		<form method="post" action="serverletsMedico" class="position-relative">
+	
+
+		<form method="post" action="serverletsMedicos" class="position-relative">
 		
 		<%
 		Integer idMedico = 0;
 		if(request.getAttribute("idMedico")!= null) Integer.parseInt(request.getAttribute("idMedico").toString());
 		%>
 			<input type="hidden" name="IdMedico" value="<%=idMedico %>"> 
+			<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>"> 
 			
 			<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 			
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>DNI</label>
-						<input disabled type="number" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
+						<input type="number" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
 						<span id="dniError" class="error"></span>
 					</div>
 			
 					<div class="d-flex fd-column">
 						<label>Fecha de Nacimiento</label>
-						<input type="Date" required="true" name="fechaNacimiento" class="campo" value="<%= medico.getFechaNacimiento()%>">
+						<input type="Date" required="true" name="fechaNacimiento" class="campo" value="<%= medico.getFechaNacimiento().toString() %>">
 						<span id="fechaNacimientoError" class="error"></span>
 					</div>
 					
@@ -211,7 +225,11 @@
 			</div>
 			</div>
 			
-			<button type="submit" name="btn-agregar-medico" class="btn bg-green position-absolute" style="right:0;">Guardar Médico</button>
+			<%if(request.getAttribute("editar-medico") != null){
+					%>
+					<button type="submit" name="btn-guardar-medico" class="btn bg-green position-absolute" style="right:0;">Guardar Cambios</button>
+					<%} %>
+			
 		</form>
 	</div>
 	
@@ -229,7 +247,11 @@
 	<form action="serverletsEspecialidades"  method="get">
 	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
 	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
-		<button type="submit" name="btn-nueva-especialidad" class="btn bg-green w-100">Agregar Especialidad</button>
+	  
+	  	<%if(request.getAttribute("editar-medico") != null){%>
+			<button type="submit" name="btn-nueva-especialidad" class="btn bg-green w-100">Agregar Especialidad</button>
+		<%} %>
+		
 	</form>
 	</div>
 		<%
@@ -247,7 +269,9 @@
 				<tr> 
 					<th>Especialidad</th>
 					<th>Activo</th>
+					<%if(request.getAttribute("editar-medico") != null){%>
 					<th>Acciones</th>
+					<%} %>
 				</tr>
 			</thead> 
 			<tbody>	
@@ -266,9 +290,11 @@
 			 	<input type="hidden" name="idEspecialidad" value="<%=especialidad.getIdEspecialidad()%>">
 				<td><%=especialidad.getDescripcion() %></td>
 				<td><button class="btn w-100 <%=nombreClase%>"><%=textButtonActivo %></button></td> 	
+				<%if(request.getAttribute("editar-medico") != null){%>
 				<td class="d-flex">
 					<button  type="submit"  name="btn-eliminar-especialidad" class="btn bg-red w-100">Eliminar  </button>
 		 		</td>
+				<%} %>
 			</form>
 			</tr> 
 			<% }} %>
@@ -300,8 +326,10 @@
 	
 	<form action="serverletsHorariosMedico"  method="get">
 	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
-	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
-	<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Horario</button>
+	 <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+	  	<%if(request.getAttribute("editar-medico") != null){%>
+			<button type="submit" name="btn-nuevo-horario" class="btn bg-green w-100">Agregar Horario</button>
+		<%} %>
 	</form>
 	
 	</div>	
@@ -324,7 +352,9 @@
 					<th>Hora Entrada</th>
 					<th>Hora Salida</th>
 					<th>Activo</th>
+					<%if(request.getAttribute("editar-medico") != null){%>
 					<th>Acciones</th>
+					<%} %>
 				</tr>
 			</thead> 
 			<tbody>		
@@ -341,21 +371,19 @@
 		
 		<tr>
 		<form action="serverletsHorariosMedico" method="post" >
-		<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
-			 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
-			 	 <input type="hidden" name="diaHorarioMedico" value="<%=horario.getDia() %>">
-		<td><%=horario.getDia() %></td> 
-		<td><%=horario.getHoraEntrada().toString() %>hs</td> 
-		<td><%=horario.getHoraSalida().toString()  %>hs</td> 
-									<td>
-							<button class="btn w-100 <%= nombreClase%>">
-							 <%= textButtonActivo%>
-							</button>
-							</td> 	
-		<td class="d-flex">
-		<button type="submit" name="btn-editar-horario-trabajo" class="btn bg-blue">Editar</button>
-		<button  type="submit"  name="btn-eliminar-horario-trabajo" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Horario seleccionado?');">Eliminar  </button>
-		 </td>
+			<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+			<input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+			<input type="hidden" name="diaHorarioMedico" value="<%=horario.getDia() %>">
+			<td><%=horario.getDia() %></td> 
+			<td><%=horario.getHoraEntrada().toString() %>hs</td> 
+			<td><%=horario.getHoraSalida().toString()  %>hs</td> 
+			<td><button class="btn w-100 <%= nombreClase%>"><%= textButtonActivo%></button></td> 	
+			<%if(request.getAttribute("editar-medico") != null){%>
+			<td class="d-flex">
+				<button type="submit" name="btn-editar-horario-trabajo" class="btn bg-blue">Editar</button>
+				<button  type="submit"  name="btn-eliminar-horario-trabajo" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Horario seleccionado?');">Eliminar  </button>
+		 	</td>
+			<%} %>
 	</form>
 
 
@@ -367,14 +395,17 @@
 	
 	
 	<div  style="border-radius:10px;height:100%;">	
-		<div  class="filtro">
-			<h3>Telefonos</h3> 
-				<form action="serverletsTelefono"  method="get">
-	 <input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
-	  <input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
-	<button type="submit" name="btn-nuevo-telefono" class="btn bg-green w-100">Agregar Telefono</button>
-	</form>
-		</div>	
+	<div  class="filtro">
+		<h3>Telefonos</h3> 
+		<form action="serverletsTelefono"  method="get">
+	 		<input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
+	  		<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
+	  	 	<%if(request.getAttribute("editar-medico") != null){%>
+				<button type="submit" name="btn-nuevo-telefono" class="btn bg-green w-100">Agregar Telefono</button>
+			<%} %>
+	
+		</form>
+	</div>	
 		
 		<%
 	ArrayList<Telefono> telefonosMedico = new ArrayList<Telefono>();
@@ -393,7 +424,7 @@
 				<tr> 
 					<th>Telefono</th>
 					<th>Activo</th>
-					<th>Acciones</th>
+					<%if(request.getAttribute("editar-medico") != null){%><th>Acciones</th><%} %>			
 				</tr>
 			</thead> 
 			<tbody>		
@@ -413,18 +444,18 @@
 						<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 						<input type="hidden" name="telefonoMedico" value="<%=telefono.getTelefono() %>">
 							<td><%=telefono.getTelefono() %></td> 
-<td>
+							<td>
 							<button class="btn w-100 <%= nombreClase%>">
 							 <%= textButtonActivo%>
 							</button>
 							</td> 	
+							<%if(request.getAttribute("editar-medico") != null){%>
 							<td class="d-flex">
 								<button type="submit" name="btn-editar-telefono" class="btn bg-blue">Editar</button>
 								<button  type="submit"  name="btn-eliminar-telefono" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Telefono seleccionado?');">Eliminar  </button>
-							 </td>
+							</td>
+							 <%} %>	
 						</form>
-						
-
 					</tr> 
 			<% }} %>
 			</tbody> 

@@ -13,7 +13,7 @@
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-
+	<script src="js/code.jquery.com_jquery-3.7.0.min.js"></script>	
 </head>
 <body>
 
@@ -79,13 +79,13 @@
 		<form action="serverletsMedicos" method="post">
 		<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
 			<input type="hidden" name="idMedico" value="<%=idMedico %>">  
-		<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
+		<button class="btn bg-blue w-100" type="submit" name="btn-editar-medico"> Volver Atrás</button>
 		</form>
 	<%}%>
 	</div>
 	
 
-		<form action="serverletsEspecialidades" method="post">
+		<form action="serverletsEspecialidades" method="post" id="formulario">
 		<%if(idMedico != ""){%>
 			 <input type="hidden" name="idMedico" value="<%=idMedico %>">
 		<%} 
@@ -93,7 +93,7 @@
 			 <input type="hidden" name="dniMedico" value="<%=dniMedico %>">
 		<%} %>
 			<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
-			
+				<span id="especialidadSelectError" class="error"></span>
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 					<label>Especialidades</label>
@@ -128,5 +128,6 @@
 	</div>
 
 </div>
+	<script src="js/validaciones.js"></script>	
 </body>
 </html>

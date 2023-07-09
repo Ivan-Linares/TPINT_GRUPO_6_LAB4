@@ -128,6 +128,7 @@
 					</div>
 					
 					<div class="d-flex fd-column">
+						<span id="nacionalidadSelectError" class="error"></span>
 						<label>Nacionalidad</label>
 						<select name="nacionalidadSelect" class="select">
 							<option value="-1">Escoge un Pais: </option>
@@ -191,6 +192,7 @@
 <input type="Text" required="true" name="provincia"  class="campo">
 				</div>
 				<div class="d-flex fd-column w-50">
+				<span id="paisSelectError" class="error"></span>
 								<label>Pais</label>
 								<select name="paisSelect" class="select">
 								<option value="-1">Escoge un Pais: </option>

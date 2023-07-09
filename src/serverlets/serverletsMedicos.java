@@ -113,7 +113,25 @@ public class serverletsMedicos extends HttpServlet   {
 			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-editar-medico") != null) {
+			agregarDetallesVerMedico(request, dniMedico, idMedico);
+			if(request.getAttribute("estadoHorario") != null) request.setAttribute("estadoHorario", request.getAttribute("estadoHorario"));
+			request.setAttribute("editar-medico", true);
+			RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
+			rd.forward(request, response);
+		}
+		else if(request.getParameter("btn-guardar-medico") != null) {
+			try {
+				if(ModificarMedico(medicoDao, request))request.setAttribute("mensaje", "El Médico fue modificado Correctamente!");
+				else request.setAttribute("mensaje", "Ocurrió un error al intentar modificar al Médico!");
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
 			
+			agregarDetallesVerMedico(request, dniMedico, idMedico);
+			request.setAttribute("editar-medico", true);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("EditarMedico.jsp");
+			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-eliminar-medico") != null) {
 			String mensaje ="";
@@ -141,8 +159,8 @@ public class serverletsMedicos extends HttpServlet   {
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		ArrayList<Medico> listaMedicos  = medicoDao.listarMedicos();
 		request.setAttribute("listaMedicos", listaMedicos);
-		System.out.println(listaMedicos.size());
 		listarHorariosTrabajoMedico(request);
+		listarEspecialidadesMedico(request);
 	}
 	
 	protected void listarTelefonosPorMedico(HttpServletRequest request, String dniMedico) {
@@ -170,7 +188,6 @@ public class serverletsMedicos extends HttpServlet   {
 	}
 	
 	protected void listarEspecialidadesMedico(HttpServletRequest request) {
-		//chequear!
 		MedicoDAOImpl espMedDao = new MedicoDAOImpl();
 		ArrayList<Medico> listaEspecialidadesMedico = (ArrayList<Medico>) espMedDao.listarEspecialidadesMedico();
 		request.setAttribute("listaEspMedico", listaEspecialidadesMedico);
@@ -184,18 +201,31 @@ public class serverletsMedicos extends HttpServlet   {
 	
 	
 	protected boolean AgregarMedico(MedicoDAOImpl mDao, HttpServletRequest request) throws ParseException {
-		Medico nuevoMedico = new Medico();
-		nuevoMedico.setDni(request.getParameter("dni").toString());
-		nuevoMedico.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
-		nuevoMedico.setSexo(request.getParameter("sexoSelect"));
-		nuevoMedico.setNombre(request.getParameter("nombre"));
-		nuevoMedico.setApellido(request.getParameter("apellido"));
+		Medico nuevoMedico = setearDatosMedico(request);
+		boolean agregado = mDao.agregar(nuevoMedico);		
+		return agregado;
+	}
+	
+	protected boolean ModificarMedico(MedicoDAOImpl mDao, HttpServletRequest request) throws ParseException {
+		Medico medico = setearDatosMedico(request);
+		return mDao.modificar(medico);
+	}
+	
+	protected Medico setearDatosMedico(HttpServletRequest request) throws ParseException {
+		Medico medico = new Medico();
+		
+		medico.setDni(request.getParameter("dni").toString());
+		medico.setFechaNacimiento(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fechaNacimiento").toString()));
+		medico.setSexo(request.getParameter("sexoSelect"));
+		medico.setNombre(request.getParameter("nombre"));
+		medico.setApellido(request.getParameter("apellido"));
+
 		
 		Pais nacionalidad = new Pais();
 		nacionalidad.setIdPais(Integer.parseInt(request.getParameter("nacionalidadSelect").toString()));
-		nuevoMedico.setNacionalidad(nacionalidad);
-		nuevoMedico.setCorreo(request.getParameter("correo"));
-		
+		medico.setNacionalidad(nacionalidad);
+		medico.setCorreo(request.getParameter("correo"));
+
 		Domicilio domicilioMedico = new Domicilio();
 		domicilioMedico.setDireccion(request.getParameter("direccion"));
 		domicilioMedico.setLocalidad(request.getParameter("localidad"));
@@ -204,9 +234,9 @@ public class serverletsMedicos extends HttpServlet   {
 		paisDomicilioMedico.setIdPais(Integer.parseInt(request.getParameter("paisSelect")));
 		domicilioMedico.setPais(paisDomicilioMedico);
 		
-		nuevoMedico.setDomicilio(domicilioMedico);
-		boolean agregado = mDao.agregar(nuevoMedico);		
-		return agregado;
+		medico.setDomicilio(domicilioMedico);
+		
+		return medico;
 	}
 	
 	protected boolean AgregarUsuario(HttpServletRequest request) throws ParseException  {

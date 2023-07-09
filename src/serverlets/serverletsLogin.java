@@ -42,7 +42,6 @@ public class serverletsLogin extends HttpServlet
 		LoginDAO login = new LoginDAO();
 		
 		if(login.iniciarSesion(user)) {
-			System.out.println("entro al if");
 			usuario = login.obtenerUsuario(user.getEmail());
 			if(usuario != null) {
 				request.getSession().setAttribute("usuario", usuario);

@@ -79,7 +79,7 @@
 			 <form action="serverletsMedicos" method="post">
 			<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
 				<input type="hidden" name="idMedico" value="<%=idMedico %>"> 
-		<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
+		<button class="btn bg-blue w-100" type="submit" name="btn-editar-medico"> Volver Atrás</button>
 		</form>
 			 <% }%>
 		

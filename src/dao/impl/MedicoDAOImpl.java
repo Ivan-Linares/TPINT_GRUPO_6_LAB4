@@ -235,31 +235,33 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	public boolean modificar(Medico medico) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
-		boolean modificado = false;
-				
+		int modificado = 0;
+		
 		try {
+			
+			SimpleDateFormat print = new SimpleDateFormat("yyyy-MM-dd");
+			String fechaNacimientoString = print.format(medico.getFechaNacimiento());
+			Date sqlDate = Date.valueOf(fechaNacimientoString);
+			
+			String updatePersona = "update personas set nombre='"+medico.getNombre()+ "', apellido='" + medico.getApellido()+"', sexo='"+medico.getSexo() +"', idNacionalidad='"+ medico.getNacionalidad().getIdPais()+"', fechaNacimiento='"+sqlDate+"', correo='"+ medico.getCorreo()+"' where dni ='"+medico.getDni()+"'";
 			statement = conexion.prepareStatement(updatePersona);
-				
-			statement.setString(1, medico.getDni());
-			statement.setString(2, medico.getNombre());
-			statement.setString(3, medico.getApellido());
-			statement.setString(4, medico.getSexo());
-			statement.setInt(5, medico.getNacionalidad().getIdPais());
-			statement.setDate(6, (Date) medico.getFechaNacimiento());
-			statement.setString(7, medico.getCorreo());
-			statement.setInt(8, medico.getDomicilio().getIdDomicilio());
-			statement.setBoolean(9, medico.isActivo());
-					
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
-				modificado = true;
+				modificado = 1;			
 			}
-					
+						
+			String updateDomicilio = "update domicilio set direccion='"+ medico.getDomicilio().getDireccion()+"', localidad='"+ medico.getDomicilio().getLocalidad()+"', provincia='"+medico.getDomicilio().getProvincia()+"', pais="+medico.getDomicilio().getPais().getIdPais()+" where idDomicilio="+ medico.getDomicilio().getIdDomicilio();
+			statement = conexion.prepareStatement(updateDomicilio);
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				modificado = 1;			
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-				
-		return modificado;
+		
+		return modificado == 1;
 	}
 
 	@Override
@@ -283,27 +285,6 @@ public class MedicoDAOImpl implements IMedicoDAO{
 				persona.setNombre(rs.getString("nombre"));
 				persona.setApellido(rs.getString("apellido"));
 				persona.setActivo(rs.getBoolean("activo"));
-				//persona.setDiaAtencion(rs.getString("DiaAtencion"));
-				//persona.setHorarioAtencionDesde(rs.getString("HorarioAtencionDesde"));
-				//persona.setHorarioAtencionHasta(rs.getString("HorarioAtencionHasta"));
-				
-				
-				//st2 = conexion.createStatement();
-				//ResultSet rs2 = st2.executeQuery(
-;
-				
-				//while(rs2.next()) {
-					//Especialidad especialidad = new Especialidad();
-					
-					//especialidad.setIdEspecialidad(Integer.parseInt(rs.getString("IdEspecialidad")));
-					//especialidad.setDescripcion(rs.getString("Especialidad"));
-					
-					//ArrayList<Especialidad> ListaEspecialidades = new ArrayList<Especialidad>();
-					//ListaEspecialidades.add(especialidad);
-					
-					//persona.setEspecialidades(ListaEspecialidades);					
-				//}
-				
 				
 				listaMedicos.add(persona);
 			}
@@ -389,9 +370,10 @@ public class MedicoDAOImpl implements IMedicoDAO{
 					int id = rs2.getInt("idMedico");
 					
 					if(id == rs.getInt("IdMedico")) {
+						
 						Especialidad esp = new Especialidad();
-						esp.setIdEspecialidad(rs.getInt("idEspecialidad"));
-						esp.setDescripcion(rs.getString("Especialidad"));
+						esp.setIdEspecialidad(rs2.getInt("idEspecialidad"));
+						esp.setDescripcion(rs2.getString("Especialidad"));
 						
 						listaEspecialidades.add(esp);
 					}
