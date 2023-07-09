@@ -223,7 +223,7 @@ public class MedicoDAOImpl implements IMedicoDAO{
 		{
 			e.printStackTrace();
 		}
-		System.out.println(eliminoMedico + "-" +eliminoPersona + "-" + eliminoTelefono + "-" + eliminoDomicilio);
+
 		if(eliminoMedico == true && eliminoPersona == true && eliminoTelefono == true && eliminoDomicilio == true) {
 			return true;
 		}else {

@@ -49,7 +49,6 @@ public class serverletsMedicos extends HttpServlet   {
 			
 			if(request.getParameter("btn-nuevo-medico") != null) {
 				agregarListaPaises(request);
-				agregarListaEspecialidades(request);
 				RequestDispatcher rd = request.getRequestDispatcher("InsertarMedico.jsp");
 				rd.forward(request, response);
 			}
@@ -133,7 +132,6 @@ public class serverletsMedicos extends HttpServlet   {
 		Medico medico = medicoDao.obtenerMedico(dniMedico);
 		request.setAttribute("medico", medico);
 		agregarListaPaises(request);
-		agregarListaEspecialidades(request);
 		listarHorariosTrabajoPorMedico(request, medico.getIdMedico());
 		listarTelefonosPorMedico(request, medico.getDni());
 	}
@@ -176,11 +174,6 @@ public class serverletsMedicos extends HttpServlet   {
 		request.setAttribute("listaPaises", listaPaises);
 	}
 	
-	protected void agregarListaEspecialidades(HttpServletRequest request) {
-		EspecialidadesDAOImpl espDao = new EspecialidadesDAOImpl();
-		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>) espDao.listarEspecialidades();
-		request.setAttribute("listaEspecialidades", listaEspecialidades);
-	}
 	
 	protected boolean AgregarMedico(MedicoDAOImpl mDao, HttpServletRequest request) throws ParseException {
 		Medico nuevoMedico = new Medico();

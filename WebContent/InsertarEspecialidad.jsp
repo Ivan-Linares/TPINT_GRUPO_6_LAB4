@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@ page import="dominio.Usuario"%>
+<%@ page import="dominio.Usuario"%>
+<%@page import="dominio.Especialidad"%>
+<%@page import="java.util.ListIterator"%>
+<%@ page import="java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -68,17 +71,20 @@
 		<% 
 	String idMedico = ""; 
 	String dniMedico = ""; 
-	if(request.getAttribute("idMedico") != null)idMedico = request.getAttribute("idMedico").toString();	 
-	if(request.getAttribute("dniMedico") != null)dniMedico = request.getAttribute("dniMedico").toString();
-			 %>
-		<form action="serverletsTelefono" method="post">
-			<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
-			<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
+	if(request.getAttribute("idMedico") != null){
+		idMedico = request.getAttribute("idMedico").toString();
+	}		 
+	if(request.getAttribute("dniMedico") != null){			 
+		dniMedico = request.getAttribute("dniMedico").toString();%>
+		<form action="serverletsMedicos" method="post">
+		<input type="hidden" name="dniMedico" value="<%=dniMedico %>">  
+		<button class="btn bg-blue w-100" type="submit" name="btn-ver-medico"> Volver Atrás</button>
 		</form>
+	<%}%>
 	</div>
 	
 
-		<form action="serverletsTelefono" method="post">
+		<form action="serverletsEspecialidades" method="post">
 		<%if(idMedico != ""){%>
 			 <input type="hidden" name="idMedico" value="<%=idMedico %>">
 		<%} 
@@ -89,17 +95,32 @@
 			
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
-						<label>Especialidad</label>
-						<input type="text" required="true" name="especialidad" class="campo">
-					</div>	
+					<label>Especialidades</label>
+					<select name="especialidadSelect" class="select">
+						<option value="-1">Selecciona una especialidad</option>
+						<%
+						ArrayList<Especialidad> listaEspecialidades = new ArrayList<Especialidad>();
+						if(request.getAttribute("listaEspecialidades") != null){
+							listaEspecialidades = (ArrayList<Especialidad>)request.getAttribute("listaEspecialidades");
+						}
+						
+						ListIterator <Especialidad> it3 = listaEspecialidades.listIterator();
+						while(it3.hasNext()){
+							Especialidad esp = it3.next();
+						%>
+						<option value="<%=esp.getIdEspecialidad() %>"><%=esp.getDescripcion() %></option>
+						<%
+						}%>
+					</select>
+				</div>
 				</div>
 			</div>
 			
-			<button type="submit" name="btn-agregar-especialidad" class="btn bg-green">Agregar Especialidad</button>
+			<button type="submit" name="btn-agregar-especialidad" class="btn bg-green">Asignar Especialidad</button>
 		</form>
 		
-		<%if (request.getAttribute("estadoNuevaEspecialidad") != null) {
-		String mensaje = request.getAttribute("estadoNuevaEspecialidad").toString();%>
+		<%if (request.getAttribute("estado") != null) {
+		String mensaje = request.getAttribute("estado").toString();%>
 			<br/>
 			<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;"><%= mensaje %></h3>
 		<%}%>
