@@ -55,7 +55,7 @@ public class serverletsHorariosMedico extends HttpServlet {
 			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");			
 			int idMedico = 0;
 			if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
-			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-ver-medico=");
+			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-editar-medico=");
 			rd.forward(request, response);
 		}
 		

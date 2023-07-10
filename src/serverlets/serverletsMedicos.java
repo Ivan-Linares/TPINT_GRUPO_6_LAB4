@@ -152,11 +152,19 @@ public class serverletsMedicos extends HttpServlet   {
 	protected void agregarDetallesVerMedico(HttpServletRequest request, String dniMedico, int idMedico) {
 		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
 		Medico medico = medicoDao.obtenerMedico(dniMedico);
+		agregarDetallesUsuarioMedico(request, dniMedico);
 		request.setAttribute("medico", medico);
 		agregarListaPaises(request);
 		listarHorariosTrabajoPorMedico(request, medico.getIdMedico());
 		listarTelefonosPorMedico(request, medico.getDni());
 		listarEspecialidadesPorMedico(request, idMedico);
+	}
+	
+	protected void agregarDetallesUsuarioMedico(HttpServletRequest request, String dni) {
+		Usuario usuarioMedico = new Usuario();
+		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
+		usuarioMedico = uDao.obtener(dni);
+		request.setAttribute("usuarioMedico", usuarioMedico);
 	}
 	
 	protected void listarMedicosFiltro(HttpServletRequest request) {

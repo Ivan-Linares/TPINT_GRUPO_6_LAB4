@@ -82,7 +82,7 @@
 			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
-	</div>
+	
 	<%		
 		Medico medico = (Medico)request.getAttribute("medico"); 	
 		%>
@@ -255,25 +255,35 @@
 			
 		</form>
 		
-		<form method="post" action="serverletsUsuarios" class="position-relative">
+
+		<%		
+			Usuario usuarioMedico = null; 	
+		if(request.getAttribute("usuarioMedico") != null){
+			usuarioMedico = (Usuario)request.getAttribute("usuarioMedico");%>
+			<form method="post" action="serverletsUsuarios" class="position-relative">
 		<input type="hidden" name="IdMedico" value="<%=idMedico %>"> 
 			<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>"> 
+			<input type="hidden" name="idUsuario" value="<%=usuarioMedico.getId() %>"> 
 			
 			<div class="d-flex fd-column style-form" style="margin: 100px 0px 0px 0px;">
+					<%if(request.getAttribute("estadoUsuarioMedico") != null){
+		String mensaje = request.getAttribute("estadoUsuarioMedico").toString(); %>
+			<h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;"><%= mensaje %></h3>
+		<%}%>
 					<h3 class="user-info-container">Datos de Usuario</h3>
 				<div class="d-flex row">
 					<div class="d-flex fd-column w-50">
 						<label>Correo Electrónico</label>
-						<%if(request.getAttribute("editar-medico") != null){%><input type="mail" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>"><%}
-						else{%><p class="campo"><%= medico.getCorreo()%></p><%}%>
+						<%if(request.getAttribute("editar-medico") != null){%><input type="mail" required="true" name="correo" class="campo" value="<%= usuarioMedico.getCorreo()%>"><%}
+						else{%><p class="campo"><%= usuarioMedico.getCorreo()%></p><%}%>
 						
 						<span id="mailError" class="error"></span>
 					</div>
 			
 								<div class="d-flex fd-column w-50">
 						<label>Contraseña</label>
-						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="password" class="campo" value="<%= "contraseña" %>"><%}
-						else{%><p class="campo"><%= "contraseña"%></p><%}%>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="password" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}
+						else{%><p class="campo"><%= usuarioMedico.getPassword() %></p><%}%>
 						
 						<span id="contraseñaError" class="error"></span>
 					</div>
@@ -282,9 +292,12 @@
 				</div>
 									<%if(request.getAttribute("editar-medico") != null){
 					%>
-					<button type="submit" name="btn-guardar-medico" class="btn bg-blue-dark position-absolute" style="right:0;">Modificar Usuario</button>
+					<button type="submit" name="btn-guardar-usuario-medico" class="btn bg-blue-dark position-absolute" style="right:0;">Modificar Usuario</button>
 					<%} %>
-				</form>
+				</form>	
+		<%}%>
+		
+		
 	</div>
 	
 	<div style="margin:60px 0px 0px 0px;border-top:1px solid blue; padding:10px 0px;">
@@ -344,11 +357,17 @@
 			 	<input type="hidden" name="idEspecialidad" value="<%=especialidad.getIdEspecialidad()%>">
 				<td><%=especialidad.getDescripcion() %></td>
 				<td><button class="btn w-100 <%=nombreClase%>"><%=textButtonActivo %></button></td> 	
-				<%if(request.getAttribute("editar-medico") != null){%>
-				<td class="d-flex">
-					<button  type="submit"  name="btn-eliminar-especialidad" class="btn bg-red w-100">Eliminar  </button>
+				<%if(request.getAttribute("editar-medico") != null){
+					if(especialidad.isActivo()) {%>
+										<td class="d-flex">
+					<button  type="submit"  name="btn-eliminar-especialidad" onclick="return confirm('Esta seguro que desea reactivar la Especialidad seleccionada?');" class="btn bg-red w-100">Eliminar  </button>
 		 		</td>
-				<%} %>
+					<%}
+					else{%>
+										<td class="d-flex">
+					<button  type="submit"  name="btn-reactivar-especialidad" onclick="return confirm('Esta seguro que desea reactivar la Especialidad seleccionada?');" class="btn bg-green w-100">Reactivar  </button>
+		 		</td>
+						<%}} %>
 			</form>
 			</tr> 
 			<% }} %>
@@ -435,7 +454,12 @@
 			<%if(request.getAttribute("editar-medico") != null){%>
 			<td class="d-flex">
 				<button type="submit" name="btn-editar-horario-trabajo" class="btn bg-blue">Editar</button>
+				<%if(horario.isActivo()){%>
 				<button  type="submit"  name="btn-eliminar-horario-trabajo" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Horario seleccionado?');">Eliminar  </button>
+			<%}else{%>
+			<button  type="submit"  name="btn-reactivar-horario-trabajo" class="btn bg-green w-100"  onclick="return confirm('Esta seguro que desea reactivar el Horario seleccionado?');">Reactivar  </button>
+			<%}%>
+				
 		 	</td>
 			<%} %>
 	</form>
@@ -506,9 +530,12 @@
 							<%if(request.getAttribute("editar-medico") != null){%>
 							<td class="d-flex">
 								<button type="submit" name="btn-editar-telefono" class="btn bg-blue">Editar</button>
+								<%if(telefono.isActivo()){%>
 								<button  type="submit"  name="btn-eliminar-telefono" class="btn bg-red w-100"  onclick="return confirm('Esta seguro que desea eliminar el Telefono seleccionado?');">Eliminar  </button>
-							</td>
-							 <%} %>	
+							 <%}else{%>	
+							 <button  type="submit"  name="btn-reactivar-telefono" class="btn bg-green w-100"  onclick="return confirm('Esta seguro que desea reactivar el Telefono seleccionado?');">Reactivar  </button>
+							<% }%>
+							</td><%} %>	
 						</form>
 					</tr> 
 			<% }} %>

@@ -30,6 +30,7 @@ $(document).ready(function() {
 	      $('.dataTables_filter input').css('display', 'none');
 	      
 	      //https://datatables.net/examples/basic_init/filter_only.html
+	       $('.dataTables_length').css('margin-bottom', '10px');
 	      $('.dataTables_filter label').contents().filter(function() {
 	        return this.nodeType === 3;
 	      }).remove();
@@ -120,7 +121,7 @@ $(document).ready(function() {
 	</div>
 
 	
-	<div class="container fd-column m-auto">
+	<div class="container fd-column m-auto" style="padding: 0 35px">
 	
 		<div class="title-section d-flex jc-sb">		
    		 <h1>Pacientes</h1>		    

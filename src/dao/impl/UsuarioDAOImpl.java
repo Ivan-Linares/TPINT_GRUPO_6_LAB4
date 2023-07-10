@@ -19,8 +19,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 	private static final String insertUsuario="Insert into Usuarios(DNI, Correo, Password, EsAdministrador) values (?,?,?,?)";
 	private static final String deleteUsuario="update Usuarios set Activo = 0 where dni=?";
 	private static final String listarUsuarios="select idusuario, dni, correo, password, esadministrador, activo from Usuarios";
-	private static final String listarUsuario="select idusuario, dni, correo, password, esadministrador, activo from Usuarios where idusuario=";
-
+	private static final String listarUsuario="select idusuario, dni, correo, password, esadministrador, activo from Usuarios where dni='";
 	@Override
 	public boolean agregar(Usuario nuevoUsuario) {
 		PreparedStatement statement;
@@ -102,14 +101,20 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		boolean state = false;
 		
-		try {
-			
-			String updateUsuario = "update Usuario set Correo ='"+ usuario.getCorreo()+"', Password ='"+ usuario.getPassword()+"' where idUsuario="+ usuario.getId();	
+		try {		
+			String updateUsuario = "update Usuarios set Correo ='"+ usuario.getCorreo()+"', Password ='"+ usuario.getPassword()+"' where idUsuario="+ usuario.getId();
 			statement = conexion.prepareStatement(updateUsuario);
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				state = true;		
-			}		
+			}
+			
+			String updatePersonaCorreo = "update personas set Correo ='"+ usuario.getCorreo()+"' where dni='"+ usuario.getDni()+"'";
+			statement = conexion.prepareStatement(updatePersonaCorreo);
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				state = true;		
+			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,7 +129,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 	}
 
 	@Override
-	public Usuario obtener(int idUsuario) {
+	public Usuario obtener(String dni) {
 		Statement st;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -133,7 +138,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		try 
 		{
 			st = conexion.createStatement();
-			ResultSet rs = st.executeQuery(listarUsuario + idUsuario);
+			ResultSet rs = st.executeQuery(listarUsuario + dni+"'");
 			
 			rs.next();
 			usuario.setId(rs.getInt("idUsuario"));
