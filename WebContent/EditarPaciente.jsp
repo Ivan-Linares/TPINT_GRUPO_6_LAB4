@@ -4,6 +4,7 @@
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="dominio.Usuario"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -25,13 +26,13 @@
 			<div class="items">
 				<ul>
 					<li>					
-						<a href="Pacientes.jsp">
+						<a href="serverletsPacientes?method=get" class="active">
 							<span class="material-symbols-outlined">groups</span>Pacientes
 						</a>
 					</li>
 					
 					<li>					
-					 	<a href="Medicos.jsp" class="active">
+					 	<a href="serverletsMedicos?method=get" >
 					 		<span class="material-symbols-outlined">clinical_notes</span>Médicos
 					 	</a>
 					 </li>
@@ -43,6 +44,17 @@
 					</li>
 				</ul>
 			</div>
+			
+			<div class="user-container">
+			
+			
+			<%if(session.getAttribute("usuario") != null){
+				Usuario user = (Usuario)session.getAttribute("usuario");
+				%>	
+				<strong><%= user.getCorreo() %></strong>
+			<%} %>
+			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
+		</div>
 		</div>		
 		
 		<%
@@ -69,45 +81,63 @@
 						<div class="d-flex row">
 							<div class="d-flex fd-column">
 								<label>DNI</label>
-								<input type="number" required="true" name="dni" class="campo" value="<%= paciente.getDni()%>">
+								<input type="hidden" required="true" name="dni" class="campo" value="<%= paciente.getDni()%>">
+								<h3 class="campo"><%= paciente.getDni()%></h3>
 							</div>
 					
 							<div class="d-flex fd-column">
 								<label>Fecha de Nacimiento</label>
-								<input type="Date" required="true" name="fechaNacimiento" class="campo" value="<%= paciente.getFechaNacimiento().toString()%>">
+								<%if(request.getAttribute("editar-paciente") != null){%><input type="Date" required="true" name="fechaNacimiento" class="campo" value="<%= paciente.getFechaNacimiento().toString()%>"><%}
+								else{%><p class="campo"><%= paciente.getFechaNacimiento().toString()%></p><%}%>
 							</div>
 							
 							<div class="d-flex fd-column">
 								<label>Sexo</label>
-								<select name="sexoSelect" class="select">
+								<%if(request.getAttribute("editar-paciente") != null){%>
+																<select name="sexoSelect" class="select">
 									<option value="F" <%if(paciente.getSexo().contains("F")){%> selected="true"<%}%>>Femenino</option>
 									<option value="M" <%if(paciente.getSexo().contains("M")){%> selected="true"<%}%>>Masculino</option>
 									<option value="O" <%if(paciente.getSexo().contains("O")){%> selected="true"<%}%>>Otro</option>
-								</select>
+								</select><%}
+								else{
+									String sexo = paciente.getSexo().toString();
+									if(sexo.contains("F"))sexo = "Femenino";
+									else if(sexo.contains("M"))sexo = "Masculino";
+									else if(sexo.contains("O"))sexo = "Otro";
+									else sexo = "";						
+									%>
+										<p class="campo"><%=sexo %></p>	
+									<%}%>
+
 							</div>						
 						</div>
 						
 						<div class="d-flex row">
 							<div class="d-flex fd-column">
 								<label>Nombre</label>
-								<input type="text" required="true" name="nombre" class="campo" value="<%= paciente.getNombre()%>">
+								<%if(request.getAttribute("editar-paciente") != null){%><input type="text" required="true" name="nombre" class="campo" value="<%= paciente.getNombre()%>"><%}
+								else{%><p class="campo"><%= paciente.getNombre()%></p><%}%>
+								
 							</div>
 					
 							<div class="d-flex fd-column">
 								<label>Apellido</label>
-								<input type="text" required="true" name="apellido" class="campo" value="<%= paciente.getApellido()%>">
+								<%if(request.getAttribute("editar-paciente") != null){%><input type="text" required="true" name="apellido" class="campo" value="<%= paciente.getApellido()%>"><%}
+								else{%><p class="campo"><%= paciente.getApellido()%></p><%}%>
+								
 							</div>
 							
 							<div class="d-flex fd-column">
 								<label>Nacionalidad</label>
-								<select name="nacionalidadSelect" class="select">
-								
-								<% 
+								<%
 								ArrayList<Pais> listaPaises = new ArrayList<Pais>();
 								if(request.getAttribute("listaPaises") != null){
 									listaPaises = (ArrayList<Pais>)request.getAttribute("listaPaises");
 								}
+								if(request.getAttribute("editar-paciente") != null){%>
+								<select name="nacionalidadSelect" class="select">
 								
+								<% 						
 								ListIterator <Pais> it = listaPaises.listIterator();
 												while(it.hasNext())
 				{
@@ -119,18 +149,25 @@
 				<%
 				}%>				
 								</select>
+								<%}
+								else{%><p class="campo"><%= paciente.getNacionalidad().getDescripcion()%></p><%}%>
+								
 							</div>
 						</div>
 						
 						<div class="d-flex row">
 							<div class="d-flex fd-column w-50">
 								<label>Correo Electrónico</label>
-								<input type="mail" required="true" name="correo" class="campo" value="<%= paciente.getCorreo()%>">
+								<%if(request.getAttribute("editar-paciente") != null){%><input type="mail" required="true" name="correo" class="campo" value="<%= paciente.getCorreo()%>"><%}
+								else{%><p class="campo"><%= paciente.getCorreo()%></p><%}%>
+								
 							</div>
 					
 							<div class="d-flex fd-column w-50">
 								<label>Telefono</label>
-								<input type="number" required="true" name="telefono" class="campo" value="<%= paciente.getTelefono().getTelefono()%>">
+								<%if(request.getAttribute("editar-paciente") != null){%><input type="number" required="true" name="telefono" class="campo" value="<%= paciente.getTelefono().getTelefono()%>"><%}
+								else{%><p class="campo"><%=paciente.getTelefono().getTelefono()%></p><%}%>
+								
 							</div>							
 						</div>
 					
@@ -140,17 +177,21 @@
 					<div class="d-flex row">					
 						<div class="d-flex fd-column">
 							<label>Dirección</label>
-							<input type="Text" required="true"  name="direccion" class="campo" value="<%= paciente.getDomicilio().getDireccion()%>">
+							<%if(request.getAttribute("editar-paciente") != null){%><input type="Text" required="true"  name="direccion" class="campo" value="<%= paciente.getDomicilio().getDireccion()%>"><%}
+								else{%><p class="campo"><%=paciente.getDomicilio().getDireccion()%></p><%}%>
+							
 						</div>
 						
 						<div class="d-flex fd-column">
 							<label>Localidad</label>
-							<input type="Text" required="true" name="localidad"  class="campo" value="<%= paciente.getDomicilio().getLocalidad()%>">
+							<%if(request.getAttribute("editar-paciente") != null){%><input type="Text" required="true" name="localidad"  class="campo" value="<%= paciente.getDomicilio().getLocalidad()%>"><%}
+								else{%><p class="campo"><%=paciente.getDomicilio().getLocalidad()%></p><%}%>
 						</div>
 						
 						<div class="d-flex fd-column">
 							<label>Provincia</label>
-							<input type="Text" required="true" name="provincia"  class="campo" value="<%= paciente.getDomicilio().getProvincia()%>">
+							<%if(request.getAttribute("editar-paciente") != null){%><input type="Text" required="true" name="provincia"  class="campo" value="<%= paciente.getDomicilio().getProvincia()%>"><%}
+								else{%><p class="campo"><%= paciente.getDomicilio().getProvincia()%></p><%}%>
 						</div>				
 					</div>	
 					
@@ -158,9 +199,9 @@
 					
 												<div class="d-flex fd-column">
 								<label>Pais</label>
-								<select name="paisSelect" class="select">								
+									<%if(request.getAttribute("editar-paciente") != null){%>
+									<select name="paisSelect" class="select">								
 								<% 
-								
 								ListIterator <Pais> it2 = listaPaises.listIterator();
 												while(it2.hasNext())
 				{
@@ -172,10 +213,14 @@
 				<%
 				}%>							
 								</select>
+									<%}
+								else{%><p class="campo"><%=paciente.getDomicilio().getPais().getDescripcion().toString()%></p><%}%>
+								
 							</div>
 					<div class="d-flex fd-column">
 								<label>Cobertura</label>
-								<select name="coberturaSelect" class="select">
+								<%if(request.getAttribute("editar-paciente") != null){%>
+<select name="coberturaSelect" class="select">
 									<option value="-1">Escoge una Cobertura: </option>
 								<% 
 								ArrayList<Cobertura> listaCoberturas = new ArrayList<Cobertura>();
@@ -191,11 +236,12 @@
 					String coberturaSelect = cobertura.getDescripcion();
 				%>
 				<option value="<%= cobertura.getId()%>"  <%if(coberturaPaciente.equals(coberturaSelect)){%> selected="true"<%}%>><%= cobertura.getDescripcion() %></option>
-				<%
-				}%>
+				<%}%>
+							</select>
+								<%}
+								else{%><p class="campo"><%=paciente.getCobertura().getDescripcion()%></p><%}%>
 								
 								
-								</select>
 							</div>
 							</div>	
 					

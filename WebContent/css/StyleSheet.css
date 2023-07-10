@@ -45,7 +45,7 @@
 
 .user-container{
 	position:absolute;
-	bottom:0px;
+	top: 85vh;
 	padding:10px;
 	display:flex;
 	flex-direction:column;
@@ -146,6 +146,15 @@ a{
     padding: 10px;
     border-bottom: 1px solid  #3661ed;
 
+}
+
+.style-form h3.campo{
+    border: 1px solid  #3661ed;
+    font-weight:bold;
+}
+
+.style-form p.campo{
+    border: 1px solid  #3661ed;
 }
 
 .style-form .select{

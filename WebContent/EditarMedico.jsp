@@ -110,23 +110,41 @@
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>DNI</label>
-						<input type="number" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
-						<span id="dniError" class="error"></span>
+						<input type="hidden" required="true" name="dni" class="campo" value="<%= medico.getDni()%>">
+						<h3 class="campo"><%= medico.getDni()%></h3>					
 					</div>
 			
 					<div class="d-flex fd-column">
 						<label>Fecha de Nacimiento</label>
+						<%if(request.getAttribute("editar-medico") != null){%>
 						<input type="Date" required="true" name="fechaNacimiento" class="campo" value="<%= medico.getFechaNacimiento().toString() %>">
+						<%}
+						else{%>
+							<p class="campo"><%= medico.getFechaNacimiento().toString() %></p>	
+							<%}%>
+						
 						<span id="fechaNacimientoError" class="error"></span>
 					</div>
 					
 					<div class="d-flex fd-column">
 						<label>Sexo</label>
-						<select name="sexoSelect" class="select">
+												<%if(request.getAttribute("editar-medico") != null){%>
+											<select name="sexoSelect" class="select">
 							<option value="F" <%if(medico.getSexo().contains("F")){%> selected="true"<%}%>>Femenino</option>
 							<option  value="M" <%if(medico.getSexo().contains("M")){%> selected="true"<%}%>>Masculino</option>
 							<option  value="O" <%if(medico.getSexo().contains("O")){%> selected="true"<%}%>>Otro</option>
 						</select>
+						<%}
+						else{
+						String sexo = medico.getSexo().toString();
+						if(sexo.contains("F"))sexo = "Femenino";
+						else if(sexo.contains("M"))sexo = "Masculino";
+						else if(sexo.contains("O"))sexo = "Otro";
+						else sexo = "";						
+						%>
+							<p class="campo"><%=sexo %></p>	
+						<%}%>
+
 					</div>
 					
 				</div>
@@ -134,25 +152,29 @@
 				<div class="d-flex row">
 					<div class="d-flex fd-column">
 						<label>Nombre</label>
-						<input  type="text" required="true" name="nombre" class="campo" value="<%= medico.getNombre()%>">
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="text" required="true" name="nombre" class="campo" value="<%= medico.getNombre()%>"><%}
+						else{%><p class="campo"><%= medico.getNombre() %></p><%}%>
 						<span id="nombreError" class="error"></span>
 					</div>
 			
 					<div class="d-flex fd-column">
 						<label>Apellido</label>
-						<input type="text" required="true" name="apellido" class="campo" value="<%= medico.getApellido()%>">
+						<%if(request.getAttribute("editar-medico") != null){%><input type="text" required="true" name="apellido" class="campo" value="<%= medico.getApellido()%>"><%}
+						else{%><p class="campo"><%= medico.getApellido()%></p><%}%>
+						
 						<span id="apellidoError" class="error"></span>
 					</div>
 					
 					<div class="d-flex fd-column">
 						<label>Nacionalidad</label>
-						<select name="nacionalidadSelect" class="select">
-								<% 
-								ArrayList<Pais> listaPaises = new ArrayList<Pais>();
-								if(request.getAttribute("listaPaises") != null){
-									listaPaises = (ArrayList<Pais>)request.getAttribute("listaPaises");
-								}
-								
+						<%
+						ArrayList<Pais> listaPaises = new ArrayList<Pais>();
+						if(request.getAttribute("listaPaises") != null){
+							listaPaises = (ArrayList<Pais>)request.getAttribute("listaPaises");
+						}
+						
+						if(request.getAttribute("editar-medico") != null){%>						<select name="nacionalidadSelect" class="select">
+								<% 								
 								ListIterator <Pais> it = listaPaises.listIterator();
 												while(it.hasNext())
 				{
@@ -163,46 +185,51 @@
 				<option value="<%= pais.getIdPais()%>"  <%if(nacionalidadSelect.equals(nacionalidadMedico)){%> selected="true"<%}%> ><%= pais.getDescripcion() %></option>
 				<%
 				}%>
-						</select>
+						</select><%}
+						else{%><p class="campo"><%= medico.getNacionalidad().getDescripcion() %></p><%}%>
+
 					</div>
 				</div>
 				
 				<div class="d-flex row">
 					<div class="d-flex fd-column w-50">
 						<label>Correo Electrónico</label>
-						<input type="mail" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>">
+						<%if(request.getAttribute("editar-medico") != null){%><input type="mail" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>"><%}
+						else{%><p class="campo"><%= medico.getCorreo()%></p><%}%>
+						
 						<span id="mailError" class="error"></span>
 					</div>
 			
 				
 								<div class="d-flex fd-column w-50">
 								<label>Dirección</label>
-								<input type="Text" required="true"  name="direccion" class="campo" value="<%= medico.getDomicilio().getDireccion()%>">
+								<%if(request.getAttribute("editar-medico") != null){%><input type="Text" required="true"  name="direccion" class="campo" value="<%= medico.getDomicilio().getDireccion()%>"><%}
+						else{%><p class="campo"><%= medico.getDomicilio().getDireccion()%></p><%}%>
+								
+				</div>						
 				</div>
-						
-				</div>
-			
-				<div class="d-flex row">
-				
-			</div>
-			
+
 			<div class="d-flex row">
 
 				
 								<div class="d-flex fd-column">
 								<label>Localidad</label>
-<input type="Text" required="true" name="localidad"  class="campo" value="<%= medico.getDomicilio().getLocalidad()%>">
+								<%if(request.getAttribute("editar-medico") != null){%><input type="Text" required="true" name="localidad"  class="campo" value="<%= medico.getDomicilio().getLocalidad()%>"><%}
+						else{%><p class="campo"><%= medico.getDomicilio().getLocalidad()%></p><%}%>
 				</div>
 				
 				<div class="d-flex fd-column">
 								<label>Provincia</label>
-<input type="Text" required="true" name="provincia"  class="campo" value="<%= medico.getDomicilio().getProvincia()%>">
+								<%if(request.getAttribute("editar-medico") != null){%><input type="Text" required="true" name="provincia"  class="campo" value="<%= medico.getDomicilio().getProvincia()%>"><%}
+						else{%><p class="campo"><%= medico.getDomicilio().getProvincia()%></p><%}%>
+
 				</div>
 			
 			
 			<div class="d-flex fd-column">
 								<label>Pais</label>
-								<select name="paisSelect" class="select">
+								<%if(request.getAttribute("editar-medico") != null){%>
+																<select name="paisSelect" class="select">
 								<% 
 								
 								ListIterator <Pais> it2 = listaPaises.listIterator();
@@ -216,7 +243,9 @@
 				<%
 				}%>
 								
-								</select>
+								</select><%}
+						else{%><p class="campo"><%= medico.getDomicilio().getPais().getDescripcion().toString()%></p><%}%>
+
 							</div>	
 							</div>
 			<div class="d-flex row">
