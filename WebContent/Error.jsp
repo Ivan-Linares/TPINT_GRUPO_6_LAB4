@@ -42,7 +42,6 @@
 					Médicos</a>
 				 </li>
 				
-				
 				<li>
 
 					<a href="Turnos.jsp">				<span class="material-symbols-outlined">

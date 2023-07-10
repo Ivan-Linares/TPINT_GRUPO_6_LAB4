@@ -61,6 +61,12 @@
 						Turnos
 					</a>
 				</li>
+																	<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Mi Perfil
+					</a>
+				</li>
 					<%}
 			} %>
 				
