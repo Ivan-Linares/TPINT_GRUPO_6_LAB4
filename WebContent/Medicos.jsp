@@ -32,11 +32,7 @@ $(document).ready(function() {
 	      }).remove();
 	    }
 	  });
-	  
-	  $(document).on('keyup', "input[type='search']", function() {
-	    var searchTerm = $(this).val();
-	    table.search(searchTerm).draw();
-	  });	  
+	    
 	  
 	  /*$('.dataTables_length').hide();
 	  $('.dataTables_info').hide();
@@ -101,10 +97,20 @@ $(document).ready(function() {
 	<div class="container fd-column m-auto">
 	<div class="title-section d-flex jc-sb">
 		<h1>Médicos</h1>
-		
-		<input type="search" placeholder="Buscar médico por DNI, Nombre o Apellido" style="width: 500px; margin: 0 5rem;">
-		
+
 		<form method="get" action="serverletsMedicos"  class="filtro">	
+						<div class="filtro">
+				<h3>Filtrar por:</h3>
+				<select name="filtro" id="filtro">
+					<option value="dni">DNI</option>
+					<option value="nombre">Nombre</option>
+					<option value="apellido">Apellido</option>
+					<option value="dia">Dia de Atención</option>	
+					<option value="especialidad">Especialidad</option>				
+				</select>			
+				<input type="text" name="filtro-valor">
+				<input type="submit" name="btn-buscar" class="btn bg-blue" value="Buscar"/> 
+				</div>	
 		<button type="submit" name="btn-nuevo-medico" class="btn bg-green">Agregar Médico</button>
 		</form>
 		

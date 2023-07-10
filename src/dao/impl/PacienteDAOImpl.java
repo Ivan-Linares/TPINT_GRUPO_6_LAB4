@@ -374,5 +374,46 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		if (existe == 1) return true;
 	    return false;
 	}
+	
+	public ArrayList<Paciente> filtrarPacientes(String campo, String valor) {
+
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<Paciente> listaPacientes = new ArrayList<Paciente>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			System.out.println(listarPacientes + " where per."+ campo +" like '%"+valor+"%'");
+			ResultSet rs = st.executeQuery(listarPacientes + " where per."+ campo +" like '%"+valor+"%'");
+
+			
+			while(rs.next()) {
+				Paciente persona = new Paciente();
+				persona.setDni(rs.getString("dni"));
+				persona.setNombre(rs.getString("nombre"));
+				persona.setApellido(rs.getString("apellido"));
+				persona.setSexo(rs.getString("sexo"));
+				persona.setFechaNacimiento(rs.getDate("fechaNacimiento"));
+				persona.setCorreo(rs.getString("correo"));
+				persona.setActivo(rs.getBoolean("activo"));
+				persona.setIdPaciente(rs.getInt("IdPaciente"));
+				
+				Pais nacionalidad = new Pais();
+				nacionalidad.setDescripcion(rs.getString("nacionalidad"));
+				
+				persona.setNacionalidad(nacionalidad);				
+				
+				listaPacientes.add(persona);
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaPacientes;
+	}
 
 }

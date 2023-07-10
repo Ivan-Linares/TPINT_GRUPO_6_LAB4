@@ -95,6 +95,7 @@ $(document).ready(function() {
 			  else selectError.text('');
 		  }
 		  
+		  
 		  function validarTelefono() {
 		    var telefono = $(this);
 		    var telefonoError = $('#telefonoError');

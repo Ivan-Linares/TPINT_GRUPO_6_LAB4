@@ -36,8 +36,7 @@ public class serverletsPacientes extends HttpServlet  {
 			RequestDispatcher rd = request.getRequestDispatcher("Login.jsp");
 			rd.forward(request, response);
 		}
-		else {
-			
+		else {	
 			if(request.getParameter("btn-agregar-paciente") != null) {
 				agregarListaPaises(request);
 				agregarListaCoberturas(request);
@@ -45,18 +44,29 @@ public class serverletsPacientes extends HttpServlet  {
 				RequestDispatcher rd = request.getRequestDispatcher("InsertarPaciente.jsp");
 				rd.forward(request, response);
 			}
-			else {
-				listarPacientes(request);
-				
+			else if (request.getParameter("btn-buscar") != null) {
+				listarPacientesFiltro(request);
 				RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 				rd.forward(request, response);
-
-				if(request.getParameter("btnBuscarPacientes") != null) {
-					//filtrado
-			}		
 			}
+			else {
+				listarPacientes(request);		
+				RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
+				rd.forward(request, response);
+			}		
 		}
+	}
+
+	private void listarPacientesFiltro(HttpServletRequest request) {
+		String campo = "";
+		String valor = "";
+		if(request.getParameter("filtro") != null) campo = request.getParameter("filtro");
+		if(request.getParameter("filtro-valor") != null) valor = request.getParameter("filtro-valor");
 		
+		PacienteDAOImpl pDao = new PacienteDAOImpl();
+		ArrayList<Paciente> listaPacientes  = pDao.filtrarPacientes(campo, valor);
+	
+		request.setAttribute("listaPacientes", listaPacientes);
 	}
 	
 	private void listarPacientes(HttpServletRequest request) {

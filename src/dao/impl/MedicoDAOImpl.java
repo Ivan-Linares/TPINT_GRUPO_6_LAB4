@@ -35,7 +35,9 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
 	private static final String listarIDMedico = "select IdMedico from medicos";
 	private static final String listarMedico = "select med.idmedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, nac.idPais as idNacionalidad, nac.descripcion AS nacionalidad, domicilio.idDomicilio as idDomicilio, domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, pais.idpais as idpais, pais.descripcion as pais,telefono.telefono as telefono from personas per inner join medicos med on per.dni = med.dni left join Paises nac on per.idNacionalidad = nac.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join Paises pais on pais.idpais= domicilio.pais left join TelefonosXPersonas telefono on per.dni = telefono.dni where per.dni = ";
-	private static final String listarMedicoXEspecialidad = "select m.IdMedico as IdMedico, m.DNI as DNI, p.Nombre as Nombre, p.Apellido as Apellido from especialidades e inner join especialidadxmedico exm on exm.IdEspecialidad = e.IdEspecialidad inner join medicos m on m.IdMedico = exm.IdMedico inner join personas p on p.DNI = m.DNI where e.IdEspecialidad =";
+	private static final String listarMedicoXEspecialidad = "select m.IdMedico as IdMedico, m.DNI as DNI, p.Nombre as Nombre, p.Apellido as Apellido, p.Activo as activo  from especialidades e inner join especialidadxmedico exm on exm.IdEspecialidad = e.IdEspecialidad inner join medicos m on m.IdMedico = exm.IdMedico inner join personas p on p.DNI = m.DNI where e.IdEspecialidad =";
+	private static final String filtrarMedicoXEspecialidad = "select m.IdMedico as IdMedico, m.DNI as DNI, p.Nombre as Nombre, p.Apellido as Apellido, p.Activo as activo  from especialidades e inner join especialidadxmedico exm on exm.IdEspecialidad = e.IdEspecialidad inner join medicos m on m.IdMedico = exm.IdMedico inner join personas p on p.DNI = m.DNI where e.descripcion like";
+	private static final String filtrarMedicosPorDia = "select med.idMedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni  inner join horariostrabajo ht on med.idmedico = ht.idmedico where ht.dia like";
 	
 	private int agregarDomicilio(Medico medico) {
 		
@@ -416,6 +418,101 @@ public class MedicoDAOImpl implements IMedicoDAO{
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		return listaMedicos;
+	}
+	
+	public ArrayList<Medico> filtrarMedicos(String campo, String valor) {
+		
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<Medico> listaMedicos = new ArrayList<Medico>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(listarMedicos+" where per."+campo + " like '%"+ valor +"%'");
+			
+			while(rs.next()) {
+				Medico persona = new Medico();
+				persona.setIdMedico(rs.getInt("idMedico"));
+				persona.setDni(rs.getString("dni"));
+				persona.setNombre(rs.getString("nombre"));
+				persona.setApellido(rs.getString("apellido"));
+				persona.setActivo(rs.getBoolean("activo"));
+				
+				listaMedicos.add(persona);
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaMedicos;
+	}
+	
+	public ArrayList<Medico> filtrarMedicosPorDia(String valor) {
+		
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<Medico> listaMedicos = new ArrayList<Medico>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			System.out.println(filtrarMedicosPorDia+ "'%"+valor+"%'");
+			ResultSet rs = st.executeQuery(filtrarMedicosPorDia+ " '%"+valor+"%'");
+
+			
+			while(rs.next()) {
+				Medico persona = new Medico();
+				persona.setIdMedico(rs.getInt("idMedico"));
+				persona.setDni(rs.getString("dni"));
+				persona.setNombre(rs.getString("nombre"));
+				persona.setApellido(rs.getString("apellido"));
+				persona.setActivo(rs.getBoolean("activo"));
+				
+				listaMedicos.add(persona);
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaMedicos;
+	}
+	
+	public ArrayList<Medico> filtrarMedicosPorEspecialidad(String valor) {
+		
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<Medico> listaMedicos = new ArrayList<Medico>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(filtrarMedicoXEspecialidad+ " '%"+valor+"%'");
+			
+			while(rs.next()) {
+				Medico persona = new Medico();
+				persona.setIdMedico(rs.getInt("idMedico"));
+				persona.setDni(rs.getString("dni"));
+				persona.setNombre(rs.getString("nombre"));
+				persona.setApellido(rs.getString("apellido"));
+				persona.setActivo(rs.getBoolean("activo"));
+				
+				listaMedicos.add(persona);
+			}
+			
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
 		}
 		
 		return listaMedicos;

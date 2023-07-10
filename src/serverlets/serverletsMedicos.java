@@ -52,7 +52,11 @@ public class serverletsMedicos extends HttpServlet   {
 				RequestDispatcher rd = request.getRequestDispatcher("InsertarMedico.jsp");
 				rd.forward(request, response);
 			}
-
+			else if (request.getParameter("btn-buscar") != null) {
+				listarMedicosFiltro(request);
+				RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
+				rd.forward(request, response);
+			}
 			else {
 				listarMedicos(request);
 				
@@ -153,6 +157,28 @@ public class serverletsMedicos extends HttpServlet   {
 		listarHorariosTrabajoPorMedico(request, medico.getIdMedico());
 		listarTelefonosPorMedico(request, medico.getDni());
 		listarEspecialidadesPorMedico(request, idMedico);
+	}
+	
+	protected void listarMedicosFiltro(HttpServletRequest request) {
+		String campo = "";
+		String valor = "";
+		if(request.getParameter("filtro") != null) campo = request.getParameter("filtro");
+		if(request.getParameter("filtro-valor") != null) valor = request.getParameter("filtro-valor");
+		
+		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
+		ArrayList<Medico> listaMedicos  = new ArrayList<Medico>();
+		if(campo.equals("dia")) {
+			listaMedicos = medicoDao.filtrarMedicosPorDia(valor);
+		}
+		else if(campo.equals("especialidad")) {
+			listaMedicos = medicoDao.filtrarMedicosPorEspecialidad(valor);
+		}
+		else {			
+			listaMedicos  = medicoDao.filtrarMedicos(campo, valor);		
+		}
+		request.setAttribute("listaMedicos", listaMedicos);
+		listarHorariosTrabajoMedico(request);
+		listarEspecialidadesMedico(request);
 	}
 	
 	protected void listarMedicos(HttpServletRequest request) {

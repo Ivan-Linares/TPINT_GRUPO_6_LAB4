@@ -44,6 +44,8 @@ $(document).ready(function() {
 	  /*$('.dataTables_length').hide();
 	  $('.dataTables_info').hide();
 	  */
+	  
+	  
 	});
 
 </script>
@@ -103,12 +105,23 @@ $(document).ready(function() {
 	<div class="container fd-column m-auto">
 	
 		<div class="title-section d-flex jc-sb">		
-    <h1>Pacientes</h1>		    
-    <input type="search" placeholder="Buscar paciente por DNI, Nombre o Apellido" style="width: 500px; margin: 0 5rem;">	
-    <form method="get" action="serverletsPacientes" class="filtro">		 
-        <button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
-    </form>		
-</div>
+   		 <h1>Pacientes</h1>		    
+
+    		<form method="get" action="serverletsPacientes" class="filtro">	
+				<div class="filtro">
+				<h3>Filtrar por:</h3>
+				<select name="filtro" id="filtro">
+					<option value="dni">DNI</option>
+					<option value="nombre">Nombre</option>
+					<option value="apellido">Apellido</option>	
+					<option value="correo">Correo</option>				
+				</select>			
+				<input type="text" name="filtro-valor">
+				<input type="submit" name="btn-buscar" class="btn bg-blue" value="Buscar"/> 
+				</div>	 
+        	<button type="submit" name="btn-agregar-paciente" class="btn bg-green">Agregar Paciente</button>
+    		</form>		
+		</div>
 
 	
 	<%
@@ -116,31 +129,21 @@ $(document).ready(function() {
 
 	if(request.getAttribute("listaPacientes") != null){
 		Object obj = request.getAttribute("listaPacientes");
-		if(obj instanceof ArrayList<?>){
-			listaPacientes = (ArrayList<Paciente>) obj;
-		}
-		else{
-			listaPacientes = null;
-		}		
-	}
-%>	
+		if(obj instanceof ArrayList<?>)listaPacientes = (ArrayList<Paciente>) obj;
+		else listaPacientes = null;		
+	}%>	
 	<% String mensaje = (String) request.getAttribute("mensajeExito");
    if (mensaje != null) { %>
    <h3 style="font-weight: bold; color: green; margin: 20px 0 20px 0;">
       <%= mensaje %>
-   </h3>
-<% } %>
+   </h3><%}%>
 
-<% String mensajeError = (String) request.getAttribute("mensajeError");
-   String dniError = (String) request.getAttribute("dniError");
-   if (mensajeError != null) { %>
-   <h3 style="font-weight: bold; color: red; margin: 20px 0 20px 0;">
-      <%= mensajeError%>
-   </h3>
-<% } %>
-
-
-	
+	<%String mensajeError = (String) request.getAttribute("mensajeError");
+   		String dniError = (String) request.getAttribute("dniError");
+   		if (mensajeError != null) { %>
+   			<h3 style="font-weight: bold; color: red; margin: 20px 0 20px 0;">
+      			<%= mensajeError%>
+   			</h3><%}%>
 	<div>
 		<table class="content-table header-table-blue"  id="tablaPacientes" style="margin: 2rem 0;"> 
 			<thead> 
