@@ -2,6 +2,7 @@
 <%@ page import="dominio.Cobertura"%>
 <%@page import="java.util.ListIterator"%>
 <%@ page import="java.util.ArrayList"%>
+<%@ page import="dominio.Usuario"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -16,37 +17,74 @@
 </head>
 <body>
 	<div class="container">
-		<div class="navbar">
-			<div class="nav-title">
-				<span class="material-symbols-outlined">ecg_heart</span>
-				<h3>Sistema Clínica</h3>
-			</div>
-	
-			<div class="items">
-				<ul>
-					<li>					
-						<a href="serverletsPacientes?method=get">
-							<span class="material-symbols-outlined">groups</span>Pacientes
-						</a>
-					</li>
-					
-					<li>					
-					 	<a href="serverletsMedicos?method=get" class="active">
-					 		<span class="material-symbols-outlined">clinical_notes</span>Médicos
-					 	</a>
-					 </li>
-					
-					
+	<div class="navbar">
+		<div class="nav-title">
+		<span class="material-symbols-outlined">
+			ecg_heart
+		</span>
+			<h3>Sistema Clínica</h3>
+		</div>
+
+		<div class="items">
+			<ul>
+			<%
+			Usuario user = null;
+			if(session.getAttribute("usuario") != null){
+				 user = (Usuario)session.getAttribute("usuario");
+				if(user.isEsAdministrador()){%>	
 					<li>
-						<a href="Turnos.jsp">
-						<span class="material-symbols-outlined">calendar_month</span>Turnos</a>
-					</li>
-				</ul>
-			</div>
-		</div>		
+					<a href="serverletsPacientes?method=get" class="active">
+						<span class="material-symbols-outlined">groups</span>
+						Pacientes
+					</a>
+				</li>
+				
+				<li> 
+				
+				 	<a href="serverletsMedicos?method=get">
+				 		<span class="material-symbols-outlined">clinical_notes</span>	
+						Médicos
+					</a>
+				 </li>
+								
+				<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+				<%}
+				else{%>	
+									<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+					<%}
+			} %>
+				
+			</ul>
+		</div>
+		
+		<div class="user-container">
+			
+			
+			<%if(user != null){
+				%>	
+				<strong><%= user.getCorreo() %></strong>
+			<%} %>
+			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
+		</div>
+	</div>	
 		
 		<div class="container fd-column m-auto" style="width:100%;
-	    margin: 0px 100px;">		
+	    margin: 0px 100px;">	
+	    	    	<div class="title-section d-flex jc-sb" >
+			<h3 class="user-info-container">Datos Paciente</h3>
+			 <a href="serverletsPacientes?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+	</div>	
+	
 			<div>		
 				<form method="post" action="serverletsPacientes" id="formulario">
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">

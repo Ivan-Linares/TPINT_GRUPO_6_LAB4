@@ -17,45 +17,66 @@
 </head>
 <body>
 	<div class="container">
-		<div class="navbar">
-			<div class="nav-title">
-				<span class="material-symbols-outlined">ecg_heart</span>
-				<h3>Sistema Clínica</h3>
-			</div>
-	
-			<div class="items">
-				<ul>
-					<li>					
-						<a href="serverletsPacientes?method=get" class="active">
-							<span class="material-symbols-outlined">groups</span>Pacientes
-						</a>
-					</li>
-					
-					<li>					
-					 	<a href="serverletsMedicos?method=get" >
-					 		<span class="material-symbols-outlined">clinical_notes</span>Médicos
-					 	</a>
-					 </li>
-					
-					
+			<div class="navbar">
+		<div class="nav-title">
+		<span class="material-symbols-outlined">
+			ecg_heart
+		</span>
+			<h3>Sistema Clínica</h3>
+		</div>
+
+		<div class="items">
+			<ul>
+			<%
+			Usuario user = null;
+			if(session.getAttribute("usuario") != null){
+				 user = (Usuario)session.getAttribute("usuario");
+				if(user.isEsAdministrador()){%>	
 					<li>
-						<a href="Turnos.jsp">
-						<span class="material-symbols-outlined">calendar_month</span>Turnos</a>
-					</li>
-				</ul>
-			</div>
+					<a href="serverletsPacientes?method=get"  class="active">
+						<span class="material-symbols-outlined">groups</span>
+						Pacientes
+					</a>
+				</li>
+				
+				<li> 
+				
+				 	<a href="serverletsMedicos?method=get">
+				 		<span class="material-symbols-outlined">clinical_notes</span>	
+						Médicos
+					</a>
+				 </li>
+								
+				<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+				<%}
+				else{%>	
+									<li>
+					<a href="servletsTurnos?method=get" class="active">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+					<%}
+			} %>
+				
+			</ul>
+		</div>
+		
+		<div class="user-container">
 			
-			<div class="user-container">
 			
-			
-			<%if(session.getAttribute("usuario") != null){
-				Usuario user = (Usuario)session.getAttribute("usuario");
+			<%if(user != null){
 				%>	
 				<strong><%= user.getCorreo() %></strong>
 			<%} %>
-			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
+			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
-		</div>		
+	</div>
 		
 		<%
 		
@@ -64,8 +85,12 @@
 		
 		%>
 		<div class="container fd-column m-auto" style="width:100%;
-	    margin: 40px 100px;" visible="<% if(paciente == null) {%> false <%}%>">	
-	    <a href="serverletsPacientes?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+	    margin: 0 100px;" visible="<% if(paciente == null) {%> false <%}%>">	
+	    	<div class="title-section d-flex jc-sb" >
+			<h3 class="user-info-container">Datos Paciente</h3>
+			 <a href="serverletsPacientes?method=get&btn-cerrar-sesion" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+	</div>
+	   
 	    <br>
 	    <% String mensaje = "";
 	    if(request.getAttribute("mensaje") != null) mensaje = (String) request.getAttribute("mensaje");

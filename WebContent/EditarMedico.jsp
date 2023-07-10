@@ -22,7 +22,7 @@
 </head>
 <body>
 <div class="container">
-	<div class="navbar">
+		<div class="navbar">
 		<div class="nav-title">
 		<span class="material-symbols-outlined">
 			ecg_heart
@@ -32,44 +32,56 @@
 
 		<div class="items">
 			<ul>
-				<li>
-				
-				<a href="serverletsPacientes?method=get">
-				<span class="material-symbols-outlined">
-					groups
-				</span>
-				Pacientes</a>
+			<%
+			Usuario user = null;
+			if(session.getAttribute("usuario") != null){
+				 user = (Usuario)session.getAttribute("usuario");
+				if(user.isEsAdministrador()){%>	
+					<li>
+					<a href="serverletsPacientes?method=get">
+						<span class="material-symbols-outlined">groups</span>
+						Pacientes
+					</a>
 				</li>
 				
 				<li> 
 				
-				 <a href="serverletsMedicos?method=get" class="active">
-				 	<span class="material-symbols-outlined">
-						clinical_notes
-					</span>	
-					Médicos</a>
+				 	<a href="serverletsMedicos?method=get" class="active">
+				 		<span class="material-symbols-outlined">clinical_notes</span>	
+						Médicos
+					</a>
 				 </li>
-				
-				
+								
 				<li>
-
-					<a href="Turnos.jsp">				<span class="material-symbols-outlined">
-					calendar_month
-				</span>	Turnos</a>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
 				</li>
+				<%}
+				else{%>	
+									<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+					<%}
+			} %>
+				
 			</ul>
 		</div>
 		
-				<div class="user-container">
+		<div class="user-container">
 			
 			
-			<%if(session.getAttribute("usuario") != null){
-				Usuario user = (Usuario)session.getAttribute("usuario");
+			<%if(user != null){
 				%>	
 				<strong><%= user.getCorreo() %></strong>
 			<%} %>
-			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
+			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
+	</div>
 	</div>
 	<%		
 		Medico medico = (Medico)request.getAttribute("medico"); 	
@@ -78,12 +90,12 @@
 	<div class="container fd-column m-auto" style="width:100%;
     margin: 0px 100px; margin-bottom:60px" visible="<% if(medico == null) {%> false <%}%>">
 	<div class="title-section d-flex jc-sb" >
-		<h1> Médico</h1>
-		
+			<h3 class="user-info-container">Datos Médico</h3>
+		 <a href="serverletsMedicos?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
 	</div>
 	
 
-	    <a href="serverletsMedicos?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+	   
 	    <br>
 	    <% String mensajeModifico = "";
 	    if(request.getAttribute("mensaje") != null) mensajeModifico = (String) request.getAttribute("mensaje");
@@ -192,46 +204,31 @@
 				</div>
 				
 				<div class="d-flex row">
-					<div class="d-flex fd-column w-50">
-						<label>Correo Electrónico</label>
-						<%if(request.getAttribute("editar-medico") != null){%><input type="mail" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>"><%}
-						else{%><p class="campo"><%= medico.getCorreo()%></p><%}%>
-						
-						<span id="mailError" class="error"></span>
-					</div>
-			
-				
+
 								<div class="d-flex fd-column w-50">
 								<label>Dirección</label>
 								<%if(request.getAttribute("editar-medico") != null){%><input type="Text" required="true"  name="direccion" class="campo" value="<%= medico.getDomicilio().getDireccion()%>"><%}
-						else{%><p class="campo"><%= medico.getDomicilio().getDireccion()%></p><%}%>
-								
-				</div>						
+						else{%><p class="campo"><%= medico.getDomicilio().getDireccion()%></p><%}%>			
 				</div>
-
-			<div class="d-flex row">
-
-				
-								<div class="d-flex fd-column">
+						<div class="d-flex fd-column">
 								<label>Localidad</label>
 								<%if(request.getAttribute("editar-medico") != null){%><input type="Text" required="true" name="localidad"  class="campo" value="<%= medico.getDomicilio().getLocalidad()%>"><%}
 						else{%><p class="campo"><%= medico.getDomicilio().getLocalidad()%></p><%}%>
+				</div>				
 				</div>
-				
-				<div class="d-flex fd-column">
+
+			<div class="d-flex row">			
+				<div class="d-flex fd-column w-50">
 								<label>Provincia</label>
 								<%if(request.getAttribute("editar-medico") != null){%><input type="Text" required="true" name="provincia"  class="campo" value="<%= medico.getDomicilio().getProvincia()%>"><%}
 						else{%><p class="campo"><%= medico.getDomicilio().getProvincia()%></p><%}%>
-
 				</div>
 			
-			
-			<div class="d-flex fd-column">
+			<div class="d-flex fd-column w-50">
 								<label>Pais</label>
 								<%if(request.getAttribute("editar-medico") != null){%>
 																<select name="paisSelect" class="select">
-								<% 
-								
+								<% 								
 								ListIterator <Pais> it2 = listaPaises.listIterator();
 												while(it2.hasNext())
 				{
@@ -248,10 +245,7 @@
 
 							</div>	
 							</div>
-			<div class="d-flex row">
-			
-			
-			</div>
+							<input type="hidden" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>">
 			</div>
 			
 			<%if(request.getAttribute("editar-medico") != null){
@@ -260,6 +254,37 @@
 					<%} %>
 			
 		</form>
+		
+		<form method="post" action="serverletsUsuarios" class="position-relative">
+		<input type="hidden" name="IdMedico" value="<%=idMedico %>"> 
+			<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>"> 
+			
+			<div class="d-flex fd-column style-form" style="margin: 100px 0px 0px 0px;">
+					<h3 class="user-info-container">Datos de Usuario</h3>
+				<div class="d-flex row">
+					<div class="d-flex fd-column w-50">
+						<label>Correo Electrónico</label>
+						<%if(request.getAttribute("editar-medico") != null){%><input type="mail" required="true" name="correo" class="campo" value="<%= medico.getCorreo()%>"><%}
+						else{%><p class="campo"><%= medico.getCorreo()%></p><%}%>
+						
+						<span id="mailError" class="error"></span>
+					</div>
+			
+								<div class="d-flex fd-column w-50">
+						<label>Contraseña</label>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="password" class="campo" value="<%= "contraseña" %>"><%}
+						else{%><p class="campo"><%= "contraseña"%></p><%}%>
+						
+						<span id="contraseñaError" class="error"></span>
+					</div>
+
+					</div>
+				</div>
+									<%if(request.getAttribute("editar-medico") != null){
+					%>
+					<button type="submit" name="btn-guardar-medico" class="btn bg-blue-dark position-absolute" style="right:0;">Modificar Usuario</button>
+					<%} %>
+				</form>
 	</div>
 	
 	<div style="margin:60px 0px 0px 0px;border-top:1px solid blue; padding:10px 0px;">

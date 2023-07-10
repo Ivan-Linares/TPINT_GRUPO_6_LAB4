@@ -22,6 +22,11 @@ public class serverletsLogin extends HttpServlet
 	public serverletsLogin() {
 		
 	}
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getParameter("btn-cerrar-sesion") != null) {
+			cerrarSesion(request, response);
+		}
+	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		

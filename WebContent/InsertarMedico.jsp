@@ -29,43 +29,54 @@
 
 		<div class="items">
 			<ul>
-				<li>
-				
-				<a href="serverletsPacientes?method=get">
-				<span class="material-symbols-outlined">
-					groups
-				</span>
-				Pacientes</a>
+			<%
+			Usuario user = null;
+			if(session.getAttribute("usuario") != null){
+				 user = (Usuario)session.getAttribute("usuario");
+				if(user.isEsAdministrador()){%>	
+					<li>
+					<a href="serverletsPacientes?method=get">
+						<span class="material-symbols-outlined">groups</span>
+						Pacientes
+					</a>
 				</li>
 				
 				<li> 
 				
-				 <a href="serverletsMedicos?method=get" class="active">
-				 	<span class="material-symbols-outlined">
-						clinical_notes
-					</span>	
-					Médicos</a>
+				 	<a href="serverletsMedicos?method=get" class="active">
+				 		<span class="material-symbols-outlined">clinical_notes</span>	
+						Médicos
+					</a>
 				 </li>
-				
-				
+								
 				<li>
-
-					<a href="Turnos.jsp">				<span class="material-symbols-outlined">
-					calendar_month
-				</span>	Turnos</a>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
 				</li>
+				<%}
+				else{%>	
+									<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+					<%}
+			} %>
+				
 			</ul>
 		</div>
 		
-				<div class="user-container">
+		<div class="user-container">
 			
 			
-			<%if(session.getAttribute("usuario") != null){
-				Usuario user = (Usuario)session.getAttribute("usuario");
+			<%if(user != null){
 				%>	
 				<strong><%= user.getCorreo() %></strong>
 			<%} %>
-			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
+			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
 	
@@ -73,10 +84,8 @@
 	<div class="container fd-column m-auto" style="width:100%;
     margin: 0px 100px;">
 	<div class="title-section d-flex jc-sb">
-		<h1>Nuevo Médico</h1>
-
-		
-		
+		<h3 class="user-info-container">Datos Médico</h3>
+		 <a href="serverletsMedicos?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
 	</div>
 	
 	<div>		
@@ -150,25 +159,6 @@
 					</div>
 				</div>
 				
-				<div class="d-flex row">
-					<div class="d-flex fd-column w-50">
-						<label>Correo Electrónico</label>
-						<input type="mail" required="true" name="correo" class="campo">
-						<span id="mailError" class="error"></span>
-					</div>
-			
-								<div class="d-flex fd-column w-50">
-						<label>Contraseña</label>
-						<input  type="password" required="true" name="password" class="campo">
-						<span id="contraseñaError" class="error"></span>
-					</div>
-					
-
-						
-				</div>
-			
-
-			
 			<div class="d-flex row">
 				
 					<div class="d-flex fd-column w-50"> 
@@ -210,7 +200,20 @@
 								</select>
 				</div>
 			</div>
-
+			<h3 class="user-info-container">Datos de Usuario</h3>
+				<div class="d-flex row">
+					<div class="d-flex fd-column w-50">
+						<label>Correo Electrónico</label>
+						<input type="mail" required="true" name="correo" class="campo">
+						<span id="mailError" class="error"></span>
+					</div>
+			
+								<div class="d-flex fd-column w-50">
+						<label>Contraseña</label>
+						<input  type="password" required="true" name="password" class="campo">
+						<span id="contraseñaError" class="error"></span>
+					</div>
+				</div>
 			
 			</div>
 			

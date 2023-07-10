@@ -15,7 +15,7 @@
 <body>
 
 <div class="container">
-<div class="navbar">
+	<div class="navbar">
 		<div class="nav-title">
 		<span class="material-symbols-outlined">
 			ecg_heart
@@ -25,7 +25,12 @@
 
 		<div class="items">
 			<ul>
-				<li>
+			<%
+			Usuario user = null;
+			if(session.getAttribute("usuario") != null){
+				 user = (Usuario)session.getAttribute("usuario");
+				if(user.isEsAdministrador()){%>	
+					<li>
 					<a href="serverletsPacientes?method=get">
 						<span class="material-symbols-outlined">groups</span>
 						Pacientes
@@ -41,23 +46,33 @@
 				 </li>
 								
 				<li>
-					<a href="Turnos.jsp">				
+					<a href="servletsTurnos?method=get">				
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
 					</a>
 				</li>
+				<%}
+				else{%>	
+									<li>
+					<a href="servletsTurnos?method=get">				
+						<span class="material-symbols-outlined">calendar_month</span>	
+						Turnos
+					</a>
+				</li>
+					<%}
+			} %>
+				
 			</ul>
 		</div>
 		
 		<div class="user-container">
 			
 			
-			<%if(session.getAttribute("usuario") != null){
-				Usuario user = (Usuario)session.getAttribute("usuario");
+			<%if(user != null){
 				%>	
 				<strong><%= user.getCorreo() %></strong>
 			<%} %>
-			<a href="serverletsLogin?method=get" class="btn bg-green">Cerrar Sesión</a>
+			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
 
