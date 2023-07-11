@@ -76,10 +76,10 @@
 			<%} %>
 			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
-	</div>	
-		
+	</div>
+
 		<div class="container fd-column m-auto" style="width:100%;
-	    margin: 0px 100px;">		
+	    margin: 0px 100px;">	
 			<div>		
 					<div class="d-flex fd-column style-form" style="margin: 50px 0px;">
 					

@@ -63,10 +63,31 @@
 		</div>
 	</div>
 	<div>
-	<h1>Error</h1>
-    <p style="color: red; font-size: 24px;"><strong>${mensaje}</strong></p>
-    <a href="Inicio.jsp">Volver al inicio</a></div>
+    <div style="width:100%; margin: 40px 100px;">
+    <form action="serverletsError" method="post">
+		<h1>Error</h1>
+	    <p style="color: red; font-size: 24px;"><strong>${mensaje}</strong></p>
+	    <% String mensajeError = (String) request.getAttribute("mensajeError");
+	    boolean errorDNI = false;
+		   if (mensajeError != null) { 
+			%>
+			<h3 style="font-weight: bold; color: red; margin: 20px 0 20px 0;">
+		      <%= mensajeError%>
+		   </h3>
+			<%
+		   		if(request.getAttribute("errorDNI")!=null){
+		   			errorDNI = (boolean) request.getAttribute("errorDNI"); 
+		   		}
+		   		if(errorDNI){
+		   %>
+		   <button type="submit" name="btn-error-DNI" class="btn bg-blue">Alta Paciente</button>
+		   <%} %>
+		   <button type="submit" name="btn-volver-alta-turnos" class="btn bg-blue">Volver a Turnos</button>
+		   </form>
+		<%
+		}%>		    
+    </div>
 </div>
-
+</div>
 </body>
 </html>

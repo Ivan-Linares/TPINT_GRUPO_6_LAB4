@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import dao.IHorariosTrabajo;
 import dominio.HorariosTrabajo;
+import dominio.Medico;
 
 public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	
@@ -20,6 +21,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo";
 	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida, Activo from horariostrabajo where idMedico = ";
 	private static final String updateHorariosTrabajoMedico = "update horariostrabajo set Dia=?, HorarioEntrada=?, HorarioSalida=? where idMedico=?";
+	private static final String listarFechayHoraxMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo where IdMedico =";
 	
 	@Override
 	public boolean agregar(HorariosTrabajo horarioTrabajo) {
@@ -225,5 +227,33 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 		}
 		
 		return eliminoHT;
+	}
+	
+	public ArrayList<HorariosTrabajo> listarMedicosFechayHora(int idMedico) {
+		Statement st;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		ArrayList<HorariosTrabajo> listaHT = new ArrayList<HorariosTrabajo>();
+		
+		try 
+		{
+			st = conexion.createStatement();
+			ResultSet rs = st.executeQuery(listarFechayHoraxMedico+idMedico);
+			
+			while(rs.next()) {
+				HorariosTrabajo ht = new HorariosTrabajo();
+				ht.setIdMedico(rs.getInt("IdMedico"));
+				ht.setDia(rs.getString("Dia"));
+				ht.setHoraEntrada(rs.getString("HoraEntrada"));
+				ht.setHoraSalida(rs.getString("HoraSalida"));
+				
+				listaHT.add(ht);
+			}		
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return listaHT;
 	}
 }

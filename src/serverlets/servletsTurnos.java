@@ -1,11 +1,17 @@
 package serverlets;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,11 +20,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import dao.impl.EspecialidadesDAOImpl;
+import dao.impl.HorariosTrabajoDAOImpl;
 import dao.impl.MedicoDAOImpl;
 import dao.impl.PacienteDAOImpl;
 import dao.impl.TurnosDAOImpl;
 import dominio.Especialidad;
+import dominio.HorariosTrabajo;
 import dominio.Medico;
 import dominio.Paciente;
 import dominio.Persona;
@@ -109,7 +119,7 @@ public class servletsTurnos extends HttpServlet {
 		if(request.getParameter("btn-agregar-turno") != null) {
 			
 			try {
-				if(agregarTurno(request)) {
+				if(agregarTurno(request, response)) {
 					request.setAttribute("mensajeExito", "Turno dado de alta con exito ");
 					listarTurnos(request);
 					
@@ -208,43 +218,144 @@ public class servletsTurnos extends HttpServlet {
 		return nuevoTurno;
 	}
 	
-	protected boolean agregarTurno(HttpServletRequest request) {
+	protected boolean agregarTurno(HttpServletRequest request, HttpServletResponse response) {
 		
 		TurnosDAOImpl tDao = new TurnosDAOImpl();
+		HorariosTrabajoDAOImpl hDao = new HorariosTrabajoDAOImpl();
 		Turnos nuevoTurno = new Turnos();
 		String dni = "";
 		boolean agregoTurno = false;
+		boolean existePaciente = false;
+		boolean fechaRepetidaPaciente = false;
+		boolean fechayHoraRepetidaMedico = false;
+		boolean coincideFechayHora = false;
 		
 		try {
 			
-			nuevoTurno.setFecha(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
+			Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString());
+			
+			int nD=-1;
+			String dia="";
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(fecha);
+			
+			nD=cal.get(Calendar.DAY_OF_WEEK); 
+			switch (nD){
+	        case 1: dia = "Domingo";
+	            break;
+	        case 2: dia = "Lunes";
+	            break;
+	        case 3: dia = "Martes";
+	            break;
+	        case 4: dia = "Miércoles";
+	            break;
+	        case 5: dia = "Jueves";
+	            break;
+	        case 6: dia = "Viernes";
+	            break;
+	        case 7: dia = "Sábado";
+	            break;
+			}
+			System.out.println(dia);
+			
+			nuevoTurno.setFecha(fecha);
 			Especialidad esp = new Especialidad();
 			esp.setIdEspecialidad(Integer.parseInt(request.getParameter("espSelect")));
 			esp.setDescripcion(request.getParameter("descripcionEsp"));
 			nuevoTurno.setEspecialidad(esp);
 			
-			nuevoTurno.setHora(Integer.parseInt(request.getParameter("hora")));
+			int hora = Integer.parseInt(request.getParameter("hora"));
+			nuevoTurno.setHora(hora);
+			
+			Medico med = new Medico();
+			int idMedico = Integer.parseInt(request.getParameter("medico"));
+			med.setIdMedico(idMedico);
+			nuevoTurno.setMedico(med);
+			
+			ArrayList<Turnos> listaTurnosxMed = tDao.obtenerTurno_Medico(idMedico);
+			for (Turnos turnos : listaTurnosxMed) {
+				if(turnos.getFecha().equals(fecha) && turnos.getHora() == hora) {
+					fechayHoraRepetidaMedico = true;
+				}
+			}
+			
+			if(fechayHoraRepetidaMedico) {
+				try {
+					request.setAttribute("mensajeError", "Esta fecha y hora ya tienen un turno asignado");
+					RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+					rd.forward(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			ArrayList<HorariosTrabajo> listaHT = hDao.listarPorMedico(idMedico);
+			for (HorariosTrabajo ht : listaHT) {
+				int horaEntrada = Integer.parseInt(ht.getHoraEntrada());
+				int horaSalida = Integer.parseInt(ht.getHoraSalida());
+				
+				if(ht.getDia().equals(dia) && (horaEntrada <= hora && horaSalida > hora)) {
+					coincideFechayHora = true;
+				}
+			}
+			
+			if(coincideFechayHora == false) {
+				try {					
+					request.setAttribute("mensajeError", "La fecha o la hora del turno no coincide con el horario del medico");
+					RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+					rd.forward(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			
 			Paciente pac = new Paciente();
 			PacienteDAOImpl pDao = new PacienteDAOImpl();
 			ArrayList<Paciente> listaPaciente = pDao.listarPacientes();
 			
 			dni = request.getParameter("dniPaciente");
-			
-			for (Paciente paciente : listaPaciente) {
-				if(paciente.getDni().equals(dni)) {
-					pac.setIdPaciente(paciente.getIdPaciente());
+			existePaciente = pDao.existe(dni);
+
+			ArrayList<Turnos> listaTurnosxPac = tDao.obtenerTurno_Paciente(dni);
+			for (Turnos turnos : listaTurnosxPac) {
+				if(turnos.getFecha().equals(fecha)) {
+					fechaRepetidaPaciente = true;
 				}
 			}
-			nuevoTurno.setPaciente(pac);
 			
-			nuevoTurno.setObservacion(request.getParameter("observaciones"));
+			if(fechaRepetidaPaciente) {
+				try {					
+					request.setAttribute("mensajeError", "Este paciente ya tiene turno asignado ese dia");
+					RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+					rd.forward(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			
-			Medico med = new Medico();
-			med.setIdMedico(Integer.parseInt(request.getParameter("medico")));
-			nuevoTurno.setMedico(med);
+			if(existePaciente) {
+				for (Paciente paciente : listaPaciente) {
+					if(paciente.getDni().equals(dni)) {
+						pac.setIdPaciente(paciente.getIdPaciente());
+					}
+				}
+				nuevoTurno.setPaciente(pac);
+				nuevoTurno.setObservacion(request.getParameter("observaciones"));
+			}else {
+				try {
+					request.setAttribute("mensajeError", "No existe paciente con ese DNI, dar de alta.");
+					request.setAttribute("errorDNI", true);
+					RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+					rd.forward(request, response);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 			
-			agregoTurno = tDao.agregarTurno(nuevoTurno);
+			if(existePaciente == true && fechaRepetidaPaciente == false && fechayHoraRepetidaMedico == false && coincideFechayHora == true) {				
+				agregoTurno = tDao.agregarTurno(nuevoTurno);
+			}
 			
 		} catch (ParseException e) {
 			

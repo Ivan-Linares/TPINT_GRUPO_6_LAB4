@@ -26,8 +26,8 @@ public class TurnosDAOImpl implements ITurnosDAO{
 	private static final String deleteTurno = "Update Turnos set Activo = 0 where IdTurno = ?";
 	private static final String listarTurnos = "select t.IdTurno as IdTurno, t.Fecha as Fecha, t.Hora as Hora, m.IdMedico, t.IdEspecialidad as IdEspecialidad, pac.IdPaciente as IdPaciente, t.IdEstado as IdEstado, est.Descripcion as Estado, t.Observacion as Observacion, t.Activo as Activo from turnos t inner join medicos m on m.IdMedico = t.IdMedico inner join pacientes pac on pac.IdPaciente = t.IdPaciente inner join estados est on est.IdEstado = t.IdEstado";
 	private static final String listarTurnosXid = "select t.IdTurno as IdTurno, t.Fecha as Fecha, t.Hora as Hora, m.IdMedico, t.IdEspecialidad as IdEspecialidad, pac.IdPaciente as IdPaciente, t.IdEstado as IdEstado, est.Descripcion as Estado, t.Observacion as Observacion, t.Activo as Activo from turnos t inner join medicos m on m.IdMedico = t.IdMedico inner join pacientes pac on pac.IdPaciente = t.IdPaciente inner join estados est on est.IdEstado = t.IdEstado where t.IdTurno =";
-	private static final String listarTurnosPaciente = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true and t.IdPaciente =";
-	private static final String listarTurnosMedico = "select t.IdTurno as IdTurno, t.FechaHora as FechaHora, m.IdMedico as IdMedico, t.IdEspecialidad as IdEspecialidad, e.Descripcion as Especialidad, t.IdPaciente as IdPaciente, t.IdEstado as IdEstado, t.Observacion as Observacion from turnos t inner join turnosxmedico txm on txm.IdTurno = t.IdTurno inner join medicos m on m.IdMedico = txm.IdMedico inner join especialidades e on e.IdEspecialidad = t.IdEspecialidad where t.Activo = true and txm.IdMedico =";
+	private static final String listarTurnosPaciente = "select t.IdTurno as IdTurno, t.Fecha as Fecha, t.Hora as Hora, m.IdMedico, t.IdEspecialidad as IdEspecialidad, pac.IdPaciente as IdPaciente, t.IdEstado as IdEstado, est.Descripcion as Estado, t.Observacion as Observacion, t.Activo as Activo from turnos t inner join medicos m on m.IdMedico = t.IdMedico inner join pacientes pac on pac.IdPaciente = t.IdPaciente inner join estados est on est.IdEstado = t.IdEstado where pac.DNI =";
+	private static final String listarTurnosMedico = "select t.IdTurno as IdTurno, t.Fecha as Fecha, t.Hora as Hora, m.IdMedico, t.IdEspecialidad as IdEspecialidad, pac.IdPaciente as IdPaciente, t.IdEstado as IdEstado, est.Descripcion as Estado, t.Observacion as Observacion, t.Activo as Activo from turnos t inner join medicos m on m.IdMedico = t.IdMedico inner join pacientes pac on pac.IdPaciente = t.IdPaciente inner join estados est on est.IdEstado = t.IdEstado where t.IdMedico =";
 	
 	@Override
 	public boolean agregarTurno(Turnos turno) {
@@ -284,7 +284,7 @@ public class TurnosDAOImpl implements ITurnosDAO{
 	}
 
 	@Override
-	public ArrayList<Turnos> obtenerTurno_Paciente(int idPaciente) {
+	public ArrayList<Turnos> obtenerTurno_Paciente(String dniPaciente) {
 		Statement st;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -293,13 +293,13 @@ public class TurnosDAOImpl implements ITurnosDAO{
 		try {
 			
 			st = conexion.createStatement();
-			ResultSet rs = st.executeQuery(listarTurnosPaciente+idPaciente);
+			ResultSet rs = st.executeQuery(listarTurnosPaciente+dniPaciente);
 			
 			while(rs.next()) {
 				Turnos turno = new Turnos();
 				turno.setIdTurno(rs.getInt("IdTurno"));
-				turno.setFecha(rs.getDate("FechaHora"));
-				//turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
+				turno.setFecha(rs.getDate("Fecha"));
+				turno.setHora(rs.getInt("Hora"));
 				
 				Medico medico = new Medico();
 				int idMed = rs.getInt("IdMedico");
@@ -315,17 +315,26 @@ public class TurnosDAOImpl implements ITurnosDAO{
 				turno.setMedico(medico);
 				
 				Especialidad esp = new Especialidad();
-				esp.setIdEspecialidad(rs.getInt("IdEspecialidad"));
-				esp.setDescripcion(rs.getString("Especialidad"));
+				int idEsp = rs.getInt("IdEspecialidad");
 				
+				EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+				ArrayList<Especialidad> listaEsp = (ArrayList<Especialidad>) eDao.listarEspecialidades();
+				
+				for (Especialidad especialidad : listaEsp) {
+					if(especialidad.getIdEspecialidad() == idEsp) {
+						esp = especialidad;
+					}
+				}
 				turno.setEspecialidad(esp);
 				
 				Paciente paciente = new Paciente();
+				int idPac = rs.getInt("IdPaciente");
+				
 				PacienteDAOImpl pDao = new PacienteDAOImpl();
 				ArrayList<Paciente> listaPacientes = pDao.listarPacientes();
 				
 				for (Paciente pac : listaPacientes) {
-					if(pac.getIdPaciente() == idPaciente) {
+					if(pac.getIdPaciente() == idPac) {
 						paciente = pac;
 					}
 				}
@@ -333,9 +342,11 @@ public class TurnosDAOImpl implements ITurnosDAO{
 				
 				Estado estado = new Estado();
 				estado.setIdEstado(rs.getInt("IdEstado"));
+				estado.setDescripcion(rs.getString("Estado"));
 				
 				turno.setEstado(estado);
 				turno.setObservacion(rs.getString("Observacion"));
+				turno.setActivo(rs.getBoolean("Activo"));
 				
 				listaTurnos.add(turno);
 			}
@@ -362,24 +373,33 @@ public class TurnosDAOImpl implements ITurnosDAO{
 			while(rs.next()) {
 				Turnos turno = new Turnos();
 				turno.setIdTurno(rs.getInt("IdTurno"));
-				turno.setFecha(rs.getDate("FechaHora"));
-				//turno.setFechaHora(LocalDateTime.parse((CharSequence)rs.getDate("FechaHora")));
+				turno.setFecha(rs.getDate("Fecha"));
+				turno.setHora(rs.getInt("Hora"));
 				
 				Medico medico = new Medico();
+				int idMed = rs.getInt("IdMedico");
+				
 				MedicoDAOImpl mDao = new MedicoDAOImpl();
 				ArrayList<Medico> listaMedicos = mDao.listarMedicos();
 				
 				for (Medico med : listaMedicos) {
-					if(med.getIdMedico() == idMedico) {
+					if(med.getIdMedico() == idMed) {
 						medico = med;
 					}
 				}
 				turno.setMedico(medico);
 				
 				Especialidad esp = new Especialidad();
-				esp.setIdEspecialidad(rs.getInt("IdEspecialidad"));
-				esp.setDescripcion(rs.getString("Especialidad"));
+				int idEsp = rs.getInt("IdEspecialidad");
 				
+				EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+				ArrayList<Especialidad> listaEsp = (ArrayList<Especialidad>) eDao.listarEspecialidades();
+				
+				for (Especialidad especialidad : listaEsp) {
+					if(especialidad.getIdEspecialidad() == idEsp) {
+						esp = especialidad;
+					}
+				}
 				turno.setEspecialidad(esp);
 				
 				Paciente paciente = new Paciente();
@@ -397,9 +417,11 @@ public class TurnosDAOImpl implements ITurnosDAO{
 				
 				Estado estado = new Estado();
 				estado.setIdEstado(rs.getInt("IdEstado"));
+				estado.setDescripcion(rs.getString("Estado"));
 				
 				turno.setEstado(estado);
 				turno.setObservacion(rs.getString("Observacion"));
+				turno.setActivo(rs.getBoolean("Activo"));
 				
 				listaTurnos.add(turno);
 			}
