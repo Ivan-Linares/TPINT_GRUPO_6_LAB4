@@ -139,44 +139,44 @@
 				<span id="horaTurnoError" class="error"></span>
 			</div>
 			<div class="d-flex fd-column">
-				<label>DNI Paciente</label>
+				<label>Datos Paciente</label>
 				<input type="hidden" required="true" name="dni" class="campo" value="<%=turno.getPaciente().getDni() %>">
-				<h3 class="campo" name="dni"><%=turno.getPaciente().getDni()%></h3>					
+				<p class="campo" name="dni"><%=turno.getPaciente().getDni()%> - <%=turno.getPaciente().getNombre() %> <%=turno.getPaciente().getApellido() %></p>					
 			</div>
 		</div>
-				<div class="d-flex row">
-					
-					<div class="d-flex fd-column">
-						<label>Fecha</label>
-						<%if(request.getAttribute("editar-turno") != null){%><input  type="Date" required="true" name="fecha" class="campo" value="<%= turno.getFecha() %>"><%}
-						else{%><p class="campo" name="fecha"><%= turno.getFecha() %></p><%}%>
-						<span id="fechaError" class="error"></span>
-					</div>
-					
-					<div class="d-flex fd-column">
-						<label>Hora</label>
-						<%if(request.getAttribute("editar-turno") != null){%><input  type="number" required="true" name="hora" class="campo" value="<%= turno.getHora() %>"><%}
-						else{%><p class="campo" name="hora"><%= turno.getHora() %></p><%}%>
-						<span id="horaError" class="error"></span>
-					</div>
-					<div class="d-flex fd-column">
-						<label>Observacion</label>
-						<%if(request.getAttribute("editar-turno") != null){%><input  type="text" name="observaciones" class="campo" value="<%= turno.getObservacion() %>"><%}
-						else{%><p class="campo" name="observaciones"><%=turno.getObservacion()%></p><%
-						}%>
-						<span id="observacionError" class="error"></span>
-					</div>
-					
-				</div>
-		</div>
+		<div class="d-flex row">
 			
-			<%if(request.getAttribute("editar-turno") != null){
-			%>
-			<button type="submit" name="btn-guardar-turno" class="btn bg-green position-absolute" style="right:0;">Guardar Cambios</button>
-			<%} %>
-			
-		</form>
+			<div class="d-flex fd-column">
+				<label>Fecha</label>
+				<%if(request.getAttribute("editar-turno") != null){%><input  type="Date" required="true" name="fecha" class="campo" value="<%= turno.getFecha() %>"><%}
+				else{%><p class="campo" name="fecha"><%= turno.getFecha() %></p><%}%>
+				<span id="fechaError" class="error"></span>
+			</div>
+					
+			<div class="d-flex fd-column">
+				<label>Hora</label>
+				<%if(request.getAttribute("editar-turno") != null){%><input  type="number" required="true" name="hora" class="campo" value="<%= turno.getHora() %>"><%}
+				else{%><p class="campo" name="hora"><%= turno.getHora() %></p><%}%>
+				<span id="horaError" class="error"></span>
+			</div>
+			<div class="d-flex fd-column">
+				<label>Observacion</label>
+				<%if(request.getAttribute("editar-turno") != null){%><input  type="text" name="observaciones" class="campo" value="<%= turno.getObservacion() %>"><%}
+				else{%><p class="campo" name="observaciones"><%=turno.getObservacion()%></p><%
+				}%>
+				<span id="observacionError" class="error"></span>
+			</div>
+					
 		</div>
+	</div>
+			
+		<%if(request.getAttribute("editar-turno") != null){
+		%>
+		<button type="submit" name="btn-guardar-turno" class="btn bg-green position-absolute" style="right:0;">Guardar Cambios</button>
+		<%} %>
+			
+	</form>
+	</div>
 	</div>
 </div>
 <script src="js/validaciones.js"></script>	
