@@ -170,7 +170,7 @@
 							<%=turno.getEstado().getDescripcion() %>
 						<%} %>
 						</td> 
-						<td><%if(turno.getObservacion() == null){ %>
+						<td><%if(turno.getObservacion() == null || turno.getObservacion().isEmpty()){ %>
 							Sin Observaciones
 						<%}else{ %>
 							<%=turno.getObservacion() %>
