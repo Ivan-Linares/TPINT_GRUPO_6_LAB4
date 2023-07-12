@@ -229,10 +229,28 @@ public class servletsTurnos extends HttpServlet {
 		boolean fechaRepetidaPaciente = false;
 		boolean fechayHoraRepetidaMedico = false;
 		boolean coincideFechayHora = false;
+		boolean fechaMenorATurno = false;
 		
 		try {
 			
 			Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString());
+
+			long miliseconds = System.currentTimeMillis();
+		    Date date = new Date(miliseconds);
+		    
+		    if(fecha.equals(date) || fecha.before(date)){
+		        fechaMenorATurno = true;
+		    }
+		    
+		    if(fechaMenorATurno) {
+		    	try {
+					request.setAttribute("mensajeError", "No se puede turnar con una fecha menor o igual a la actual");
+					RequestDispatcher rd = request.getRequestDispatcher("Error.jsp");
+					rd.forward(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		    }
 			
 			int nD=-1;
 			String dia="";
@@ -263,7 +281,6 @@ public class servletsTurnos extends HttpServlet {
 			esp.setIdEspecialidad(Integer.parseInt(request.getParameter("espSelect")));
 			esp.setDescripcion(request.getParameter("descripcionEsp"));
 			nuevoTurno.setEspecialidad(esp);
-			
 			
 			int hora = Integer.parseInt(request.getParameter("hora").toString());
 			System.out.println(hora);
