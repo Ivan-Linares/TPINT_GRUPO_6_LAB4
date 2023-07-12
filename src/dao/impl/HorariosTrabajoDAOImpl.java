@@ -16,9 +16,10 @@ import dominio.Medico;
 public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	
 	private static final String insertHorariosTrabajoMedico = "Insert into HorariosTrabajo (IdMedico, Dia, HoraEntrada, HoraSalida, Libre) values (?,?,?,?,?)";
-	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=? and dia=?";
+	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=? and dia=? and horaentrada=?";
+	private static final String reactiveHorariosTrabajoMedico = "Update horariostrabajo set Activo=1 where idMedico=? and dia=? and horaentrada=?";
 	private static final String deleteAllHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=?";
-	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo";
+	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo where activo = 1";
 	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida, Activo from horariostrabajo where idMedico = ";
 	private static final String updateHorariosTrabajoMedico = "update horariostrabajo set Dia=?, HorarioEntrada=?, HorarioSalida=? where idMedico=?";
 	private static final String listarFechayHoraxMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo where IdMedico =";
@@ -53,7 +54,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 
 
 	@Override
-	public boolean eliminar(int idMedico, String dia) {
+	public boolean eliminar(int idMedico, String dia, String horaEntrada) {
 		PreparedStatement statement;
 		Connection conexion = Conexion.getConexion().getSQLConexion();
 		
@@ -74,6 +75,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 			statement = conexion.prepareStatement(deleteHorariosTrabajoMedico);
 			statement.setInt(1, idMedico);
 			statement.setString(2, dia);
+			statement.setString(3, horaEntrada);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
@@ -255,5 +257,44 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 		}
 		
 		return listaHT;
+	}
+
+
+	@Override
+	public boolean reactivar(int idMedico, String dia, String horaEntrada) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean state = false;
+		
+		try
+		{
+
+			statement = conexion.prepareStatement(reactiveHorariosTrabajoMedico);
+			statement.setInt(1, idMedico);
+			statement.setString(2, dia);
+			statement.setString(3, horaEntrada);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				state = true;
+			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return state;
 	}
 }

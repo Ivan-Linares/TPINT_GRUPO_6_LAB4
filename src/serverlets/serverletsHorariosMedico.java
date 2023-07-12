@@ -58,8 +58,32 @@ public class serverletsHorariosMedico extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-editar-medico=");
 			rd.forward(request, response);
 		}
+		else if(request.getParameter("btn-reactivar-horario-trabajo") != null) {
+			String estadoHorario = "";
+			if(reactivarHorarioTrabajo(request)) estadoHorario = "Se pudo reactivar el Horario correctamente!";
+			request.setAttribute("estadoHorario", estadoHorario);
+			
+			String dniMedico = "";
+			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");			
+			int idMedico = 0;
+			if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
+			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-editar-medico=");
+			rd.forward(request, response);
+		}
 		
+	}
+	
+	protected boolean reactivarHorarioTrabajo(HttpServletRequest request) {
+		HorariosTrabajoDAOImpl horarioDao = new HorariosTrabajoDAOImpl();
+		int idMedico = 0;
+		String dia = "";
+		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
+		if(request.getParameter("diaHorarioMedico") != null) dia = request.getParameter("diaHorarioMedico") ;
+		String horaEntrada = request.getParameter("horaEntrada").toString();
+		 String[] horaMinEntrada = horaEntrada.split(":");
 		
+		if(horarioDao.reactivar(idMedico, dia, horaMinEntrada[0]+":"+horaMinEntrada[1]+":00")) return true;
+		return false;
 	}
 	
 	protected boolean eliminarHorarioTrabajo(HttpServletRequest request) {
@@ -68,8 +92,10 @@ public class serverletsHorariosMedico extends HttpServlet {
 		String dia = "";
 		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
 		if(request.getParameter("diaHorarioMedico") != null) dia = request.getParameter("diaHorarioMedico") ;
+		String horaEntrada = request.getParameter("horaEntrada").toString();
+		 String[] horaMinEntrada = horaEntrada.split(":");
 		
-		if(horarioDao.eliminar(idMedico, dia)) return true;
+		if(horarioDao.eliminar(idMedico, dia, horaMinEntrada[0]+":"+horaMinEntrada[1]+":00")) return true;
 		return false;
 	}
 	
@@ -96,13 +122,12 @@ public class serverletsHorariosMedico extends HttpServlet {
 		
 		String horaEntrada = request.getParameter("horaEntrada").toString();
 		 String[] horaMinEntrada = horaEntrada.split(":");
-		 int horaEntradaInt = Integer.parseInt(horaMinEntrada[0]);
-		nuevoHorario.setHoraEntrada(horaEntrada);
+		 
+		nuevoHorario.setHoraEntrada(horaMinEntrada[0]+":"+horaMinEntrada[1]+":00");
 		
 		String horaSalida = request.getParameter("horaSalida").toString();
 		 String[] horaMinSalida = horaSalida.split(":");
-		 int horaSalidaInt = Integer.parseInt(horaMinSalida[0]);
-		nuevoHorario.setHoraSalida(horaSalida);
+		nuevoHorario.setHoraSalida(horaMinSalida[0]+":"+horaMinSalida[1]+":00");
 
 		HorariosTrabajoDAOImpl horarioDao = new HorariosTrabajoDAOImpl();
 		

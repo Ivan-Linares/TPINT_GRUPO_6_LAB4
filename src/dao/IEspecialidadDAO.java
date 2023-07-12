@@ -11,4 +11,5 @@ public interface IEspecialidadDAO {
 	public List<Especialidad> listarEspecialidades();
 	public ArrayList<Especialidad> listarEspecialidadesPorMedico(int idMedico);
 	public boolean eliminarEspecialidadMedico(int idEspecialidad, int idMedico);
+	public boolean reactivarEspecialidadMedico(int idEspecialidad, int idMedico);
 }

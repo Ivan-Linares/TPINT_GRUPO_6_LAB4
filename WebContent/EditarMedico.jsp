@@ -447,6 +447,7 @@
 			<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>">
 			<input type="hidden" name="idMedico" value="<%=medico.getIdMedico() %>">
 			<input type="hidden" name="diaHorarioMedico" value="<%=horario.getDia() %>">
+			<input type="hidden" name="horaEntrada" value="<%=horario.getHoraEntrada().toString()%>">
 			<td><%=horario.getDia() %></td> 
 			<td><%=horario.getHoraEntrada().toString() %>hs</td> 
 			<td><%=horario.getHoraSalida().toString()  %>hs</td> 

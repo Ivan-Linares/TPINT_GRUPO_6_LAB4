@@ -66,7 +66,28 @@ public class serverletsTelefono extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-editar-medico=");
 			rd.forward(request, response);
 		}
+		else if(request.getParameter("btn-reactivar-telefono") != null) {
+			String estadoTelefono = "";
+			if(reactivarTelefono(request)) estadoTelefono = "Se pudo reactivar el Telefono correctamente!";
+			request.setAttribute("estadoTelefono", estadoTelefono);
+			
+			String dniMedico = "";
+			if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");			int idMedico = 0;
+			if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
+			RequestDispatcher rd = request.getRequestDispatcher("serverletsMedicos?method=post&dniMedico="+ dniMedico+"&idMedico="+idMedico+"&btn-editar-medico=");
+			rd.forward(request, response);
+		}
 		
+	}
+	protected boolean reactivarTelefono(HttpServletRequest request) {
+		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+		String dniMedico = "";
+		String telefonoMedico = "";
+		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
+		if(request.getParameter("telefonoMedico") != null) telefonoMedico = request.getParameter("telefonoMedico");
+		
+		if(tDao.reactivar(dniMedico, telefonoMedico)) return true;
+		return false;
 	}
 	
 	protected boolean eliminarTelefono(HttpServletRequest request) {
