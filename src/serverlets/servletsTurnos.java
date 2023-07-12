@@ -247,7 +247,7 @@ public class servletsTurnos extends HttpServlet {
 	            break;
 	        case 3: dia = "Martes";
 	            break;
-	        case 4: dia = "Miércoles";
+	        case 4: dia = "Miercoles";
 	            break;
 	        case 5: dia = "Jueves";
 	            break;
@@ -264,7 +264,9 @@ public class servletsTurnos extends HttpServlet {
 			esp.setDescripcion(request.getParameter("descripcionEsp"));
 			nuevoTurno.setEspecialidad(esp);
 			
-			int hora = Integer.parseInt(request.getParameter("hora"));
+			
+			int hora = Integer.parseInt(request.getParameter("hora").toString());
+			System.out.println(hora);
 			nuevoTurno.setHora(hora);
 			
 			Medico med = new Medico();
@@ -291,9 +293,9 @@ public class servletsTurnos extends HttpServlet {
 			
 			ArrayList<HorariosTrabajo> listaHT = hDao.listarPorMedico(idMedico);
 			for (HorariosTrabajo ht : listaHT) {
-				int horaEntrada = Integer.parseInt(ht.getHoraEntrada());
-				int horaSalida = Integer.parseInt(ht.getHoraSalida());
-				
+				int horaEntrada = Integer.parseInt(ht.getHoraEntrada().split(":")[0]);
+				int horaSalida = Integer.parseInt(ht.getHoraSalida().split(":")[0]);
+				System.out.println(horaEntrada + " - "+ horaSalida + ht.getDia() + " -" + dia);
 				if(ht.getDia().equals(dia) && (horaEntrada <= hora && horaSalida > hora)) {
 					coincideFechayHora = true;
 				}
