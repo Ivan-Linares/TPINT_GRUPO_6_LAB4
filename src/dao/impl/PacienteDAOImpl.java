@@ -30,6 +30,10 @@ public class PacienteDAOImpl implements IPacienteDAO{
 	private static final String deletePersona = "update personas set Activo = 0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo = 0 where dni=?";
 	private static final String deleteDomicilio = "update domicilio set Activo = 0 where idDomicilio=?";
+	private static final String reactivePaciente = "update pacientes set Activo = 1 where dni =?";
+	private static final String reactivePersona = "update personas set Activo = 1 where dni=?";
+	private static final String reactiveTelefono = "update TelefonosXPersonas set Activo = 1 where dni=?";
+	private static final String reactiveDomicilio = "update domicilio set Activo = 1 where idDomicilio=?";
 	private static final String listarPacientes = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, pais.idPais as idNacionalidad, pais.descripcion AS nacionalidad, telefono.telefono as telefono, pac.IdPaciente as IdPaciente from personas per inner join pacientes pac on per.dni = pac.dni left join Paises pais on per.idNacionalidad = pais.IdPais left join TelefonosXPersonas telefono on per.dni = telefono.dni";
 	private static final String listarPaciente = "select per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.sexo as sexo, per.FechaNacimiento as fechaNacimiento, per.Correo as correo, per.Activo as activo, nacionalidad.idPais as idNacionalidad, nacionalidad.descripcion AS nacionalidad,domicilio.iddomicilio as iddomicilio, domicilio.Direccion AS direccion, domicilio.Localidad as localidad, domicilio.Provincia as provincia, pais.idPais as idpais, pais.descripcion as pais,telefono.telefono as telefono,c.IdCobertura as idcobertura, c.Descripcion as cobertura from personas per inner join pacientes pac on per.dni = pac.dni left join Paises nacionalidad on per.idNacionalidad = nacionalidad.IdPais left join Domicilio domicilio on per.idDomicilio = domicilio.idDomicilio left join Paises pais on domicilio.Pais = pais.idPais left join TelefonosXPersonas telefono on per.dni = telefono.dni left join coberturas c on c.IdCobertura = pac.IdCobertura where per.dni = ";
 	private static final String existePaciente = "SELECT CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS existe_registro FROM personas p WHERE p.dni = ?";
@@ -414,6 +418,67 @@ public class PacienteDAOImpl implements IPacienteDAO{
 		}
 		
 		return listaPacientes;
+	}
+
+	@Override
+	public boolean reactivar(String dniPaciente) {
+
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean state = true;
+		
+		try
+		{
+
+			statement = conexion.prepareStatement(reactivePaciente);
+			statement.setString(1, dniPaciente);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+			}
+			else state = false;
+			
+			statement = conexion.prepareStatement(reactivePersona);
+			statement.setString(1, dniPaciente);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();			
+			}
+			else state = false;
+			statement = conexion.prepareStatement(reactiveTelefono);
+			statement.setString(1, dniPaciente);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+			}
+			else state = false;
+			
+			Paciente paciente = obtenerPaciente(dniPaciente);
+			statement = conexion.prepareStatement(reactiveDomicilio);
+			statement.setInt(1, paciente.getDomicilio().getIdDomicilio());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();				
+			}
+			else state = false;
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return state;
 	}
 
 }

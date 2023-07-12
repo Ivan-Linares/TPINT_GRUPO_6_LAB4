@@ -144,6 +144,14 @@ public class serverletsPacientes extends HttpServlet  {
 			RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
 			rd.forward(request, response);
 		}
+		else if(request.getParameter("btn-reactivar-paciente") != null) {
+			
+			ReactivarPaciente(pDao, dniPaciente);
+			listarPacientes(request);
+			request.setAttribute("mensajeExito", "El Paciente fue reactivado Correctamente!");
+			RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
+			rd.forward(request, response);
+		}
 		else if(request.getParameter("btn-agregar-paciente") != null) {
 			try {				
 				if(!AgregarPaciente(pDao, request)) {					
@@ -169,6 +177,10 @@ public class serverletsPacientes extends HttpServlet  {
 
 	protected void EliminarPaciente(PacienteDAOImpl pDao, String dniPaciente) {		
 		pDao.eliminar(dniPaciente);	
+	}
+
+	protected void ReactivarPaciente(PacienteDAOImpl pDao, String dniPaciente) {		
+		pDao.reactivar(dniPaciente);	
 	}
 	
 	protected boolean AgregarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {

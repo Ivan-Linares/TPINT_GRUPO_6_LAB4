@@ -18,6 +18,7 @@ import dominio.Usuario;
 public class UsuarioDAOImpl implements IUsuarioDAO {
 	private static final String insertUsuario="Insert into Usuarios(DNI, Correo, Password, EsAdministrador) values (?,?,?,?)";
 	private static final String deleteUsuario="update Usuarios set Activo = 0 where dni=?";
+	private static final String reactiveUsuario="update Usuarios set Activo = 1 where dni=?";
 	private static final String listarUsuarios="select idusuario, dni, correo, password, esadministrador, activo from Usuarios";
 	private static final String listarUsuario="select idusuario, dni, correo, password, esadministrador, activo from Usuarios where dni='";
 	@Override
@@ -75,15 +76,11 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		{
 
 			statement = conexion.prepareStatement(deleteUsuario);
-			System.out.println(deleteUsuario);
-			System.out.println(dniUsuario);
 			statement.setString(1, dniUsuario);
 			
 			if(statement.executeUpdate() > 0) {
 				conexion.commit();
 				state = true;
-				
-				state=true;
 			}
 			
 		}
@@ -153,6 +150,41 @@ public class UsuarioDAOImpl implements IUsuarioDAO {
 		}
 		
 		return usuario;
+	}
+
+	@Override
+	public boolean reactivar(String dniUsuario) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean state = false;
+		
+		try
+		{
+			statement = conexion.prepareStatement(reactiveUsuario);
+			statement.setString(1, dniUsuario);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+				state = true;
+			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return state;
 	}
 
 }

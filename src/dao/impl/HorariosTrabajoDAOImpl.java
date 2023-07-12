@@ -19,6 +19,7 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 	private static final String deleteHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=? and dia=? and horaentrada=?";
 	private static final String reactiveHorariosTrabajoMedico = "Update horariostrabajo set Activo=1 where idMedico=? and dia=? and horaentrada=?";
 	private static final String deleteAllHorariosTrabajoMedico = "Update horariostrabajo set Activo=0 where idMedico=?";
+	private static final String reactiveAllHorariosTrabajoMedico = "Update horariostrabajo set Activo=1 where idMedico=?";
 	private static final String listarHorariosTrabajoMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida from horariostrabajo where activo = 1";
 	private static final String listarHorariosTrabajoPorMedico = "select IdMedico, Dia, HoraEntrada, HoraSalida, Activo from horariostrabajo where idMedico = ";
 	private static final String updateHorariosTrabajoMedico = "update horariostrabajo set Dia=?, HorarioEntrada=?, HorarioSalida=? where idMedico=?";
@@ -288,6 +289,43 @@ public class HorariosTrabajoDAOImpl implements IHorariosTrabajo {
 				conexion.commit();
 				state = true;
 			}
+			
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return state;
+	}
+
+
+	@Override
+	public boolean reactivarTodos(int idMedico) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean state = true;
+		
+		try
+		{
+
+			statement = conexion.prepareStatement(reactiveAllHorariosTrabajoMedico);
+			statement.setInt(1, idMedico);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+			}
+			else state = false;
 			
 		}
 		catch(Exception e)

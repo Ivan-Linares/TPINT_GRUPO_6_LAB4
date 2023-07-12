@@ -30,6 +30,10 @@ public class MedicoDAOImpl implements IMedicoDAO{
 	private static final String deletePersona = "update personas set Activo=0 where dni=?";
 	private static final String deleteTelefono = "update TelefonosXPersonas set Activo=0 where dni=?";
 	private static final String deleteDomicilio = "update domicilio set Activo = 0 where idDomicilio=?";
+	private static final String reactiveMedico = "update medicos set Activo=1 where dni=?";
+	private static final String reactivePersona = "update personas set Activo=1 where dni=?";
+	private static final String reactiveTelefono = "update TelefonosXPersonas set Activo=1 where dni=?";
+	private static final String reactiveDomicilio = "update domicilio set Activo = 1 where idDomicilio=?";
 	private static final String listarMedicos = "select med.idMedico as idMedico, per.dni as dni, per.nombre as nombre, per.apellido as apellido, per.Activo as activo from personas per inner join medicos med on per.dni = med.dni";
 	private static final String listarEspecialidades = "select med.IdMedico as idMedico, esp.IdEspecialidad as idEspecialidad, esp.Descripcion as Especialidad from medicos med inner join especialidadxmedico exm on exm.IdMedico = med.IdMedico inner join especialidades esp on esp.IdEspecialidad = exm.IdEspecialidad";
 	private static final String updatePersona = "update personas set dni=?, nombre=?, apellido=?, sexo=?, nacionalidad=?, fechaNac=?, correo=?, idDomicilio=?, activo=? where idPaciente=?";
@@ -516,6 +520,72 @@ public class MedicoDAOImpl implements IMedicoDAO{
 		}
 		
 		return listaMedicos;
+	}
+
+	@Override
+	public boolean reactivar(String dniMedico, int idMedico) {
+		PreparedStatement statement;
+		Connection conexion = Conexion.getConexion().getSQLConexion();
+		
+		try 
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} 
+		catch (ClassNotFoundException e) 
+		{
+			e.printStackTrace();
+		}
+		
+		boolean state = true;
+		
+		try
+		{
+
+			statement = conexion.prepareStatement(reactiveMedico);
+			statement.setString(1, dniMedico);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+			}
+			else state = false;
+			
+			statement = conexion.prepareStatement(reactivePersona);
+			statement.setString(1, dniMedico);
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+			}
+			else state = false;
+			
+			TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+			if(tDao.listarPorPersona(dniMedico).size() > 0) {
+				statement = conexion.prepareStatement(reactiveTelefono);
+				statement.setString(1, dniMedico);
+				
+				if(statement.executeUpdate() > 0) {
+					conexion.commit();				
+				}
+				else state = false;
+			}	
+
+			HorariosTrabajoDAOImpl horariosTrabajoDAO = new HorariosTrabajoDAOImpl();
+			horariosTrabajoDAO.reactivarTodos(idMedico);
+			
+			Medico medico = obtenerMedico(dniMedico);
+			statement = conexion.prepareStatement(reactiveDomicilio);
+			statement.setInt(1, medico.getDomicilio().getIdDomicilio());
+			
+			if(statement.executeUpdate() > 0) {
+				conexion.commit();
+			}
+			else state = false;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+		return state;
 	}
 
 }

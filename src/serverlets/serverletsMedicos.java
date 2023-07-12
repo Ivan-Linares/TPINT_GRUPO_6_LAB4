@@ -146,6 +146,15 @@ public class serverletsMedicos extends HttpServlet   {
 			RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
 			rd.forward(request, response);
 		}
+		else if(request.getParameter("btn-reactivar-medico") != null) {
+			String mensaje ="";
+			if(ReactivarMedico(medicoDao, dniMedico, idMedico) && ReactivarUsuarioMedico(dniMedico)) mensaje ="El médico fue reactivado con exito!";
+			else  mensaje ="Hubo un error al intentar reactivar el Médico";
+			request.setAttribute("mensaje", mensaje);	
+			listarMedicos(request);			
+			RequestDispatcher rd = request.getRequestDispatcher("Medicos.jsp");
+			rd.forward(request, response);
+		}
 		
 	}
 	
@@ -290,5 +299,13 @@ public class serverletsMedicos extends HttpServlet   {
 	protected boolean EliminarUsuarioMedico(String dniMedico) {		
 		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
 		return uDao.eliminar(dniMedico);
+	}
+	
+	protected boolean ReactivarMedico(MedicoDAOImpl mDao, String dniMedico, int idMedico) {		
+		return mDao.reactivar(dniMedico, idMedico);	
+	}
+	protected boolean ReactivarUsuarioMedico(String dniMedico) {		
+		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
+		return uDao.reactivar(dniMedico);
 	}
 }
