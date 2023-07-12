@@ -9,7 +9,7 @@
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-<title>Inicio</title>
+<title>Reportes</title>
 </head>
 <body>
 
@@ -64,7 +64,7 @@
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
 					</a>
-				</li>		
+				</li>			
 				
 																	<li>
 					<a href="servletsTurnos?method=get">				
@@ -88,7 +88,18 @@
 			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
+	
+	<div class="container fd-column m-auto">
+	<div class="title-section d-flex jc-sb">
+		<a href="TurnosPorEspecialidad.jsp" class="btn bg-green">Cantidad de turnos por especialidad</a>
+		<a href="TurnosPorMedico.jsp" class="btn bg-green">Cantidad de turnos por médico</a>
+		<a href="Inicio.jsp" class="btn bg-green">Volver al inicio</a>
+	</div>
+	
 </div>
+</div>
+
+
 
 </body>
 </html>
