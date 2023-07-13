@@ -177,14 +177,14 @@
 			
 			<div class="d-flex fd-column">
 				<label>Fecha</label>
-				<%if(request.getAttribute("editar-turno") != null){%><input  type="Date" required="true" name="fecha" class="campo" value="<%= turno.getFecha() %>"><%}
+				<%if(request.getAttribute("editar-turno") != null && user.isEsAdministrador() == true){%><input  type="Date" required="true" name="fecha" class="campo" value="<%= turno.getFecha() %>"><%}
 				else{%><p class="campo" name="fecha"><%= turno.getFecha() %></p><%}%>
 				<span id="fechaError" class="error"></span>
 			</div>
 					
 			<div class="d-flex fd-column">
 				<label>Hora</label>
-				<%if(request.getAttribute("editar-turno") != null){%><input  type="number" required="true" name="hora" class="campo" value="<%= turno.getHora() %>"><%}
+				<%if(request.getAttribute("editar-turno") != null && user.isEsAdministrador() == true){%><input  type="number" required="true" name="hora" class="campo" value="<%= turno.getHora() %>"><%}
 				else{%><p class="campo" name="hora"><%= turno.getHora() %></p><%}%>
 				<span id="horaError" class="error"></span>
 			</div>
