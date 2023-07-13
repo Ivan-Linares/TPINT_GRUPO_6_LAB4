@@ -20,6 +20,7 @@ import dominio.Paciente;
 import dominio.Pais;
 import dominio.Telefono;
 import dominio.Usuario;
+import negocioImpl.CoberturaNegocioImpl;
 
 @WebServlet("/serverletsPacientes")
 public class serverletsPacientes extends HttpServlet  {
@@ -83,8 +84,8 @@ public class serverletsPacientes extends HttpServlet  {
 	}
 	
 	protected void agregarListaCoberturas(HttpServletRequest request) {
-		CoberturaDAOImpl coberturaDao = new CoberturaDAOImpl();
-		ArrayList<Cobertura> listaCoberturas = (ArrayList<Cobertura>) coberturaDao.listarCoberturas();
+		CoberturaNegocioImpl coberturaNegocio = new CoberturaNegocioImpl();
+		ArrayList<Cobertura> listaCoberturas = (ArrayList<Cobertura>) coberturaNegocio.listarCoberturas();
 		request.setAttribute("listaCoberturas", listaCoberturas);
 	}
 	
