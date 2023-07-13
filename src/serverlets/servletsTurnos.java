@@ -22,11 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.mysql.fabric.xmlrpc.base.Array;
 
-import dao.impl.EspecialidadesDAOImpl;
-import dao.impl.HorariosTrabajoDAOImpl;
-import dao.impl.MedicoDAOImpl;
-import dao.impl.PacienteDAOImpl;
-import dao.impl.TurnosDAOImpl;
+import negocioImpl.*;
 import dominio.Especialidad;
 import dominio.Estado;
 import dominio.HorariosTrabajo;
@@ -88,7 +84,7 @@ public class servletsTurnos extends HttpServlet {
 		
 		String idEsp = "";
 		String descEsp = "";
-		TurnosDAOImpl tDao = new TurnosDAOImpl();
+		TurnosNegocioImpl tNegocio = new TurnosNegocioImpl();
 		
 		int idTurno = 0;
 		if(request.getParameter("idTurno") != null) idTurno = Integer.parseInt(request.getParameter("idTurno"));
@@ -96,8 +92,8 @@ public class servletsTurnos extends HttpServlet {
 		if(request.getParameter("btn-buscar-medicos") != null) {
 			idEsp = request.getParameter("especialidadSelect").toString();
 
-			EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
-			ArrayList<Especialidad> listaEsp = (ArrayList<Especialidad>) eDao.listarEspecialidades();
+			EspecialidadNegocioImpl eNegocio = new EspecialidadNegocioImpl();
+			ArrayList<Especialidad> listaEsp = (ArrayList<Especialidad>) eNegocio.listarEspecialidades();
 			
 			for (Especialidad esp : listaEsp) {
 				if(esp.getIdEspecialidad() == Integer.parseInt(idEsp)) {
@@ -105,8 +101,8 @@ public class servletsTurnos extends HttpServlet {
 				}
 			}
 			
-			MedicoDAOImpl mDao = new MedicoDAOImpl();
-			ArrayList<Medico> listaMedico = mDao.listarMedicosXespecialidad(idEsp);
+			MedicoNegocioImpl mNegocio = new MedicoNegocioImpl();
+			ArrayList<Medico> listaMedico = mNegocio.listarMedicosXespecialidad(idEsp);
 			
 			request.setAttribute("listaMed", listaMedico);
 			request.setAttribute("espSelect", idEsp);
@@ -151,7 +147,7 @@ public class servletsTurnos extends HttpServlet {
 		}
 		else if(request.getParameter("btn-guardar-turno") != null) {
 			try {
-				if(ModificarTurno(tDao, request))request.setAttribute("mensajeExito", "El turno fue modificado Correctamente!");
+				if(ModificarTurno(tNegocio, request))request.setAttribute("mensajeExito", "El turno fue modificado Correctamente!");
 				else request.setAttribute("mensajeError", "Ocurrió un error al intentar modificar al turno");
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -165,7 +161,7 @@ public class servletsTurnos extends HttpServlet {
 		}
 		if(request.getParameter("btn-eliminar-turno") != null) {
 			
-			EliminarTurno(tDao, idTurno);
+			EliminarTurno(tNegocio, idTurno);
 			listarTurnos(request);
 			request.setAttribute("mensajeExito", "El Turno fue eliminado correctamente!");
 			RequestDispatcher rd = request.getRequestDispatcher("Turnos.jsp");
@@ -175,15 +171,15 @@ public class servletsTurnos extends HttpServlet {
 	}
 
 	private void listarTurnos(HttpServletRequest request) {
-		TurnosDAOImpl tDao = new TurnosDAOImpl();
+		TurnosNegocioImpl tNegocio = new TurnosNegocioImpl();
 		ArrayList<Turnos> listaTurnos = new ArrayList<Turnos>();
 		
 		if(request.getSession().getAttribute("medicoUsuario") == null){
-			listaTurnos  = tDao.listarTurnos();
+			listaTurnos  = (ArrayList<Turnos>) tNegocio.listarTurnos();
 		}
 		else {
 			Medico medicoUsuario = (Medico)request.getSession().getAttribute("medicoUsuario");
-			listaTurnos = tDao.obtenerTurno_Medico(medicoUsuario.getIdMedico());
+			listaTurnos = (ArrayList<Turnos>) tNegocio.obtenerTurno_Medico(medicoUsuario.getIdMedico());
 		}
 
 		
@@ -192,21 +188,21 @@ public class servletsTurnos extends HttpServlet {
 	
 	protected void agregarDetallesVerTurno(HttpServletRequest request, int idTurno) {
 		
-		TurnosDAOImpl tDao = new TurnosDAOImpl();
-		Turnos turno = tDao.listarTurnoxId(idTurno);
+		TurnosNegocioImpl tNegocio = new TurnosNegocioImpl();
+		Turnos turno = tNegocio.listarTurnoxId(idTurno);
 		request.setAttribute("turno", turno);
 		listarEspecialidades(request);
 	}
 	
 	protected void listarEspecialidades(HttpServletRequest request) {
-		EspecialidadesDAOImpl espDao = new EspecialidadesDAOImpl();
-		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>)espDao.listarEspecialidades();
+		EspecialidadNegocioImpl espNegocio = new EspecialidadNegocioImpl();
+		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>)espNegocio.listarEspecialidades();
 		request.setAttribute("listaEspecialidades", listaEspecialidades);
 	}
 	
-	protected boolean ModificarTurno(TurnosDAOImpl tDao, HttpServletRequest request) throws ParseException {
+	protected boolean ModificarTurno(TurnosNegocioImpl tNegocio, HttpServletRequest request) throws ParseException {
 		Turnos turno = setearDatosTurno(request);
-		return tDao.modificarTurno(turno);
+		return tNegocio.modificarTurno(turno);
 	}
 	
 	protected Turnos setearDatosTurno(HttpServletRequest request) {
@@ -234,8 +230,8 @@ public class servletsTurnos extends HttpServlet {
 	
 	protected boolean agregarTurno(HttpServletRequest request, HttpServletResponse response) {
 		
-		TurnosDAOImpl tDao = new TurnosDAOImpl();
-		HorariosTrabajoDAOImpl hDao = new HorariosTrabajoDAOImpl();
+		TurnosNegocioImpl tNegocio = new TurnosNegocioImpl();
+		HorariosTrabajoNegocioImpl hNegocio = new HorariosTrabajoNegocioImpl();
 		Turnos nuevoTurno = new Turnos();
 		String dni = "";
 		boolean agregoTurno = false;
@@ -305,7 +301,7 @@ public class servletsTurnos extends HttpServlet {
 			med.setIdMedico(idMedico);
 			nuevoTurno.setMedico(med);
 			
-			ArrayList<Turnos> listaTurnosxMed = tDao.obtenerTurno_Medico(idMedico);
+			ArrayList<Turnos> listaTurnosxMed = (ArrayList<Turnos>) tNegocio.obtenerTurno_Medico(idMedico);
 			for (Turnos turnos : listaTurnosxMed) {
 				if(turnos.getFecha().equals(fecha) && turnos.getHora() == hora) {
 					fechayHoraRepetidaMedico = true;
@@ -322,7 +318,7 @@ public class servletsTurnos extends HttpServlet {
 				}
 			}
 			
-			ArrayList<HorariosTrabajo> listaHT = hDao.listarPorMedico(idMedico);
+			ArrayList<HorariosTrabajo> listaHT = hNegocio.listarPorMedico(idMedico);
 			for (HorariosTrabajo ht : listaHT) {
 				int horaEntrada = Integer.parseInt(ht.getHoraEntrada().split(":")[0]);
 				int horaSalida = Integer.parseInt(ht.getHoraSalida().split(":")[0]);
@@ -343,13 +339,13 @@ public class servletsTurnos extends HttpServlet {
 			}
 			
 			Paciente pac = new Paciente();
-			PacienteDAOImpl pDao = new PacienteDAOImpl();
-			ArrayList<Paciente> listaPaciente = pDao.listarPacientes();
+			PacienteNegocioImpl pNegocio = new PacienteNegocioImpl();
+			ArrayList<Paciente> listaPaciente = (ArrayList<Paciente>) pNegocio.listarPacientes();
 			
 			dni = request.getParameter("dniPaciente");
-			existePaciente = pDao.existe(dni);
+			existePaciente = pNegocio.existe(dni);
 
-			ArrayList<Turnos> listaTurnosxPac = tDao.obtenerTurno_Paciente(dni);
+			ArrayList<Turnos> listaTurnosxPac = (ArrayList<Turnos>) tNegocio.obtenerTurno_Paciente(dni);
 			for (Turnos turnos : listaTurnosxPac) {
 				if(turnos.getFecha().equals(fecha)) {
 					fechaRepetidaPaciente = true;
@@ -387,7 +383,7 @@ public class servletsTurnos extends HttpServlet {
 			}
 			
 			if(existePaciente == true && fechaRepetidaPaciente == false && fechayHoraRepetidaMedico == false && coincideFechayHora == true) {				
-				agregoTurno = tDao.agregarTurno(nuevoTurno);
+				agregoTurno = tNegocio.agregarTurno(nuevoTurno);
 			}
 			
 		} catch (ParseException e) {
@@ -398,8 +394,8 @@ public class servletsTurnos extends HttpServlet {
 		return agregoTurno;
 	}
 	
-	protected void EliminarTurno(TurnosDAOImpl tDao, int idTurno) {		
-		tDao.eliminarTurno(idTurno);
+	protected void EliminarTurno(TurnosNegocioImpl tNegocio, int idTurno) {		
+		tNegocio.eliminarTurno(idTurno);
 	}
 	
 }

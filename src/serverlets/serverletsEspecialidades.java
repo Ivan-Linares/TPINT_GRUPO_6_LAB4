@@ -10,8 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.impl.EspecialidadesDAOImpl;
-import dao.impl.TelefonoDAOImpl;
+import negocioImpl.EspecialidadNegocioImpl;
+import negocioImpl.TelefonoNegocioImpl;
 import dominio.Especialidad;
 import dominio.Medico;
 import dominio.Telefono;
@@ -41,9 +41,9 @@ public class serverletsEspecialidades extends HttpServlet {
 			if(request.getParameter("especialidadSelect") != null) idEspecialidad = Integer.parseInt(request.getParameter("especialidadSelect"));
 			if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
 			
-			EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+			EspecialidadNegocioImpl eNegocio = new EspecialidadNegocioImpl();
 			String estado = "";
-			if(eDao.agregarEspecialidadMedico(idEspecialidad, idMedico)) {
+			if(eNegocio.agregarEspecialidadMedico(idEspecialidad, idMedico)) {
 				setearAtributosIdDniMedico(request);
 				agregarListaEspecialidades(request);
 				estado = "Nueva especialidad asignada al Médico con éxito";
@@ -83,24 +83,24 @@ public class serverletsEspecialidades extends HttpServlet {
 		
 	}
 	protected boolean reactivarEspecialidadMedico(HttpServletRequest request) {
-		EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+		EspecialidadNegocioImpl eNegocio = new EspecialidadNegocioImpl();
 		int idMedico = 0;
 		int idEspecialidad = 0;
 		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
 		if(request.getParameter("idEspecialidad") != null) idEspecialidad = Integer.parseInt(request.getParameter("idEspecialidad"));
 	
-		if(eDao.reactivarEspecialidadMedico(idEspecialidad, idMedico)) return true;
+		if(eNegocio.reactivarEspecialidadMedico(idEspecialidad, idMedico)) return true;
 		return false;
 	}
 	
 	protected boolean eliminarEspecialidadMedico(HttpServletRequest request) {
-		EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
+		EspecialidadNegocioImpl eNegocio = new EspecialidadNegocioImpl();
 		int idMedico = 0;
 		int idEspecialidad = 0;
 		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
 		if(request.getParameter("idEspecialidad") != null) idEspecialidad = Integer.parseInt(request.getParameter("idEspecialidad"));
 		
-		if(eDao.eliminarEspecialidadMedico(idEspecialidad, idMedico)) return true;
+		if(eNegocio.eliminarEspecialidadMedico(idEspecialidad, idMedico)) return true;
 		return false;
 	}
 	
@@ -117,8 +117,8 @@ public class serverletsEspecialidades extends HttpServlet {
 	}
 	
 	protected void agregarListaEspecialidades(HttpServletRequest request) {
-		EspecialidadesDAOImpl espDao = new EspecialidadesDAOImpl();
-		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>) espDao.listarEspecialidades();
+		EspecialidadNegocioImpl espNegocio = new EspecialidadNegocioImpl();
+		ArrayList<Especialidad> listaEspecialidades = (ArrayList<Especialidad>) espNegocio.listarEspecialidades();
 		request.setAttribute("listaEspecialidades", listaEspecialidades);
 	}
 }

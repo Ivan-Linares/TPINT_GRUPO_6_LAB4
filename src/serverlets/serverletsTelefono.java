@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.impl.HorariosTrabajoDAOImpl;
-import dao.impl.TelefonoDAOImpl;
+import negocioImpl.HorariosTrabajoNegocioImpl;
+import negocioImpl.TelefonoNegocioImpl;
 import dominio.HorariosTrabajo;
 import dominio.Telefono;
 
@@ -43,10 +43,10 @@ public class serverletsTelefono extends HttpServlet {
 			
 			nuevoTelefono.setTelefono(request.getParameter("telefono"));
 
-			TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+			TelefonoNegocioImpl tNegocio = new TelefonoNegocioImpl();
 			
 			String estadoNuevoTelefono = "";
-			if(tDao.agregar(nuevoTelefono)) {
+			if(tNegocio.agregar(nuevoTelefono)) {
 				setearAtributosIdDniMedico(request);
 				estadoNuevoTelefono = "Nuevo telefono agregado al Médico con éxito!";
 				request.setAttribute("estadoNuevoTelefono", estadoNuevoTelefono);
@@ -80,24 +80,24 @@ public class serverletsTelefono extends HttpServlet {
 		
 	}
 	protected boolean reactivarTelefono(HttpServletRequest request) {
-		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+		TelefonoNegocioImpl tNegocio = new TelefonoNegocioImpl();
 		String dniMedico = "";
 		String telefonoMedico = "";
 		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
 		if(request.getParameter("telefonoMedico") != null) telefonoMedico = request.getParameter("telefonoMedico");
 		
-		if(tDao.reactivar(dniMedico, telefonoMedico)) return true;
+		if(tNegocio.reactivar(dniMedico, telefonoMedico)) return true;
 		return false;
 	}
 	
 	protected boolean eliminarTelefono(HttpServletRequest request) {
-		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
+		TelefonoNegocioImpl tNegocio = new TelefonoNegocioImpl();
 		String dniMedico = "";
 		String telefonoMedico = "";
 		if(request.getParameter("dniMedico") != null) dniMedico = request.getParameter("dniMedico");
 		if(request.getParameter("telefonoMedico") != null) telefonoMedico = request.getParameter("telefonoMedico");
 		
-		if(tDao.eliminar(dniMedico, telefonoMedico)) return true;
+		if(tNegocio.eliminar(dniMedico, telefonoMedico)) return true;
 		return false;
 	}
 	

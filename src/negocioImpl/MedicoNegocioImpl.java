@@ -50,5 +50,20 @@ public class MedicoNegocioImpl implements  MedicoNegocio{
 		// TODO Auto-generated method stub
 		return mDao.listarEspecialidadesMedico();
 	}
+	
+	public ArrayList<Medico> filtrarMedicos(String campo, String valor){
+		return mDao.filtrarMedicos(campo, valor);
+	}
+	
+	public ArrayList<Medico> filtrarMedicosPorDia(String valor){
+		return mDao.filtrarMedicosPorDia(valor);
+	}
 
+	public ArrayList<Medico> filtrarMedicosPorEspecialidad(String valor){
+		return mDao.filtrarMedicosPorEspecialidad(valor);
+	}
+	
+	public ArrayList<Medico> listarMedicosXespecialidad(String idEsp){
+		return mDao.listarMedicosXespecialidad(idEsp);
+	}
 }

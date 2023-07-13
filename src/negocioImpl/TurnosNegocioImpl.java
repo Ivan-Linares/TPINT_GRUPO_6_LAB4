@@ -44,5 +44,9 @@ public class TurnosNegocioImpl implements TurnosNegocio{
 		// TODO Auto-generated method stub
 		return tDao.obtenerTurno_Medico(idMedico);
 	}
+	
+	public Turnos listarTurnoxId(int idTurno) {
+		return tDao.listarTurnoxId(idTurno);
+	}
 
 }

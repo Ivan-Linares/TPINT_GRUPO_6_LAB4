@@ -8,6 +8,33 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+	
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" charset="utf8"
+	src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	var table = $('#tablaTurnos').DataTable({	    
+	    initComplete: function() {
+	      
+	      $('.dataTables_filter input').css('display', 'none');
+	      $('.dataTables_length').css('margin-bottom', '10px');
+	      //https://datatables.net/examples/basic_init/filter_only.html
+	      $('.dataTables_filter label').contents().filter(function() {
+	        return this.nodeType === 3;
+	      }).remove();
+	    }
+	  });
+	    
+	  
+	  /*$('.dataTables_length').hide();
+	  $('.dataTables_info').hide();
+	  */
+	});
+</script>
 <style>
 <jsp:include page="css/StyleSheet.css"></jsp:include>
 </style>
@@ -110,18 +137,18 @@
 	<div class="title-section d-flex jc-sb">
 			<h1>Turnos</h1>
 			<form action="servletsTurnos" method="get">
-				<div class="filtro">
-				<h3>Filtrar por:</h3>
-				<select name="filtroTurnos" id="filtroTurnos">
+				<div class="filtro" >
+				<h3 style="display:none">Filtrar por:</h3>
+				<select name="filtroTurnos" id="filtroTurnos" style="display:none">
 					<option>Especialidad</option>
 					<option>Medico</option>
 					<option>Paciente</option>				
 				</select>			
-				<input type="text">
-				<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
+				<input type="text" style="display:none">
+				<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar" style="display:none"/> 
 				<%if(medico == null){%>
 				
-					<button type="submit" name="btn-nuevo-turno" class="btn bg-green">Agregar Turno</button>	
+					<button type="submit" name="btn-nuevo-turno" class="btn bg-green w-100">Agregar Turno</button>	
 				<%}%>
 				
 				</div>
@@ -157,7 +184,7 @@
 <% } %>
 	
 	<div>
-		<table class="content-table header-table-blue"> 
+		<table class="content-table header-table-blue" id="tablaTurnos"> 
 			<thead> 
 				<tr> 
 					<th>ID Turno</th>
@@ -167,7 +194,6 @@
 					<th>Especialidad</th> 
 					<th>Paciente</th> 
 					<th>Estado</th> 
-					<th>Observacion</th> 
 					<th>Activo</th> 
 					<th>Acciones</th>
 				</tr>
@@ -196,12 +222,7 @@
 							<%=turno.getEstado().getDescripcion() %>
 						<%} %>
 						</td> 
-						<td><%if(turno.getObservacion() == null || turno.getObservacion().isEmpty()){ %>
-							Sin Observaciones
-						<%}else{ %>
-							<%=turno.getObservacion() %>
-						<%} %>
-						</td>
+						
 						<td><button class="btn w-100 <%= nombreClase%>">
 							 <%= textButtonActivo%>
 							</button></td> 			

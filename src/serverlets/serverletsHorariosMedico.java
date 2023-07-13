@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.impl.HorariosTrabajoDAOImpl;
+import negocioImpl.HorariosTrabajoNegocioImpl;
 import dominio.HorariosTrabajo;
 
 @WebServlet("/serverletsHorariosMedico")
@@ -74,7 +74,7 @@ public class serverletsHorariosMedico extends HttpServlet {
 	}
 	
 	protected boolean reactivarHorarioTrabajo(HttpServletRequest request) {
-		HorariosTrabajoDAOImpl horarioDao = new HorariosTrabajoDAOImpl();
+		HorariosTrabajoNegocioImpl horarioNegocio = new HorariosTrabajoNegocioImpl();
 		int idMedico = 0;
 		String dia = "";
 		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
@@ -82,12 +82,12 @@ public class serverletsHorariosMedico extends HttpServlet {
 		String horaEntrada = request.getParameter("horaEntrada").toString();
 		 String[] horaMinEntrada = horaEntrada.split(":");
 		
-		if(horarioDao.reactivar(idMedico, dia, horaMinEntrada[0]+":"+horaMinEntrada[1]+":00")) return true;
+		if(horarioNegocio.reactivar(idMedico, dia, horaMinEntrada[0]+":"+horaMinEntrada[1]+":00")) return true;
 		return false;
 	}
 	
 	protected boolean eliminarHorarioTrabajo(HttpServletRequest request) {
-		HorariosTrabajoDAOImpl horarioDao = new HorariosTrabajoDAOImpl();
+		HorariosTrabajoNegocioImpl horarioNegocio = new HorariosTrabajoNegocioImpl();
 		int idMedico = 0;
 		String dia = "";
 		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
@@ -95,7 +95,7 @@ public class serverletsHorariosMedico extends HttpServlet {
 		String horaEntrada = request.getParameter("horaEntrada").toString();
 		 String[] horaMinEntrada = horaEntrada.split(":");
 		
-		if(horarioDao.eliminar(idMedico, dia, horaMinEntrada[0]+":"+horaMinEntrada[1]+":00")) return true;
+		if(horarioNegocio.eliminar(idMedico, dia, horaMinEntrada[0]+":"+horaMinEntrada[1]+":00")) return true;
 		return false;
 	}
 	
@@ -129,9 +129,9 @@ public class serverletsHorariosMedico extends HttpServlet {
 		 String[] horaMinSalida = horaSalida.split(":");
 		nuevoHorario.setHoraSalida(horaMinSalida[0]+":"+horaMinSalida[1]+":00");
 
-		HorariosTrabajoDAOImpl horarioDao = new HorariosTrabajoDAOImpl();
+		HorariosTrabajoNegocioImpl horarioNegocio = new HorariosTrabajoNegocioImpl();
 		
-		if(horarioDao.agregar(nuevoHorario)) {
+		if(horarioNegocio.agregar(nuevoHorario)) {
 			
 			return true;
 		}

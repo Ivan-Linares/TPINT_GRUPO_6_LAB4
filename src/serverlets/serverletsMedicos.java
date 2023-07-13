@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.impl.EspecialidadesDAOImpl;
-import dao.impl.HorariosTrabajoDAOImpl;
-import dao.impl.MedicoDAOImpl;
-import dao.impl.PacienteDAOImpl;
-import dao.impl.PaisDAOImpl;
-import dao.impl.TelefonoDAOImpl;
-import dao.impl.UsuarioDAOImpl;
+import negocioImpl.EspecialidadNegocioImpl;
+import negocioImpl.HorariosTrabajoNegocioImpl;
+import negocioImpl.MedicoNegocioImpl;
+import negocioImpl.PacienteNegocioImpl;
+import negocioImpl.PaisNegocioImpl;
+import negocioImpl.TelefonoNegocioImpl;
+import negocioImpl.UsuarioNegocioImpl;
 import dominio.Cobertura;
 import dominio.Domicilio;
 import dominio.Especialidad;
@@ -73,7 +73,7 @@ public class serverletsMedicos extends HttpServlet   {
 		int idMedico = 0;
 		if(request.getParameter("idMedico") != null) idMedico = Integer.parseInt(request.getParameter("idMedico"));
 
-		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
+		MedicoNegocioImpl medicoNegocio = new MedicoNegocioImpl();
 		if(request.getParameter("btn-agregar-medico") != null) {
 			try {
 			    ValidadorFormulario validar = new ValidadorFormulario();
@@ -92,7 +92,7 @@ public class serverletsMedicos extends HttpServlet   {
 			        return;
 			    }
 			    
-			    if (AgregarMedico(medicoDao, request)) {	
+			    if (AgregarMedico(medicoNegocio, request)) {	
 			    	AgregarUsuario(request);
 			         dniMedico = request.getParameter("dni").toString();
 			         agregarDetallesVerMedico(request, dniMedico, idMedico);
@@ -125,7 +125,7 @@ public class serverletsMedicos extends HttpServlet   {
 		}
 		else if(request.getParameter("btn-guardar-medico") != null) {
 			try {
-				if(ModificarMedico(medicoDao, request))request.setAttribute("mensaje", "El Médico fue modificado Correctamente!");
+				if(ModificarMedico(medicoNegocio, request))request.setAttribute("mensaje", "El Médico fue modificado Correctamente!");
 				else request.setAttribute("mensaje", "Ocurrió un error al intentar modificar al Médico!");
 			} catch (ParseException e) {
 				e.printStackTrace();
@@ -139,7 +139,7 @@ public class serverletsMedicos extends HttpServlet   {
 		}
 		else if(request.getParameter("btn-eliminar-medico") != null) {
 			String mensaje ="";
-			if(EliminarMedico(medicoDao, dniMedico, idMedico) && EliminarUsuarioMedico(dniMedico)) mensaje ="El médico fue eliminado con exito!";
+			if(EliminarMedico(medicoNegocio, dniMedico, idMedico) && EliminarUsuarioMedico(dniMedico)) mensaje ="El médico fue eliminado con exito!";
 			else  mensaje ="Hubo un error al intentar eliminar el Médico";
 			request.setAttribute("mensaje", mensaje);	
 			listarMedicos(request);			
@@ -148,7 +148,7 @@ public class serverletsMedicos extends HttpServlet   {
 		}
 		else if(request.getParameter("btn-reactivar-medico") != null) {
 			String mensaje ="";
-			if(ReactivarMedico(medicoDao, dniMedico, idMedico) && ReactivarUsuarioMedico(dniMedico)) mensaje ="El médico fue reactivado con exito!";
+			if(ReactivarMedico(medicoNegocio, dniMedico, idMedico) && ReactivarUsuarioMedico(dniMedico)) mensaje ="El médico fue reactivado con exito!";
 			else  mensaje ="Hubo un error al intentar reactivar el Médico";
 			request.setAttribute("mensaje", mensaje);	
 			listarMedicos(request);			
@@ -159,8 +159,8 @@ public class serverletsMedicos extends HttpServlet   {
 	}
 	
 	protected void agregarDetallesVerMedico(HttpServletRequest request, String dniMedico, int idMedico) {
-		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
-		Medico medico = medicoDao.obtenerMedico(dniMedico);
+		MedicoNegocioImpl medicoNegocio = new MedicoNegocioImpl();
+		Medico medico = medicoNegocio.obtenerMedico(dniMedico);
 		agregarDetallesUsuarioMedico(request, dniMedico);
 		request.setAttribute("medico", medico);
 		agregarListaPaises(request);
@@ -171,8 +171,8 @@ public class serverletsMedicos extends HttpServlet   {
 	
 	protected void agregarDetallesUsuarioMedico(HttpServletRequest request, String dni) {
 		Usuario usuarioMedico = new Usuario();
-		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
-		usuarioMedico = uDao.obtener(dni);
+		UsuarioNegocioImpl uNegocio = new UsuarioNegocioImpl();
+		usuarioMedico = uNegocio.obtener(dni);
 		request.setAttribute("usuarioMedico", usuarioMedico);
 	}
 	
@@ -182,16 +182,16 @@ public class serverletsMedicos extends HttpServlet   {
 		if(request.getParameter("filtro") != null) campo = request.getParameter("filtro");
 		if(request.getParameter("filtro-valor") != null) valor = request.getParameter("filtro-valor");
 		
-		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
+		MedicoNegocioImpl medicoNegocio = new MedicoNegocioImpl();
 		ArrayList<Medico> listaMedicos  = new ArrayList<Medico>();
 		if(campo.equals("dia")) {
-			listaMedicos = medicoDao.filtrarMedicosPorDia(valor);
+			listaMedicos = medicoNegocio.filtrarMedicosPorDia(valor);
 		}
 		else if(campo.equals("especialidad")) {
-			listaMedicos = medicoDao.filtrarMedicosPorEspecialidad(valor);
+			listaMedicos = medicoNegocio.filtrarMedicosPorEspecialidad(valor);
 		}
 		else {			
-			listaMedicos  = medicoDao.filtrarMedicos(campo, valor);		
+			listaMedicos  = medicoNegocio.filtrarMedicos(campo, valor);		
 		}
 		request.setAttribute("listaMedicos", listaMedicos);
 		listarHorariosTrabajoMedico(request);
@@ -199,59 +199,59 @@ public class serverletsMedicos extends HttpServlet   {
 	}
 	
 	protected void listarMedicos(HttpServletRequest request) {
-		MedicoDAOImpl medicoDao = new MedicoDAOImpl();
-		ArrayList<Medico> listaMedicos  = medicoDao.listarMedicos();
+		MedicoNegocioImpl medicoNegocio = new MedicoNegocioImpl();
+		ArrayList<Medico> listaMedicos  = medicoNegocio.listarMedicos();
 		request.setAttribute("listaMedicos", listaMedicos);
 		listarHorariosTrabajoMedico(request);
 		listarEspecialidadesMedico(request);
 	}
 	
 	protected void listarTelefonosPorMedico(HttpServletRequest request, String dniMedico) {
-		TelefonoDAOImpl tDao = new TelefonoDAOImpl();
-		ArrayList<Telefono> listaT = tDao.listarPorPersona(dniMedico);
+		TelefonoNegocioImpl tNegocio = new TelefonoNegocioImpl();
+		ArrayList<Telefono> listaT = tNegocio.listarPorPersona(dniMedico);
 		request.setAttribute("listaTelefonosMedico", listaT);
 	}
 	
 	protected void listarEspecialidadesPorMedico(HttpServletRequest request, int idMedico) {
-		EspecialidadesDAOImpl eDao = new EspecialidadesDAOImpl();
-		ArrayList<Especialidad> listaEspecialidadesMedico = eDao.listarEspecialidadesPorMedico(idMedico);
+		EspecialidadNegocioImpl eNegocio = new EspecialidadNegocioImpl();
+		ArrayList<Especialidad> listaEspecialidadesMedico = eNegocio.listarEspecialidadesPorMedico(idMedico);
 		request.setAttribute("listaEspecialidadesMedico", listaEspecialidadesMedico);
 	}
 	
 	protected void listarHorariosTrabajoPorMedico(HttpServletRequest request, int idMedico) {
-		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
-		ArrayList<HorariosTrabajo> listaHT = htDao.listarPorMedico(idMedico);
+		HorariosTrabajoNegocioImpl htNegocio = new HorariosTrabajoNegocioImpl();
+		ArrayList<HorariosTrabajo> listaHT = htNegocio.listarPorMedico(idMedico);
 		request.setAttribute("listaHorariosMedico", listaHT);
 	}
 	
 	protected void listarHorariosTrabajoMedico(HttpServletRequest request) {
-		HorariosTrabajoDAOImpl htDao = new HorariosTrabajoDAOImpl();
-		ArrayList<HorariosTrabajo> listaHT = htDao.listar();
+		HorariosTrabajoNegocioImpl htNegocio = new HorariosTrabajoNegocioImpl();
+		ArrayList<HorariosTrabajo> listaHT = htNegocio.listar();
 		request.setAttribute("listaHT", listaHT);
 	}
 	
 	protected void listarEspecialidadesMedico(HttpServletRequest request) {
-		MedicoDAOImpl espMedDao = new MedicoDAOImpl();
-		ArrayList<Medico> listaEspecialidadesMedico = (ArrayList<Medico>) espMedDao.listarEspecialidadesMedico();
+		MedicoNegocioImpl espMedNegocio = new MedicoNegocioImpl();
+		ArrayList<Medico> listaEspecialidadesMedico = (ArrayList<Medico>) espMedNegocio.listarEspecialidadesMedico();
 		request.setAttribute("listaEspMedico", listaEspecialidadesMedico);
 	}
 	
 	protected void agregarListaPaises(HttpServletRequest request) {
-		PaisDAOImpl paisDao = new PaisDAOImpl();
-		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisDao.listarPaises();
+		PaisNegocioImpl paisNegocio = new PaisNegocioImpl();
+		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisNegocio.listarPaises();
 		request.setAttribute("listaPaises", listaPaises);
 	}
 	
 	
-	protected boolean AgregarMedico(MedicoDAOImpl mDao, HttpServletRequest request) throws ParseException {
+	protected boolean AgregarMedico(MedicoNegocioImpl mNegocio, HttpServletRequest request) throws ParseException {
 		Medico nuevoMedico = setearDatosMedico(request);
-		boolean agregado = mDao.agregar(nuevoMedico);		
+		boolean agregado = mNegocio.agregar(nuevoMedico);		
 		return agregado;
 	}
 	
-	protected boolean ModificarMedico(MedicoDAOImpl mDao, HttpServletRequest request) throws ParseException {
+	protected boolean ModificarMedico(MedicoNegocioImpl mNegocio, HttpServletRequest request) throws ParseException {
 		Medico medico = setearDatosMedico(request);
-		return mDao.modificar(medico);
+		return mNegocio.modificar(medico);
 	}
 	
 	protected Medico setearDatosMedico(HttpServletRequest request) throws ParseException {
@@ -289,23 +289,23 @@ public class serverletsMedicos extends HttpServlet   {
 		usuario.setPassword(request.getParameter("password").toString());
 		usuario.setEsAdministrador(false);
 		
-		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
-		return uDao.agregar(usuario);
+		UsuarioNegocioImpl uNegocio = new UsuarioNegocioImpl();
+		return uNegocio.agregar(usuario);
 	}
 	
-	protected boolean EliminarMedico(MedicoDAOImpl mDao, String dniMedico, int idMedico) {		
-		return mDao.eliminar(dniMedico, idMedico);	
+	protected boolean EliminarMedico(MedicoNegocioImpl mNegocio, String dniMedico, int idMedico) {		
+		return mNegocio.eliminar(dniMedico, idMedico);	
 	}
 	protected boolean EliminarUsuarioMedico(String dniMedico) {		
-		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
-		return uDao.eliminar(dniMedico);
+		UsuarioNegocioImpl uNegocio = new UsuarioNegocioImpl();
+		return uNegocio.eliminar(dniMedico);
 	}
 	
-	protected boolean ReactivarMedico(MedicoDAOImpl mDao, String dniMedico, int idMedico) {		
-		return mDao.reactivar(dniMedico, idMedico);	
+	protected boolean ReactivarMedico(MedicoNegocioImpl mNegocio, String dniMedico, int idMedico) {		
+		return mNegocio.reactivar(dniMedico, idMedico);	
 	}
 	protected boolean ReactivarUsuarioMedico(String dniMedico) {		
-		UsuarioDAOImpl uDao = new UsuarioDAOImpl();
-		return uDao.reactivar(dniMedico);
+		UsuarioNegocioImpl uNegocio = new UsuarioNegocioImpl();
+		return uNegocio.reactivar(dniMedico);
 	}
 }

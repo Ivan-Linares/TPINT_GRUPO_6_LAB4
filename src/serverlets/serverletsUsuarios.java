@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.impl.EspecialidadesDAOImpl;
-import dao.impl.UsuarioDAOImpl;
+import negocioImpl.EspecialidadNegocioImpl;
+import negocioImpl.UsuarioNegocioImpl;
 import dominio.Usuario;
 
 @WebServlet("/serverletsUsuarios")
@@ -23,13 +23,13 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			if(request.getParameter("idUsuario") != null) idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
 			
 			Usuario usuario = new Usuario();
-			UsuarioDAOImpl uDao = new UsuarioDAOImpl();
+			UsuarioNegocioImpl uNegocio = new UsuarioNegocioImpl();
 			usuario.setId(Integer.parseInt(request.getParameter("idUsuario").toString()));
 			usuario.setDni(request.getParameter("dniMedico"));
 			usuario.setCorreo(request.getParameter("correo"));
 			usuario.setPassword(request.getParameter("passwordNueva"));
 			String estado = "";
-			if(uDao.modificar(usuario)) {
+			if(uNegocio.modificar(usuario)) {
 				estado = "El Usuario del Medico fue modificado con exito!";
 				request.setAttribute("estadoUsuarioMedico", estado);			
 				String dniMedico = "";

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import dao.impl.*;
+import negocioImpl.*;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -13,7 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import dao.impl.PacienteDAOImpl;
+import negocioImpl.PacienteNegocioImpl;
 import dominio.Cobertura;
 import dominio.Domicilio;
 import dominio.Paciente;
@@ -64,22 +64,22 @@ public class serverletsPacientes extends HttpServlet  {
 		if(request.getParameter("filtro") != null) campo = request.getParameter("filtro");
 		if(request.getParameter("filtro-valor") != null) valor = request.getParameter("filtro-valor");
 		
-		PacienteDAOImpl pDao = new PacienteDAOImpl();
-		ArrayList<Paciente> listaPacientes  = pDao.filtrarPacientes(campo, valor);
+		PacienteNegocioImpl pNegocio = new PacienteNegocioImpl();
+		ArrayList<Paciente> listaPacientes  = pNegocio.filtrarPacientes(campo, valor);
 	
 		request.setAttribute("listaPacientes", listaPacientes);
 	}
 	
 	private void listarPacientes(HttpServletRequest request) {
-		PacienteDAOImpl pDao = new PacienteDAOImpl();
-		ArrayList<Paciente> listaPacientes  = pDao.listarPacientes();
+		PacienteNegocioImpl pNegocio = new PacienteNegocioImpl();
+		ArrayList<Paciente> listaPacientes  = (ArrayList<Paciente>) pNegocio.listarPacientes();
 		
 		request.setAttribute("listaPacientes", listaPacientes);
 	}
 	
 	protected void agregarListaPaises(HttpServletRequest request) {
-		PaisDAOImpl paisDao = new PaisDAOImpl();
-		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisDao.listarPaises();
+		PaisNegocioImpl paisNegocio = new PaisNegocioImpl();
+		ArrayList<Pais> listaPaises = (ArrayList<Pais>) paisNegocio.listarPaises();
 		request.setAttribute("listaPaises", listaPaises);
 	}
 	
@@ -93,11 +93,11 @@ public class serverletsPacientes extends HttpServlet  {
 	{
 		 String dniPaciente ="";
 		if(request.getParameter("dniPaciente") != null) dniPaciente = request.getParameter("dniPaciente").toString();
-		PacienteDAOImpl pDao = new PacienteDAOImpl();
+		PacienteNegocioImpl pNegocio = new PacienteNegocioImpl();
 		
 		if(request.getParameter("btn-ver-paciente") != null) 
 		{
-			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
+			Paciente paciente = pNegocio.obtenerPaciente(dniPaciente);
 			request.setAttribute("paciente", paciente);
 			if(request.getParameter("idTurno") != null) {
 				int idTurno = 0;
@@ -112,7 +112,7 @@ public class serverletsPacientes extends HttpServlet  {
 			rd.forward(request, response);
 		}
 		else if(request.getParameter("btn-editar-paciente") != null) {
-			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
+			Paciente paciente = pNegocio.obtenerPaciente(dniPaciente);
 			request.setAttribute("paciente", paciente);
 			
 			agregarListaPaises(request);
@@ -125,14 +125,14 @@ public class serverletsPacientes extends HttpServlet  {
 			dniPaciente = request.getParameter("dni").toString();
 			int modificado = 0;
 			try {
-				modificado = ModificarPaciente(pDao, request);
+				modificado = ModificarPaciente(pNegocio, request);
 				if(modificado == 1)request.setAttribute("mensaje", "El Paciente fue modificado Correctamente!");
 				else request.setAttribute("mensaje", "Ocurrió un error al intentar modificar al Paciente!");
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 			
-			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
+			Paciente paciente = pNegocio.obtenerPaciente(dniPaciente);
 			request.setAttribute("paciente", paciente);
 			
 			agregarListaPaises(request);
@@ -144,7 +144,7 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else if(request.getParameter("btn-eliminar-paciente") != null) {
 			
-			EliminarPaciente(pDao, dniPaciente);
+			EliminarPaciente(pNegocio, dniPaciente);
 			listarPacientes(request);
 			request.setAttribute("mensajeExito", "El Paciente fue eliminado Correctamente!");
 			RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
@@ -152,7 +152,7 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else if(request.getParameter("btn-reactivar-paciente") != null) {
 			
-			ReactivarPaciente(pDao, dniPaciente);
+			ReactivarPaciente(pNegocio, dniPaciente);
 			listarPacientes(request);
 			request.setAttribute("mensajeExito", "El Paciente fue reactivado Correctamente!");
 			RequestDispatcher rd = request.getRequestDispatcher("Pacientes.jsp");
@@ -160,7 +160,7 @@ public class serverletsPacientes extends HttpServlet  {
 		}
 		else if(request.getParameter("btn-agregar-paciente") != null) {
 			try {				
-				if(!AgregarPaciente(pDao, request)) {					
+				if(!AgregarPaciente(pNegocio, request)) {					
 					request.setAttribute("mensajeError", "Ya existe un registro con el DNI ingresado.");					
 					listarPacientes(request);
 						
@@ -181,36 +181,36 @@ public class serverletsPacientes extends HttpServlet  {
 		}		
 	}
 
-	protected void EliminarPaciente(PacienteDAOImpl pDao, String dniPaciente) {		
-		pDao.eliminar(dniPaciente);	
+	protected void EliminarPaciente(PacienteNegocioImpl pNegocio, String dniPaciente) {		
+		pNegocio.eliminar(dniPaciente);	
 	}
 
-	protected void ReactivarPaciente(PacienteDAOImpl pDao, String dniPaciente) {		
-		pDao.reactivar(dniPaciente);	
+	protected void ReactivarPaciente(PacienteNegocioImpl pNegocio, String dniPaciente) {		
+		pNegocio.reactivar(dniPaciente);	
 	}
 	
-	protected boolean AgregarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+	protected boolean AgregarPaciente(PacienteNegocioImpl pNegocio, HttpServletRequest request) throws ParseException {
 		
-		if(pDao.existe(request.getParameter("dni").toString())){
+		if(pNegocio.existe(request.getParameter("dni").toString())){
 			return false;
 		}
 		
-		Paciente nuevoPaciente = setearDatosPaciente(pDao, request);
+		Paciente nuevoPaciente = setearDatosPaciente(pNegocio, request);
 		
-		boolean agregado = pDao.agregar(nuevoPaciente);
+		boolean agregado = pNegocio.agregar(nuevoPaciente);
 		return agregado;
 	}
 	
 
 	
-	protected int ModificarPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
-		Paciente UpdatePaciente = setearDatosPaciente(pDao, request);
-		boolean Modificado = pDao.modificar(UpdatePaciente) == 1;
+	protected int ModificarPaciente(PacienteNegocioImpl pNegocio, HttpServletRequest request) throws ParseException {
+		Paciente UpdatePaciente = setearDatosPaciente(pNegocio, request);
+		boolean Modificado = pNegocio.modificar(UpdatePaciente) == 1;
 		
 		return 1;
 	}
 	
-	protected Paciente setearDatosPaciente(PacienteDAOImpl pDao, HttpServletRequest request) throws ParseException {
+	protected Paciente setearDatosPaciente(PacienteNegocioImpl pNegocio, HttpServletRequest request) throws ParseException {
 		Paciente paciente = new Paciente();
 		paciente.setDni(request.getParameter("dni").toString());
 

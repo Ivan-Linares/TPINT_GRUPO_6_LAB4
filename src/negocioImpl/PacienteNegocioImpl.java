@@ -1,5 +1,6 @@
 package negocioImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dao.impl.MedicoDAOImpl;
@@ -51,4 +52,7 @@ public class PacienteNegocioImpl implements PacienteNegocio {
 		return pDao.existe(dniPaciente);
 	}
 
+	public ArrayList<Paciente> filtrarPacientes(String campo, String valor) {
+		return pDao.filtrarPacientes(campo, valor);
+	}
 }
