@@ -98,6 +98,11 @@ public class serverletsPacientes extends HttpServlet  {
 		{
 			Paciente paciente = pDao.obtenerPaciente(dniPaciente);
 			request.setAttribute("paciente", paciente);
+			if(request.getParameter("idTurno") != null) {
+				int idTurno = 0;
+				idTurno = Integer.parseInt(request.getParameter("idTurno").toString());
+				request.setAttribute("idTurno", idTurno);
+			}
 			
 			agregarListaPaises(request);
 			agregarListaCoberturas(request);

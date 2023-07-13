@@ -100,7 +100,14 @@
 	    margin: 0 100px;" visible="<% if(paciente == null) {%> false <%}%>">	
 	    	<div class="title-section d-flex jc-sb" >
 			<h3 class="user-info-container">Datos Paciente</h3>
+			<%if(request.getAttribute("idTurno") != null){ %>
+			 <form action="servletsTurnos" method="post">
+						<input type="hidden" name="idTurno" value="<%=Integer.parseInt(request.getAttribute("idTurno").toString())%>">								
+								<button type="submit" name="btn-editar-turno" style="width:100%" class="btn bg-blue">Volver al Turno</button>
+					</form>
+			 <%}else{%>
 			 <a href="serverletsPacientes?method=get&btn-cerrar-sesion" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+			 <%} %>
 	</div>
 	   
 	    <br>

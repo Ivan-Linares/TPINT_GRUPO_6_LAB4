@@ -193,10 +193,10 @@
 				<label>Estado</label>
 				<%if(request.getAttribute("editar-turno") != null){%>
 				<select name="estadoSelect" class="select">
-					<option value="1">Libre</option>
-					<option value="2">Ocupado</option>
-					<option value="3">Ausente</option>
-					<option value="4">Presente</option>
+					<option value="1" <%if(turno.getEstado().getDescripcion().equals("Libre")){%> selected="true"<%}%>>Libre</option>
+					<option value="2" <%if(turno.getEstado().getDescripcion().equals("Ocupado")){%> selected="true"<%}%>>Ocupado</option>
+					<option value="3" <%if(turno.getEstado().getDescripcion().equals("Ausente")){%> selected="true"<%}%>>Ausente</option>
+					<option value="4" <%if(turno.getEstado().getDescripcion().equals("Presente")){%> selected="true"<%}%>>Presente</option>
 				</select>
 				<%}
 				else{%><p class="campo" name="hora"><%= turno.getEstado().getDescripcion() %></p><%}%>
@@ -218,12 +218,25 @@
 		</div>
 	</div>
 			
+
 		<%if(request.getAttribute("editar-turno") != null){
 		%>
 		<button type="submit" name="btn-guardar-turno" class="btn bg-green position-absolute" style="right:0;">Guardar Cambios</button>
 		<%} %>
 			
 	</form>
+	<%if(request.getAttribute("editar-turno") != null){
+		%>
+						<form action="serverletsPacientes" method="post">
+ 			<input type="hidden" name="dniPaciente" value="<%=turno.getPaciente().getDni()%> "> 
+ 			<input type="hidden" name="idTurno" value="<%=turno.getIdTurno()%>"> 
+ 			
+			<td class="d-flex">
+				<button type="submit" name="btn-ver-paciente" class="btn bg-blue">Ver Detalles Paciente</button>
+			</td>
+			</form>
+		<%} %>
+
 	</div>
 	</div>
 </div>
