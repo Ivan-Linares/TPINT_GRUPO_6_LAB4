@@ -4,6 +4,7 @@ $(document).ready(function() {
 		  $('input[name="nombre"]').blur(validarNombre);
 		  $('input[name="apellido"]').blur(validarApellido);
 		  $('input[name="correo"]').blur(validarCorreo);
+		  $('input[name="password"]').blur(validarPassword);
 		  $('input[name="telefono"]').blur(validarTelefono);
 		  $('select[name="sexoSelect"]').blur(validarSelect);
 		  $('select[name="nacionalidadSelect"]').blur(validarSelect);
@@ -84,6 +85,40 @@ $(document).ready(function() {
 		    }
 		  }
 		  
+		  function validarPassword() {
+			    var password = $(this);
+			    var passwordError = $('#passwordError');
+			    var passwordVerificacion = $('input[name="passwordVerificacion"]');
+			    passwordError.text('');
+			    if(password.val().length < 8){
+			    	passwordError.text('La contraseña necesita mínimo 8 carácteres.');
+			    	esValido = false;
+			    }
+			    if(password.val() != passwordVerificacion.val()){			    	
+			    	passwordError.text('Las contraseñas ingresadas son diferentes.');
+			    	esValido = false;
+			    }
+			  }
+		  
+
+		  
+		  function validarPasswords() {			 
+			    var password =  $('input[name="password"]');
+			    var passwordError = $('#passwordError');
+			    var passwordVerificacion = $('input[name="passwordVerificacion"]');
+			    passwordError.text('');
+			    if(password.val().length < 8){
+			    	passwordError.text('La contraseña necesita mínimo 8 carácteres.');
+			    	return false;
+			    }
+			    if(password.val() != passwordVerificacion.val()){
+			    	passwordError.text('Las contraseñas ingresadas son diferentes.');
+			    	return false;
+			    }
+			    
+			    return true;
+			  }
+		  
 		  function validarSelect(){
 			  var select = $(this);
 			  var selectError = $('#'+select.attr("name")+'Error');
@@ -143,10 +178,59 @@ $(document).ready(function() {
 				  formInvalid = true;			  
 			  }
 			  
-			  if(formInvalid)event.preventDefault();
+			  if(formInvalid || !validarPasswords())event.preventDefault();
 		  });
 		  
+		  function cambiarPassword() {
+
+			  var passwordOriginal =  $('input[name="passwordOriginal"]');
+			  var passwordAnterior =  $('input[name="passwordAnterior"]');
+			  var passwordNueva =  $('input[name="passwordNueva"]');
+			  var passwordNuevaValidacion =  $('input[name="passwordNuevaValidacion"]');
+			  
+			    passwordError.text('');
+
+			    if(passwordOriginal.val() != passwordAnterior.val()){
+			    	passwordError.text('Las contraseña ingresada no coincide con la contraseña original.');
+			    	return false;
+			    }
+			    
+			    if(passwordNueva.val().length < 8){
+			    	passwordError.text('La contraseña necesita mínimo 8 carácteres.');
+			    	return false;
+			    }
+			    
+			    if(passwordNueva.val() != passwordNuevaValidacion.val()){
+			    	passwordError.text('Las contraseñas nuevas ingresadas no coinciden.');
+			    	return false;
+			    }
+			    return true;
+			  }
+		  
+		  var formUsuario = $("#formularioUsuario");
+		  formUsuario.on("submit", function() { 			  
+			  if(!cambiarPassword())event.preventDefault();
+		  });
+
+
 		});
 
-
+function modificarUsuario(){
+	var labelPasswordOriginal =  $('label[name="lblPassword"]');
+	  var passwordOriginal =  $('input[name="passwordOriginal"]');
+	  var divModificarUsuario = $('div[name="div-modificar-usuario"]');
+	  var btnModificarUsuario =  $('button[name="btn-modificar-usuario"]');
+	  var passwordAnterior =  $('input[name="passwordAnterior"]');
+	  var passwordNueva =  $('input[name="passwordNueva"]');
+	  var btnGuardarUsuario =  $('button[name="btn-guardar-usuario-medico"]');
+	  
+	  labelPasswordOriginal.css('display', 'none');
+	  passwordOriginal.css('display', 'none');
+	  btnModificarUsuario.css('display', 'none');
+	  
+	  divModificarUsuario.css('display', 'block');
+	  btnGuardarUsuario.css('display', 'block');
+	  
+	  event.preventDefault();
+	}
 

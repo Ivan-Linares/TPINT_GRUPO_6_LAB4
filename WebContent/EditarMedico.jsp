@@ -287,7 +287,7 @@
 			Usuario usuarioMedico = null; 	
 		if(request.getAttribute("usuarioMedico") != null){
 			usuarioMedico = (Usuario)request.getAttribute("usuarioMedico");%>
-			<form method="post" action="serverletsUsuarios" class="position-relative">
+			<form method="post" action="serverletsUsuarios" class="position-relative" id="formularioUsuario">
 		<input type="hidden" name="IdMedico" value="<%=idMedico %>"> 
 			<input type="hidden" name="dniMedico" value="<%=medico.getDni() %>"> 
 			<input type="hidden" name="idUsuario" value="<%=usuarioMedico.getId() %>"> 
@@ -306,20 +306,45 @@
 						
 						<span id="mailError" class="error"></span>
 					</div>
-			
-								<div class="d-flex fd-column w-50">
-						<label>Contraseña</label>
-						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="password" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}
-						else{%><p class="campo"><%= usuarioMedico.getPassword() %></p><%}%>
+					
+					<div class="d-flex fd-column w-50">
+						<label name="lblPassword"> Contraseña</label>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordOriginal" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}
+						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
 						
 						<span id="contraseñaError" class="error"></span>
 					</div>
-
+					</div>
+					
+					<div class="d-flex row" name="div-modificar-usuario" style=" display:none;">			
+								<div class="d-flex fd-column w-50">
+						<label> Contraseña Anterior</label>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordAnterior" class="campo" ><%}
+						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
+						
+						<span id="contraseñaError" class="error"></span>
+					</div>
+					<div class="d-flex fd-column w-50">
+						<label>Nueva Contraseña</label>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordNueva" class="campo"><%}
+						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
+						
+						<span id="contraseñaError" class="error"></span>
+					</div>
+					
+					<div class="d-flex fd-column w-50">
+						<label>Repetir Nueva Contraseña</label>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordNuevaValidacion" class="campo"><%}
+						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
+						
+						<span id="contraseñaError" class="error"></span>
+					</div>
 					</div>
 				</div>
 									<%if(request.getAttribute("editar-medico") != null){
 					%>
-					<button type="submit" name="btn-guardar-usuario-medico" class="btn bg-blue-dark position-absolute" style="right:0;">Modificar Usuario</button>
+					<button type="submit" name="btn-guardar-usuario-medico" class="btn bg-blue-dark position-absolute" style="right:0; display:none;">Modificar Usuario</button>
+					<button name="btn-modificar-usuario" class="btn bg-red position-absolute" style="right:0;" onClick="modificarUsuario()">Modificar Usuario</button>
 					<%} %>
 				</form>	
 		<%}%>

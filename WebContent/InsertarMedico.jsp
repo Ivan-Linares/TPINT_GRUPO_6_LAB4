@@ -213,16 +213,23 @@
 						<input type="mail" required="true" name="correo" class="campo">
 						<span id="mailError" class="error"></span>
 					</div>
+				</div>
 			
-								<div class="d-flex fd-column w-50">
+				<div class="d-flex row">
+					<div class="d-flex fd-column w-50">
 						<label>Contraseña</label>
 						<input  type="password" required="true" name="password" class="campo">
+						<span id="passwordError" class="error"></span>
+					</div>
+				</div>
+				
+				<div class="d-flex row">
+					<div class="d-flex fd-column w-50">
+						<label>Verificar Contraseña</label>
+						<input  type="password" required="true" name="passwordVerificacion" class="campo">
 						<span id="contraseñaError" class="error"></span>
 					</div>
 				</div>
-			
-			</div>
-			
 			<button type="submit" name="btn-agregar-medico" class="btn bg-green">Agregar Médico</button>
 		</form>
 	</div>
