@@ -58,13 +58,40 @@
 						Turnos
 					</a>
 				</li>
+								<li>
+					<a href="Reportes.jsp">				
+						<span class="material-symbols-outlined">density_small</span>
+						Reportes
+					</a>
+				</li>
 				<%}
-				else{%>	
+				else{				Medico medico = null;
+				if(session.getAttribute("medicoUsuario") != null) medico =(Medico)session.getAttribute("medicoUsuario");
+				String dniMedico = "";
+				dniMedico = medico.getDni();
+				int idMedico = 0;
+				idMedico = medico.getIdMedico();
+				String url = "serverletsMedicos?method=post&dniMedico="+dniMedico+"&idMedico="+idMedico+ "&btn-ver-medico=";
+				%>	
 									<li>
 					<a href="servletsTurnos?method=get">				
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
 					</a>
+				</li>
+				
+																					<li>
+																	
+																	
+
+					<form method="post" action="serverletsMedicos">	
+								<input type="hidden" name="dniMedico" value="<%=dniMedico%>">
+								<input type="hidden" name="idMedico" value="<%=idMedico%>">
+											<button class="btn-a" name="btn-ver-medico">				
+						<span class="material-symbols-outlined">account_circle</span>	
+						Mi Perfil
+					</button>
+					</form>
 				</li>
 					<%}
 			} %>

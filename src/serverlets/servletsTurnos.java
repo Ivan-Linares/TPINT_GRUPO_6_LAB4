@@ -175,7 +175,16 @@ public class servletsTurnos extends HttpServlet {
 
 	private void listarTurnos(HttpServletRequest request) {
 		TurnosDAOImpl tDao = new TurnosDAOImpl();
-		ArrayList<Turnos> listaTurnos  = tDao.listarTurnos();
+		ArrayList<Turnos> listaTurnos = new ArrayList<Turnos>();
+		
+		if(request.getSession().getAttribute("medicoUsuario") == null){
+			listaTurnos  = tDao.listarTurnos();
+		}
+		else {
+			Medico medicoUsuario = (Medico)request.getSession().getAttribute("medicoUsuario");
+			listaTurnos = tDao.obtenerTurno_Medico(medicoUsuario.getIdMedico());
+		}
+
 		
 		request.setAttribute("listaTurnos", listaTurnos);
 	}

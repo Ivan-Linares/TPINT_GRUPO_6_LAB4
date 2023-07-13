@@ -40,16 +40,23 @@
 				
 				<li> 
 				
-				 	<a href="serverletsMedicos?method=get" class="active">
+				 	<a href="serverletsMedicos?method=get">
 				 		<span class="material-symbols-outlined">clinical_notes</span>	
 						Médicos
 					</a>
 				 </li>
 								
 				<li>
-					<a href="servletsTurnos?method=get">				
+					<a href="servletsTurnos?method=get" >				
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
+					</a>
+				</li>
+				
+								<li>
+					<a href="Reportes.jsp"  class="active">				
+						<span class="material-symbols-outlined">density_small</span>
+						Reportes
 					</a>
 				</li>
 				<%}
@@ -83,11 +90,11 @@
 		</div>
 	</div>
 	
-	<div class="container fd-column m-auto">
+	<div class="container fd-column m-auto" style="width:100%; padding:20px">
 		<div class="title-section d-flex jc-sb">
-			<a href="Reportes.jsp" class="btn bg-green">Volver</a>
-			<form method="get" action="serverletsTurnosPorMedico">				
-				<button type="submit" name="btn-buscar" class="btn bg-green">Buscar turnos</button>
+		<h3 class="user-info-container">Reporte Turnos Por Medico</h3>
+			<form method="get" action="serverletsTurnosPorMedico" class="filtro">				
+				<button type="submit" name="btn-buscar" class="btn bg-green">Generar Reporte</button>
 			</form>
 		</div>
 		

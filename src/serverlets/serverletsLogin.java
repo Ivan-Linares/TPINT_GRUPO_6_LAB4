@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.impl.LoginDAO;
+import dao.impl.MedicoDAOImpl;
 import dominio.Login;
 import dominio.LoginDao;
+import dominio.Medico;
 import dominio.Usuario;
 
 @WebServlet("/serverletsLogin")
@@ -49,9 +51,18 @@ public class serverletsLogin extends HttpServlet
 		if(login.iniciarSesion(user)) {
 			usuario = login.obtenerUsuario(user.getEmail());
 			if(usuario != null) {
+				if(!usuario.isEsAdministrador()) {
+					MedicoDAOImpl mDao = new MedicoDAOImpl();
+					Medico medicoUsuario = mDao.obtenerMedico(usuario.getDni());
+					
+					if(medicoUsuario != null) {
+						request.getSession().setAttribute("medicoUsuario", medicoUsuario);
+					}	
+				}
 				request.getSession().setAttribute("usuario", usuario);
 				requestDispacherRedirect = "/Inicio.jsp";
 			}			
+			
 		}
 		else {
 			request.getSession().setAttribute("usuario", usuario);
@@ -65,6 +76,7 @@ public class serverletsLogin extends HttpServlet
 	
 	protected void  cerrarSesion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getSession().setAttribute("usuario", null);
+		request.getSession().setAttribute("medicoUsuario", null);
 		String requestDispacherRedirect = "/Login.jsp";
 		RequestDispatcher rd2 = request.getRequestDispatcher(requestDispacherRedirect); 
 		rd2.forward(request, response);		

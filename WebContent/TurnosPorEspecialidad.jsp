@@ -41,16 +41,22 @@
 				
 				<li> 
 				
-				 	<a href="serverletsMedicos?method=get" class="active">
+				 	<a href="serverletsMedicos?method=get">
 				 		<span class="material-symbols-outlined">clinical_notes</span>	
 						Médicos
 					</a>
 				 </li>
 								
 				<li>
-					<a href="servletsTurnos?method=get">				
+					<a href="servletsTurnos?method=get"  >				
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
+					</a>
+				</li>
+								<li>
+					<a href="Reportes.jsp"  class="active">				
+						<span class="material-symbols-outlined">density_small</span>
+						Reportes
 					</a>
 				</li>
 				<%}
@@ -83,18 +89,21 @@
 			<a href="serverletsLogin?method=get&btn-cerrar-sesion" class="btn bg-green">Cerrar Sesión</a>
 		</div>
 	</div>
-	<div class="container fd-column m-auto">
+	<div class="container fd-column m-auto" style="width:100%; padding:20px">
+					<div class="title-section d-flex jc-sb" >
+			<h3 class="user-info-container">Reporte Turnos Por Especialidad</h3>
+	</div>
 		<div class="title-section d-flex jc-sb">
-			<a href="Reportes.jsp" class="btn bg-green">Volver</a>
-			
-			
-			<form method="get" action="serverletsTurnosPorEspecialidad">
-				<div class="d-flex fd-column">
+
+
+	
+			<form method="get" action="serverletsTurnosPorEspecialidad" class="filtro style-form" style="width:100%">
+				<div class="d-flex fd-column" style="width:30%">
 					<label>Fecha inicio</label>
 					<input type="Date" required="true" name="fechaInicio" class="campo">
 					<span id="fechaNacimientoError" class="error"></span>
 				</div>
-				<div class="d-flex fd-column">
+				<div class="d-flex fd-column" style="width:30%">
 					<label>Fecha fin</label>
 					<input type="Date" required="true" name="fechaFin" class="campo">
 					<span id="fechaNacimientoError" class="error"></span>

@@ -1,5 +1,6 @@
 <%@ page import="java.util.ArrayList"%>
 <%@ page import="dominio.Usuario"%>
+<%@ page import="dominio.Medico"%>
 <%@ page import="dominio.Turnos"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -28,6 +29,7 @@
 		<div class="items">
 			<ul>
 			<%
+			Medico medico = null;
 			Usuario user = null;
 			if(session.getAttribute("usuario") != null){
 				 user = (Usuario)session.getAttribute("usuario");
@@ -53,8 +55,23 @@
 						Turnos
 					</a>
 				</li>
+								<li>
+					<a href="Reportes.jsp">				
+						<span class="material-symbols-outlined">density_small</span>
+						Reportes
+					</a>
+				</li>
 				<%}
-				else{%>	
+				else{
+				
+			if(session.getAttribute("medicoUsuario") != null) medico =(Medico)session.getAttribute("medicoUsuario");
+			String dniMedico = "";
+			dniMedico = medico.getDni();
+			int idMedico = 0;
+			idMedico = medico.getIdMedico();
+			String url = "serverletsMedicos?method=post&dniMedico="+dniMedico+"&idMedico="+idMedico+ "&btn-ver-medico=";
+			%>	
+				
 									<li>
 					<a href="servletsTurnos?method=get" class="active">				
 						<span class="material-symbols-outlined">calendar_month</span>	
@@ -62,10 +79,17 @@
 					</a>
 				</li>
 																	<li>
-					<a href="servletsTurnos?method=get">				
-						<span class="material-symbols-outlined">calendar_month</span>	
+																	
+																	
+
+					<form method="post" action="serverletsMedicos">	
+								<input type="hidden" name="dniMedico" value="<%=dniMedico%>">
+								<input type="hidden" name="idMedico" value="<%=idMedico%>">
+											<button class="btn-a" name="btn-ver-medico">				
+						<span class="material-symbols-outlined">account_circle</span>	
 						Mi Perfil
-					</a>
+					</button>
+					</form>
 				</li>
 					<%}
 			} %>
@@ -98,7 +122,11 @@
 				</select>			
 				<input type="text">
 				<input type="submit" name="btnBuscar" class="btn bg-blue" value="Buscar"/> 
-				<button type="submit" name="btn-nuevo-turno" class="btn bg-green">Agregar Turno</button>	
+				<%if(medico == null){%>
+				
+					<button type="submit" name="btn-nuevo-turno" class="btn bg-green">Agregar Turno</button>	
+				<%}%>
+				
 				</div>
 			</form>
 		</div>
@@ -143,6 +171,7 @@
 					<th>Paciente</th> 
 					<th>Estado</th> 
 					<th>Observacion</th> 
+					<th>Activo</th> 
 					<th>Acciones</th>
 				</tr>
 			</thead> 

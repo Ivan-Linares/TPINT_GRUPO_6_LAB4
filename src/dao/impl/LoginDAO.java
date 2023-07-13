@@ -8,7 +8,7 @@ import dominio.Usuario;
 
 public class LoginDAO {
 	private String query = "SELECT * FROM Usuarios WHERE Correo = ? AND Password = ?";
-	private String queryObtenerUsuario = "SELECT IdUsuario, EsAdministrador, Correo FROM Usuarios WHERE Correo = ?";
+	private String queryObtenerUsuario = "SELECT IdUsuario, EsAdministrador, Correo, DNI FROM Usuarios WHERE Correo = ?";
 	
 	public boolean iniciarSesion(Login login) {
 		PreparedStatement statement;
@@ -48,7 +48,7 @@ public class LoginDAO {
 			rs = statement.executeQuery();
 		
 			if(rs.next()) {
-				return new Usuario(rs.getInt("IdUsuario"), rs.getBoolean("EsAdministrador"), rs.getString("Correo"));
+				return new Usuario(rs.getInt("IdUsuario"), rs.getBoolean("EsAdministrador"), rs.getString("Correo"), rs.getString("dni"));
 			}
 			
 		

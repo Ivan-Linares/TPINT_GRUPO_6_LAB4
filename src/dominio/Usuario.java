@@ -28,11 +28,12 @@ public class Usuario {
 		this.password = password;
 	}
 
-	public Usuario(int id, boolean esAdministrador, String correo) {
+	public Usuario(int id, boolean esAdministrador, String correo, String dni) {
 		super();
 		this.id = id;
 		this.esAdministrador = esAdministrador;
 		this.correo = correo;
+		this.dni = dni;
 	}
 
 	public int getId() {

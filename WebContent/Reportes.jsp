@@ -38,7 +38,7 @@
 				
 				<li> 
 				
-				 	<a href="serverletsMedicos?method=get" class="active">
+				 	<a href="serverletsMedicos?method=get" >
 				 		<span class="material-symbols-outlined">clinical_notes</span>	
 						Médicos
 					</a>
@@ -52,7 +52,7 @@
 				</li>
 				
 				<li>
-					<a href="Reportes.jsp">				
+					<a href="Reportes.jsp"  class="active">				
 						<span class="material-symbols-outlined">density_small</span>
 						Reportes
 					</a>
@@ -89,13 +89,17 @@
 		</div>
 	</div>
 	
-	<div class="container fd-column m-auto">
-	<div class="title-section d-flex jc-sb">
-		<a href="TurnosPorEspecialidad.jsp" class="btn bg-green">Cantidad de turnos por especialidad</a>
-		<a href="TurnosPorMedico.jsp" class="btn bg-green">Cantidad de turnos por médico</a>
-		<a href="Inicio.jsp" class="btn bg-green">Volver al inicio</a>
+	<div class="container fd-column m-auto" style="width:100%; padding:20px">
+	<div class="title-section d-flex jc-sb" style="flex-direction:column;gap:1rem;">
+	<h1>Reportes</h1>
+	<p>Seleccione el Reporte a generar</p>
 	</div>
 	
+		<div style="margin-top:50px; display:flex; flex-direction:column; gap: 1rem; ">
+		<a href="TurnosPorEspecialidad.jsp" class="btn bg-green" style="align-self:start;">Cantidad de turnos por especialidad</a>
+		<a href="TurnosPorMedico.jsp" class="btn bg-blue" style="align-self:start;">Cantidad de turnos por médico</a>
+
+	</div>
 </div>
 </div>
 

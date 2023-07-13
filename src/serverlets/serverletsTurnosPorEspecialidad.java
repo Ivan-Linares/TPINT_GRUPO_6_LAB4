@@ -56,7 +56,7 @@ public class serverletsTurnosPorEspecialidad extends HttpServlet {
 	            
 	            listarTurnosPorEspecialidad(request, fecha1, fecha2);
 			
-				RequestDispatcher rd = request.getRequestDispatcher("TurnosPorEspecialdiad.jsp");
+				RequestDispatcher rd = request.getRequestDispatcher("TurnosPorEspecialidad.jsp");
 				rd.forward(request, response);
 			}
 		}

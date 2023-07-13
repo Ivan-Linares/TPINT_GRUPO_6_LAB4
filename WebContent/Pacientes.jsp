@@ -89,6 +89,12 @@ $(document).ready(function() {
 						Turnos
 					</a>
 				</li>
+								<li>
+					<a href="Reportes.jsp">				
+						<span class="material-symbols-outlined">density_small</span>
+						Reportes
+					</a>
+				</li>
 				<%}
 				else{%>	
 									<li>
