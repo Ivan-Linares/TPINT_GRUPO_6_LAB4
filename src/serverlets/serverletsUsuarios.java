@@ -27,7 +27,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			usuario.setId(Integer.parseInt(request.getParameter("idUsuario").toString()));
 			usuario.setDni(request.getParameter("dniMedico"));
 			usuario.setCorreo(request.getParameter("correo"));
-			usuario.setPassword(request.getParameter("password"));
+			usuario.setPassword(request.getParameter("passwordNueva"));
 			String estado = "";
 			if(uDao.modificar(usuario)) {
 				estado = "El Usuario del Medico fue modificado con exito!";

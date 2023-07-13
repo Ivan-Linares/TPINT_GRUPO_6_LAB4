@@ -187,28 +187,33 @@ $(document).ready(function() {
 			  var passwordAnterior =  $('input[name="passwordAnterior"]');
 			  var passwordNueva =  $('input[name="passwordNueva"]');
 			  var passwordNuevaValidacion =  $('input[name="passwordNuevaValidacion"]');
+			  var passwordAnteriorError = $('#passwordAnteriorError');
+			  var passwordNuevaError = $('#passwordNuevaError');
 			  
-			    passwordError.text('');
-
+			  passwordAnteriorError.text('');
+			  passwordNuevaError.text('');
+			  
 			    if(passwordOriginal.val() != passwordAnterior.val()){
-			    	passwordError.text('Las contraseña ingresada no coincide con la contraseña original.');
+			    	passwordAnteriorError.text('La contraseña ingresada no coincide con la contraseña original.');
 			    	return false;
 			    }
 			    
 			    if(passwordNueva.val().length < 8){
-			    	passwordError.text('La contraseña necesita mínimo 8 carácteres.');
+			    	passwordNuevaError.text('La contraseña necesita mínimo 8 carácteres.');
 			    	return false;
 			    }
 			    
 			    if(passwordNueva.val() != passwordNuevaValidacion.val()){
-			    	passwordError.text('Las contraseñas nuevas ingresadas no coinciden.');
+			    	passwordNuevaError.text('Las contraseñas nuevas ingresadas no coinciden.');
 			    	return false;
 			    }
 			    return true;
 			  }
 		  
+		  
 		  var formUsuario = $("#formularioUsuario");
-		  formUsuario.on("submit", function() { 			  
+		  formUsuario.on("submit", function() { 			
+			  console.log("ntro");
 			  if(!cambiarPassword())event.preventDefault();
 		  });
 

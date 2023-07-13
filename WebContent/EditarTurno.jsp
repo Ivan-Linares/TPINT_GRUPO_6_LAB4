@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="dominio.Usuario"%>
+<%@ page import="dominio.Medico"%>
 <%@ page import="dominio.Turnos"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -27,6 +28,7 @@
 			<ul>
 			<%
 			Usuario user = null;
+			Medico medico = null;
 			if(session.getAttribute("usuario") != null){
 				 user = (Usuario)session.getAttribute("usuario");
 				if(user.isEsAdministrador()){%>	
@@ -60,12 +62,30 @@
 				</li>
 				
 				<%}
-				else{%>	
+				else{
+					
+			if(session.getAttribute("medicoUsuario") != null) medico =(Medico)session.getAttribute("medicoUsuario");
+			String dniMedico = "";
+			dniMedico = medico.getDni();
+			int idMedico = 0;
+			idMedico = medico.getIdMedico();
+			String url = "serverletsMedicos?method=post&dniMedico="+dniMedico+"&idMedico="+idMedico+ "&btn-ver-medico=";
+			%>	
 									<li>
 					<a href="servletsTurnos?method=get">				
 						<span class="material-symbols-outlined">calendar_month</span>	
 						Turnos
 					</a>
+				</li>
+								<li>
+					<form method="post" action="serverletsMedicos">	
+								<input type="hidden" name="dniMedico" value="<%=dniMedico%>">
+								<input type="hidden" name="idMedico" value="<%=idMedico%>">
+											<button class="btn-a" name="btn-ver-medico">				
+						<span class="material-symbols-outlined">account_circle</span>	
+						Mi Perfil
+					</button>
+					</form>
 				</li>
 
 					<%}
@@ -155,22 +175,27 @@
 		</div>
 		<div class="d-flex row">
 			
-			<div class="d-flex fd-column">
+			<div class="d-flex fd-column w-50">
 				<label>Fecha</label>
 				<%if(request.getAttribute("editar-turno") != null){%><input  type="Date" required="true" name="fecha" class="campo" value="<%= turno.getFecha() %>"><%}
 				else{%><p class="campo" name="fecha"><%= turno.getFecha() %></p><%}%>
 				<span id="fechaError" class="error"></span>
 			</div>
 					
-			<div class="d-flex fd-column">
+			<div class="d-flex fd-column w-50">
 				<label>Hora</label>
 				<%if(request.getAttribute("editar-turno") != null){%><input  type="number" required="true" name="hora" class="campo" value="<%= turno.getHora() %>"><%}
 				else{%><p class="campo" name="hora"><%= turno.getHora() %></p><%}%>
 				<span id="horaError" class="error"></span>
 			</div>
-			<div class="d-flex fd-column">
+		</div>
+		
+				<div class="d-flex row">
+
+			<div class="d-flex fd-column w-100">
 				<label>Observacion</label>
-				<%if(request.getAttribute("editar-turno") != null){%><input  type="text" name="observaciones" class="campo" value="<%= turno.getObservacion() %>"><%}
+				<%if(request.getAttribute("editar-turno") != null){%><input  type="text" name="observaciones" class="campo" value="<%= turno.getObservacion() %>">
+				<%}
 				else{%><p class="campo" name="observaciones"><%=turno.getObservacion()%></p><%
 				}%>
 				<span id="observacionError" class="error"></span>

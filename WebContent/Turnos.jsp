@@ -78,10 +78,7 @@
 						Turnos
 					</a>
 				</li>
-																	<li>
-																	
-																	
-
+				<li>
 					<form method="post" action="serverletsMedicos">	
 								<input type="hidden" name="dniMedico" value="<%=dniMedico%>">
 								<input type="hidden" name="idMedico" value="<%=idMedico%>">
@@ -109,7 +106,7 @@
 	</div>
 
 
-<div class="container fd-column m-auto">
+<div class="container fd-column m-auto" style="padding: 0 35px">
 	<div class="title-section d-flex jc-sb">
 			<h1>Turnos</h1>
 			<form action="servletsTurnos" method="get">

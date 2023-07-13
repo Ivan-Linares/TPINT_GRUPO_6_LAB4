@@ -118,7 +118,7 @@
     margin: 0px 100px; margin-bottom:60px" visible="<% if(medico == null) {%> false <%}%>">
 	<div class="title-section d-flex jc-sb" >
 			<h3 class="user-info-container">Datos Médico</h3>
-		 <a href="serverletsMedicos?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	
+									<%if(user.isEsAdministrador()){%>	 <a href="serverletsMedicos?method=get" name="btn-volver" class="btn bg-blue">Volver al Listado</a>	<%}%>
 	</div>
 	
 
@@ -311,40 +311,36 @@
 						<label name="lblPassword"> Contraseña</label>
 						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordOriginal" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}
 						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
-						
-						<span id="contraseñaError" class="error"></span>
+					
 					</div>
 					</div>
 					
 					<div class="d-flex row" name="div-modificar-usuario" style=" display:none;">			
 								<div class="d-flex fd-column w-50">
 						<label> Contraseña Anterior</label>
-						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordAnterior" class="campo" ><%}
-						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordAnterior" class="campo" ><%}%>
 						
-						<span id="contraseñaError" class="error"></span>
+						<span id="passwordAnteriorError" class="error"></span>
 					</div>
 					<div class="d-flex fd-column w-50">
 						<label>Nueva Contraseña</label>
-						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordNueva" class="campo"><%}
-						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
+						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordNueva" class="campo"><%}%>
 						
-						<span id="contraseñaError" class="error"></span>
+						<span id="passwordNuevaError" class="error"></span>
 					</div>
 					
 					<div class="d-flex fd-column w-50">
 						<label>Repetir Nueva Contraseña</label>
 						<%if(request.getAttribute("editar-medico") != null){%><input  type="password" required="true" name="passwordNuevaValidacion" class="campo"><%}
 						else{%><input  type="password" disabled name="password" style="border: 1px solid  #3661ed" class="campo" value="<%=usuarioMedico.getPassword() %>"><%}%>
-						
-						<span id="contraseñaError" class="error"></span>
+
 					</div>
 					</div>
 				</div>
 									<%if(request.getAttribute("editar-medico") != null){
 					%>
 					<button type="submit" name="btn-guardar-usuario-medico" class="btn bg-blue-dark position-absolute" style="right:0; display:none;">Modificar Usuario</button>
-					<button name="btn-modificar-usuario" class="btn bg-red position-absolute" style="right:0;" onClick="modificarUsuario()">Modificar Usuario</button>
+					<button name="btn-modificar-usuario" class="btn bg-blue-dark position-absolute" style="right:0;" onClick="modificarUsuario()">Modificar Usuario</button>
 					<%} %>
 				</form>	
 		<%}%>
