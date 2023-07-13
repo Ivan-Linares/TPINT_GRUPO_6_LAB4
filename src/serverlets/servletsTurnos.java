@@ -28,6 +28,7 @@ import dao.impl.MedicoDAOImpl;
 import dao.impl.PacienteDAOImpl;
 import dao.impl.TurnosDAOImpl;
 import dominio.Especialidad;
+import dominio.Estado;
 import dominio.HorariosTrabajo;
 import dominio.Medico;
 import dominio.Paciente;
@@ -217,6 +218,10 @@ public class servletsTurnos extends HttpServlet {
 			
 			nuevoTurno.setFecha(new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("fecha").toString()));
 			nuevoTurno.setHora(Integer.parseInt(request.getParameter("hora")));
+			Estado estadoTurno = new Estado();
+			if(nuevoTurno.getIdTurno() > 0) estadoTurno.setIdEstado(Integer.parseInt(request.getParameter("estadoSelect").toString()));
+			else estadoTurno.setIdEstado(1);
+			nuevoTurno.setEstado(estadoTurno);
 			nuevoTurno.setObservacion(request.getParameter("observaciones"));
 			
 		} catch (ParseException e) {

@@ -109,7 +109,7 @@ public class TurnosDAOImpl implements ITurnosDAO{
 			statement.setDate(1, sqlDate);
 			
 			statement.setInt(2, turno.getHora());
-			statement.setInt(3, 1);
+			statement.setInt(3, turno.getEstado().getIdEstado());
 			statement.setString(4, turno.getObservacion());
 			
 			if(statement.executeUpdate() > 0) {

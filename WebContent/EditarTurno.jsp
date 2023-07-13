@@ -175,18 +175,32 @@
 		</div>
 		<div class="d-flex row">
 			
-			<div class="d-flex fd-column w-50">
+			<div class="d-flex fd-column">
 				<label>Fecha</label>
 				<%if(request.getAttribute("editar-turno") != null){%><input  type="Date" required="true" name="fecha" class="campo" value="<%= turno.getFecha() %>"><%}
 				else{%><p class="campo" name="fecha"><%= turno.getFecha() %></p><%}%>
 				<span id="fechaError" class="error"></span>
 			</div>
 					
-			<div class="d-flex fd-column w-50">
+			<div class="d-flex fd-column">
 				<label>Hora</label>
 				<%if(request.getAttribute("editar-turno") != null){%><input  type="number" required="true" name="hora" class="campo" value="<%= turno.getHora() %>"><%}
 				else{%><p class="campo" name="hora"><%= turno.getHora() %></p><%}%>
 				<span id="horaError" class="error"></span>
+			</div>
+			
+			<div class="d-flex fd-column">
+				<label>Estado</label>
+				<%if(request.getAttribute("editar-turno") != null){%>
+				<select name="estadoSelect" class="select">
+					<option value="1">Libre</option>
+					<option value="2">Ocupado</option>
+					<option value="3">Ausente</option>
+					<option value="4">Presente</option>
+				</select>
+				<%}
+				else{%><p class="campo" name="hora"><%= turno.getEstado().getDescripcion() %></p><%}%>
+				<span id="estadoSelect" class="error"></span>
 			</div>
 		</div>
 		
